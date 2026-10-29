@@ -37,7 +37,7 @@ const NET={room:null,user:null,want:1,on:0,host:0,me:null,hostPeer:null,gid:null
  tmh:[0,0,0,0],emi:0x2aa08a,o:{},names:{},nreq:{},toast:null,hl:0,btT:0,rv:{id:null,t:0,near:null},lf:-99,lfx:-99,fxOff:0,prevDiff:0,st0:0,fl0:0,ph:120};
 try{if(localStorage.getItem('rnb_mp')==='0')NET.want=0}catch(e){}
 const MPC=[[0x9ff2da,0x2aa08a,'#7dffc8'],[0xffb8de,0xb0306e,'#ff9ad0'],[0xffe38a,0xa8780e,'#ffd24a'],[0xb8ccff,0x3a5ac0,'#9fb8ff']];
-let BTG=null,MOBID=0,MOBHP=675,PSAVE=0,NDRAW=0,SHF=0;const BHP=19200;
+let BTG=null,MOBID=0,MOBHP=675,PSAVE=0,NDRAW=0,SHF=0;const BHP=17280;
 const NETMODE='pj';
 
 const C=document.getElementById('c'),X=C.getContext('2d'),W=960,H=540,DT=1/60,PI=Math.PI,TAU=PI*2;
@@ -46,15 +46,15 @@ const BX0=230,BX1=FW-230,BY0=190,BY1=FH-190;
 const TRW=100,TRH=58;const TERM=[[FW/2-742,60],[FW/2+742,60],[FW/2-742,FH-60],[FW/2+742,FH-60]]; // 壁の制御端末（前の立ち位置）
 const GA=1.0015,GH=.86,GR=575; // ツインガトリング：正面±0.17radが安全地帯、外側は真横＋15°（105°）まで
 const rnd=(a,b)=>a+Math.random()*(b-a),cl=(v,a,b)=>v<a?a:v>b?b:v,dist=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y),ang=(a,b)=>Math.atan2(b.y-a.y,b.x-a.x),lerp=(a,b,t)=>a+(b-a)*t,ad=a=>Math.atan2(Math.sin(a),Math.cos(a));
-const FONT='"M PLUS Rounded 1c","Hiragino Maru Gothic ProN","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif',NUMF='"Orbitron","M PLUS Rounded 1c","Hiragino Kaku Gothic ProN",sans-serif',BOSSN='ロボネコ13号';
+const FONT='"M PLUS Rounded 1c","Hiragino Maru Gothic ProN","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif',NUMF='"Orbitron","M PLUS Rounded 1c","Hiragino Kaku Gothic ProN",sans-serif',BOSSN='ロボネコ24号';
 function say(t){try{if(mute||BGM.se<=.01||!window.speechSynthesis)return;const u=new SpeechSynthesisUtterance(t);u.lang='ja-JP';u.rate=1.15;u.pitch=1.1;u.volume=Math.min(1,BGM.se*2);const v=speechSynthesis.getVoices().find(v=>/^ja/i.test(v.lang));if(v)u.voice=v;speechSynthesis.cancel();speechSynthesis.speak(u)}catch(e){}}
 let ZCAM=0,COFF=0,DCAM=null,FRZ=0,BOLTT=0,RISE=[],CUTS=[],GFX=[],visC='#6ff3ff',BAN=null,loseR='';const TLIM=300;
-const DIFS=[['NORMAL',3.2,'#9fd8ff',1],['HARD',4.16,'#ffd24a',1.3],['極',4.8,'#c0242e',1.7]];let DIFF=0;try{const v=localStorage.getItem('rnb_diff2');if(v==='1'||v==='2')DIFF=+v}catch(e){}
+const DIFS=[['NORMAL',3.2,'#9fd8ff',1],['HARD',4.16,'#ffd24a',1.3],['極',4.8,'#c0242e',2]];let DIFF=0;try{const v=localStorage.getItem('rnb_diff2');if(v==='1'||v==='2')DIFF=+v}catch(e){}
 function setDiff(i){DIFF=Math.max(0,Math.min(2,i|0));try{localStorage.setItem('rnb_diff2',String(DIFF))}catch(e){}}
 
 function drawDiff(){const lx=DBTN(0)[0];txt('難易度',lx+4,DBTN(0)[1]-12,11,'#c9d6ef','left');if(!TOUCH)txt('← → で切替',DBTN(2)[0]+DBTN(2)[2]-2,DBTN(0)[1]-12,10,'rgba(201,214,239,.7)','right');
  for(let i=0;i<3;i++){const[x,y,w,h]=DBTN(i),on=DIFF===i,c=DIFS[i][2];X.save();if(on){X.shadowColor=c;X.shadowBlur=16}X.beginPath();X.roundRect(x,y,w,h,16);const g=X.createLinearGradient(x,y,x,y+h);g.addColorStop(0,on?['#2f6cc0','#c99a12','#7a1018'][i]:'rgba(20,26,44,.85)');g.addColorStop(1,on?['#173a72','#5e4204','#260306'][i]:'rgba(10,14,26,.85)');X.fillStyle=g;X.fill();X.shadowBlur=0;X.lineWidth=on?2:1;X.strokeStyle=on?'rgba(255,255,255,.9)':'rgba(255,255,255,.2)';X.stroke();X.restore();
-  txt(DIFS[i][0],x+w/2,y+h/2-8,i===2?20:14,on?'#ffffff':'#7f8aa0','center',null,{f:NUMF});if(i){txt('攻撃×'+(i===1?'1.3':'1.5'),x+w/2,y+h/2+12,9,on?(i===1?'#fff0b8':'#ffc4c4'):'#5d6880');txt('体力×'+(i===1?'1.3':'1.7'),x+w/2,y+h/2+25,9,on?(i===1?'#fff0b8':'#ffc4c4'):'#5d6880')}else txt('標準',x+w/2,y+h/2+16,10,on?'#cfe6ff':'#5d6880');if(on){X.save();X.fillStyle=c;X.beginPath();X.arc(x+w/2,y+10,3,0,TAU);X.fill();X.restore()}}}
+  txt(DIFS[i][0],x+w/2,y+h/2-8,i===2?20:14,on?'#ffffff':'#7f8aa0','center',null,{f:NUMF});if(i){txt('攻撃×'+(i===1?'1.3':'1.5'),x+w/2,y+h/2+12,9,on?(i===1?'#fff0b8':'#ffc4c4'):'#5d6880');txt('体力×'+(i===1?'1.3':'2'),x+w/2,y+h/2+25,9,on?(i===1?'#fff0b8':'#ffc4c4'):'#5d6880')}else txt('標準',x+w/2,y+h/2+16,10,on?'#cfe6ff':'#5d6880');if(on){X.save();X.fillStyle=c;X.beginPath();X.arc(x+w/2,y+10,3,0,TAU);X.fill();X.restore()}}}
 const DBTN=i=>[18+i*80,392,74,86];
 /* ---- BGM・音量 ---- */
 const BX=W-306,BY=62,BPW=288,BPH=188,BBTN=[W-158,14,140,40],BGMN=['なし','roboA','roboB'];
@@ -407,7 +407,7 @@ const MSLS=[];{const MRED=MS(0xd83a2c,{metalness:.3,roughness:.4});for(let i=0;i
  mesh(CY(5.6,5.6,3,12),BDARK,g,0,-6,0);g.rt=0;MSLS.push(g)}}
 let MSI=0;function launchM(dl){let m=null;for(let k=0;k<MSLS.length;k++){const c=MSLS[(MSI+k)%MSLS.length];if(c.visible){m=c;MSI=(MSI+k+1)%MSLS.length;break}}if(!m){m=MSLS[MSI];MSI=(MSI+1)%MSLS.length}
  m.updateMatrixWorld(true);m.getWorldPosition(_a);m.visible=false;m.rt=2.6;RISE.push({x:_a.x+FW/2,y:_a.z+FH/2,h:_a.y+20,vh:250,t:-dl})}mesh(TOR(60.5,1.4),VISM,bd,0,160,0,1,1,.74,1);mesh(TOR(64,1.4),VISM,bd,0,128,0,1,1,.74,1);
-const PLT=new THREE.CanvasTexture(cv(128,64,(g)=>{g.fillStyle='#1b1f29';g.fillRect(0,0,128,64);g.strokeStyle='#ff8a1f';g.lineWidth=5;g.strokeRect(4,4,120,56);g.fillStyle='#ffb35c';g.font='900 34px monospace';g.textAlign='center';g.textBaseline='middle';g.font='900 40px monospace';g.fillText('13',64,35)}));
+const PLT=new THREE.CanvasTexture(cv(128,64,(g)=>{g.fillStyle='#1b1f29';g.fillRect(0,0,128,64);g.strokeStyle='#ff8a1f';g.lineWidth=5;g.strokeRect(4,4,120,56);g.fillStyle='#ffb35c';g.font='900 34px monospace';g.textAlign='center';g.textBaseline='middle';g.font='900 40px monospace';g.fillText('24',64,35)}));
 mesh(SP(20),MB(0xffffff,{map:PLT}),bd,0,185,31,1,.5,.28,1);
 const hatch=new THREE.Group();hatch.position.set(0,88,46);bd.add(hatch);
 {const dg=new THREE.Group();dg.position.set(0,32,9);dg.scale.setScalar(1.22);hatch.add(dg);const ZR=g=>g.rotateX(PI/2);
@@ -992,7 +992,7 @@ function bossIcon(x,y,r){X.save();X.translate(x,y);
 function hud(){
  const bw=520,bx=(W-bw-66)/2,by=38;panel(bx-16,6,bw+98,58,12,'rgba(255,96,70,.9)');
  X.save();X.translate(bx+6,23);X.rotate(PI/4);X.beginPath();X.roundRect(-6,-6,12,12,2);X.fillStyle='#ff4a36';X.fill();X.strokeStyle='rgba(255,220,210,.9)';X.lineWidth=1.2;X.stroke();X.restore();
- txt(BOSSN,bx+20,23,15,'#ffffff','left');
+ txt((DIFF===1?'Hard・':DIFF===2?'極・':'')+BOSSN,bx+20,23,15,'#ffffff','left');
  const stt=B.down>0?'DOWN '+B.down.toFixed(1):B.sky?'LOCK LOST':B.p2?'OVERDRIVE':'';if(stt)txt(stt,bx+bw-56,23,11,B.down>0?'#ffe45e':B.p2?'#ff8a6b':'#9fd3ff','right',null,{f:NUMF});
  txt(Math.ceil(B.hp/B.mhp*100)+'%',bx+bw,23,13,'#ffd9cf','right',null,{f:NUMF});
  bar(bx,by,bw,12,B.hp/B.mhp,B.p2?'#ff6a4a':'#ff8f6b',B.p2?'#a8120e':'#c8241c',B.hpv/B.mhp);bossIcon(bx+bw+48,35,26);
