@@ -41,6 +41,8 @@ const NETMODE='pj';
 /* ---- キャラ選択（待ち部屋）：いま使っている自分キャラ。単体で開いたときはいつもこのゲームの自分キャラ ---- */
 const CH_NATIVE='shiro';let MYCH=CH_NATIVE,PK=null;const CHN=()=>MYCH===CH_NATIVE,chOK=c=>c==='hyu'||c==='shiro'||c==='kage';
 function chNet(p){p.ch=MYCH;if(PK){p.fl&=241;p.q=-1;p.a=0;p.cb=0;p.u=0;p.cs=PK.net()}}
+/* キャラごとの攻撃力の倍率：このボスの本来の自分キャラと同じくらいの強さになるように（自動テストで1秒あたりのダメージを測って決めた） */
+const CHDM={hyu:.9,shiro:1,kage:.72};
 
 let BTG=null,MOBID=0,MOBHP=675;
 
@@ -541,7 +543,7 @@ let PUPZ=0,PUP0=0,PUPT=0;
 function bossMaxHP(n){return Math.round(BHP*(DIFS[DIFF]?DIFS[DIFF][3]:1)*[1,1.9,2.7,3.4][Math.max(0,Math.min(3,(n||1)-1))])}
 
 /* ================= 初期化 ================= */
-const BHP=12240;
+const BHP=11000;
 function reset(){
  P={x:ACX+420,y:ACY,hp:300,mhp:300,inv:0,hcd:0,dodge:0,dcd:0,ddx:0,ddy:1,ult:0,ultT:0,uTick:0,hits:0,stA:0,noHit:0,flinch:0,hold:0,kbx:0,kby:0,dodged:0,ua:0,st:100,stD:0,exh:0,run:0,mcd:0,bcd:0,buffT:0,face:PI,atk:null,aq:0,acd:0,dash:null,fin:0,dead:0};
  B={x:ACX-420,y:ACY,r:140,pow:0,tired:0,nob:0,hp:bossMaxHP(1),mhp:bossMaxHP(1),hpv:bossMaxHP(1),face:0,lock:0,z:0,flash:0,down:0,act:'',at:0,spin:0,tr:0,glow:0,sky:0,dying:0,p2:0,p2q:0,tel:null,gen:null,last:'',downQ:0,fly:0,flyA:0,zap:0,inZ:0,runT:0,runA:0,sq:0,crouch:0,kneel:0,flinchT:0,vT:0,zpend:0,dsT:0,buzz:0,gl:0,glA:[0,0,0,0,0,0]};
@@ -601,7 +603,7 @@ function hurt(d,multi,nf){if(S!=='play'||P.dead||P.ultT>0||P.uch>0||P.dash)retur
  shake=Math.max(shake,multi?5:12);flash=multi?.12:.25;flashC='#f33';pop('-'+d,P.x,P.y,ecr?'#ff4a3a':'#ff6060',(multi?42:54)+(ecr?14:0),95,'#3a0000',ecr?'#ff2010':null);pf(P.x,P.y,multi?5:14,'#ff5a5a',260,.5,4);snd(150,.2,'sawtooth',multi?.05:.09,.4);
  if(P.hp<=0){if(NET.on)mpDie();else{S='lose';endT=0;snd(300,.9,'sawtooth',.08,.1)}}return true}
 function chkP2(){}
-function dmgTo(e,d,src){if(!e)return;const cr=Math.random()<.2,cli=NET.on&&!NET.host;d*=6*(P.buffT>0?1.3:1)*(cr?1.5:1);
+function dmgTo(e,d,src){if(!e)return;d*=CHDM[MYCH]||1;const cr=Math.random()<.2,cli=NET.on&&!NET.host;d*=6*(P.buffT>0?1.3:1)*(cr?1.5:1);
  if(e===B){if(B.dying||B.sky)return;if(B.inZ){if(!(B.gT>0)){B.gT=.15;SWT.getWorldPosition(_a);pf(B.x+rnd(-60,60),B.y+rnd(-60,60),8,'#bfe8ff',260,.3,4,rnd(120,300));snd(1900,.06,'square',.025,.6)}return}if(B.down>0&&!B.nob)d*=1.5;d=Math.round(d);if(cli){mpQ('b',d);B.hp=Math.max(1,B.hp-d)}else B.hp=Math.max(0,B.hp-d);B.flash=.07;
   {const hh=B.z+rnd(190,300),xx=B.x+rnd(-50,50);if(cr){pop(String(d),xx,B.y,'#6fd8ff',B.down>0?84:74,hh,'#0a2a8a','#2a8cff');pop('CRITICAL!',xx,B.y,'#bfeaff',26,hh+70,'#0a2a8a','#2a8cff');snd(1760,.08,'square',.03,1.4)}else pop(String(d),xx,B.y,B.down>0?'#fff27a':'#ffffff',B.down>0?62:50,hh,B.down>0?'#9a3a00':'#b8301a')}
   if(src!=='ult'&&P.ultT<=0)P.ult=Math.min(100,P.ult+d*.2/12);
@@ -1172,7 +1174,7 @@ function cam(dt){
   CAM.position.set(wx(CS[0])+rnd(-j,j),CS[2]+rnd(-j,j),wz(CS[1]));CAM.lookAt(wx(CS[3]),CS[5],wz(CS[4]));CAM.updateMatrixWorld();camV=Math.atan2(CS[4]-CS[1],CS[3]-CS[0]);camA=camV;
   DL.position.set(wx(B.x)+500,1000,wz(B.y)+350);DL.target.position.set(wx(B.x),0,wz(B.y));return}
  if(S==='play')DCAM=null;
- const t=curT();if(t)camA+=ad(ang(P,t)-camA)*(1-Math.exp(-6*dt));else if(S==='play'){const tr=(keys.KeyD||keys.ArrowRight?1:0)-(keys.KeyA||keys.ArrowLeft?1:0);camA+=tr*1.7*dt}
+ const t=curT();if(t){const dd=Math.hypot(t.x-P.x,t.y-P.y),nr=cl((dd-(t.r||40)*.6)/((t.r||40)*.5),0,1),mx=2.4*dt;camA+=cl(ad(ang(P,t)-camA)*(1-Math.exp(-6*dt))*nr,-mx,mx)}else if(S==='play'){const tr=(keys.KeyD||keys.ArrowRight?1:0)-(keys.KeyA||keys.ArrowLeft?1:0);camA+=tr*1.7*dt}
  {const qe=(keys.KeyE?1:0)-(keys.KeyQ?1:0);if(qe&&S==='play')COFF=cl(COFF+qe*2.9*dt,-1.7,1.7);else COFF*=Math.exp(-4.5*dt)}
  const c=Math.cos(camA+COFF),s=Math.sin(camA+COFF),cx=P.x-c*300,cy=cl(P.y-s*300,25,FH-25);
  let lh=70;if(t===B){const d=dist(P,B);lh=70+cl((700-d)*.22,0,130)}if(B.sky===3&&B.z>40&&S==='play')lh=cl(B.z*.62,70,950);
@@ -2289,7 +2291,7 @@ function chTB(){const L=PK.tbs();for(let i=TB.length-1;i>=0;i--)if(CH_TBN.includ
    待ち部屋がパーティーの通信を持っていて、このゲームにはいつもの部屋と同じ形で渡してくれる。
    部屋コードの画面は出さず、そろったら自動で出撃し、終わったら待ち部屋に戻る。 */
 const LBY=(()=>{try{const p=window.parent;if(p&&p!==window&&p.RNB_LOBBY&&p.RNB_LOBBY.v===1&&p.RNB_LOBBY.session())return p.RNB_LOBBY}catch(e){}return null})();
-const LBX={s:null,t0:0,went:0,played:0,out:0,tt:0,re:0,msg:''};
+const LBX={s:null,t0:0,went:0,played:0,out:0,tt:0,re:0,msg:'',mvAt:0};
 if(LBY){
  try{chSetup(LBY.session())}catch(e){console.error('キャラ選択の準備に失敗',e)}
  pjInit=function(){const s=LBY.session();if(!s)return;LBX.s=s;LBX.t0=performance.now();NET.want=1;NET.myName=String(s.name||'').slice(0,10);DIFF=Math.max(0,Math.min(2,s.d|0));
@@ -2304,12 +2306,14 @@ function lbyTick(){const s=LBX.s;if(!s||LBX.out)return;try{LBY.state(S)}catch(e)
  if(LBX.played){if(NET.on)return;const now=performance.now();
   if(!LBX.tt){LBX.tt=now;LBX.re=!!(NET.toast&&/^再戦/.test(NET.toast.s));LBX.msg=NET.toast&&!NET.toast.ok?NET.toast.s:''}
   if(LBX.re&&now-LBX.tt<22000)return;lbyOut(LBX.msg);return}
- if(LBX.went)return;const el=performance.now()-LBX.t0;DIFF=Math.max(0,Math.min(2,s.d|0));
- if(s.solo){if(el>400){LBX.went=1;start()}return}
- if(!s.leader){if(el>45000)lbyOut('リーダーの出撃に間に合いませんでした');return}
- if(!NET.me)return;const want=s.part.filter(id=>id!==s.me),ps=mpPeers().filter(p=>!p.sameTab&&want.includes(p.peer)),
+ if(LBX.went)return;const now=performance.now(),el=now-LBX.t0,mv=!LBY.mv||LBY.mv();DIFF=Math.max(0,Math.min(2,s.d|0));
+ /* 出撃ムービーが終わる（スキップする）までは始めない。仲間はムービーが終わってから「準備OK」になる */
+ if(mv&&!LBX.mvAt)LBX.mvAt=now;const em=LBX.mvAt?now-LBX.mvAt:0;
+ if(s.solo){if(el>400&&mv){LBX.went=1;start()}return}
+ if(!s.leader){NET.want=mv?1:0;if(mv&&em>45000)lbyOut('リーダーの出撃に間に合いませんでした');return}
+ if(!NET.me||!mv)return;const want=s.part.filter(id=>id!==s.me),ps=mpPeers().filter(p=>!p.sameTab&&want.includes(p.peer)),
   rd=ps.filter(p=>p.presence&&p.presence.v===1&&p.presence.st==='title'&&p.presence.mp&&!p.presence.gid);
- if((rd.length>=want.length&&el>600)||(rd.length>=ps.length&&ps.length<want.length&&el>4000)||el>25000){LBX.went=1;start()}}
+ if((rd.length>=want.length&&el>600)||(rd.length>=ps.length&&ps.length<want.length&&em>4000)||em>25000){LBX.went=1;start()}}
 
 mpInstall();reset();requestAnimationFrame(loop);mpInit();
 

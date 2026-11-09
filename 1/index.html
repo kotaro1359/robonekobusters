@@ -42,6 +42,8 @@ const NETMODE='pj';
 /* ---- キャラ選択（待ち部屋）：いま使っている自分キャラ。単体で開いたときはいつもこのゲームの自分キャラ ---- */
 const CH_NATIVE='hyu';let MYCH=CH_NATIVE,PK=null;const CHN=()=>MYCH===CH_NATIVE,chOK=c=>c==='hyu'||c==='shiro'||c==='kage';
 function chNet(p){p.ch=MYCH;if(PK){p.fl&=241;p.q=-1;p.a=0;p.cb=0;p.u=0;p.cs=PK.net()}}
+/* キャラごとの攻撃力の倍率：このボスの本来の自分キャラと同じくらいの強さになるように（自動テストで1秒あたりのダメージを測って決めた） */
+const CHDM={hyu:1,shiro:1.05,kage:.72};
 
 
 const C=document.getElementById('c'),X=C.getContext('2d'),W=960,H=540,DT=1/60,PI=Math.PI,TAU=PI*2;
@@ -552,7 +554,7 @@ function hurt(d,multi,nf){if(S!=='play'||P.dead||P.ultT>0||P.uch>0)return false;
  const ecr=Math.random()<.1;d=Math.round(d*DIFS[DIFF][1]*(ecr?1.25:1));P.noHit=0;if(!nf){const fl=multi===2?.3:multi?.14:.38,kb=multi===2?300:multi?120:420;if(P.flinch<fl)P.flinch=fl;const a=B.dying<=0&&B.sky!==1?ang(B,P):P.face+PI;P.kbx=Math.cos(a)*kb;P.kby=Math.sin(a)*kb}if(P.rush&&!nf){P.rush=null;P.hold=0;if(P.flinch<.42)P.flinch=.42;const ra=B.dying<=0&&B.sky!==1?ang(B,P):P.face+PI;P.kbx=Math.cos(ra)*380;P.kby=Math.sin(ra)*380}P.qch=-1;P.hp=Math.max(0,P.hp-d);P.inv=multi?Math.max(P.inv,.12):1;if(P.hcd<=0){P.hits++;P.hcd=1}
  shake=Math.max(shake,multi?5:12);flash=multi?.12:.25;flashC='#f33';pop('-'+d,P.x,P.y,ecr?'#ff4a3a':'#ff6060',(multi?42:54)+(ecr?14:0),95,'#3a0000',ecr?'#ff2010':null);pf(P.x,P.y,multi?5:14,'#ff5a5a',260,.5,4);snd(150,.2,'sawtooth',multi?.05:.09,.4);
  if(P.hp<=0){if(NET.on)mpDie();else{S='lose';endT=0;snd(300,.9,'sawtooth',.08,.1)}}return true}
-function dmgTo(e,d,src){if(!e)return;const cr=Math.random()<.2,cli=NET.on&&!NET.host;d*=6*(P.buffT>0?1.3:1)*(cr?1.5:1);
+function dmgTo(e,d,src){if(!e)return;d*=CHDM[MYCH]||1;const cr=Math.random()<.2,cli=NET.on&&!NET.host;d*=6*(P.buffT>0?1.3:1)*(cr?1.5:1);
  if(e===B){if(B.dying||B.sky)return;if(B.down>0)d*=1.5;d=Math.round(d);if(cli){mpQ('b',d);B.hp=Math.max(1,B.hp-d)}else B.hp=Math.max(0,B.hp-d);B.flash=.07;
   {const hh=B.z+rnd(190,300),xx=B.x+rnd(-50,50);if(cr){pop(String(d),xx,B.y,'#6fd8ff',B.down>0?84:74,hh,'#0a2a8a','#2a8cff');pop('CRITICAL!',xx,B.y,'#bfeaff',26,hh+70,'#0a2a8a','#2a8cff');snd(1760,.08,'square',.03,1.4)}else pop(String(d),xx,B.y,B.down>0?'#fff27a':'#ffffff',B.down>0?62:50,hh,B.down>0?'#9a3a00':'#b8301a')}
   if(src!=='ult'&&P.ultT<=0)P.ult=Math.min(100,P.ult+d*.2/12);if(cli)return;
@@ -2181,7 +2183,7 @@ function chTB(){const L=PK.tbs();for(let i=TB.length-1;i>=0;i--)if(CH_TBN.includ
    待ち部屋がパーティーの通信を持っていて、このゲームにはいつもの部屋と同じ形で渡してくれる。
    部屋コードの画面は出さず、そろったら自動で出撃し、終わったら待ち部屋に戻る。 */
 const LBY=(()=>{try{const p=window.parent;if(p&&p!==window&&p.RNB_LOBBY&&p.RNB_LOBBY.v===1&&p.RNB_LOBBY.session())return p.RNB_LOBBY}catch(e){}return null})();
-const LBX={s:null,t0:0,went:0,played:0,out:0,tt:0,re:0,msg:''};
+const LBX={s:null,t0:0,went:0,played:0,out:0,tt:0,re:0,msg:'',mvAt:0};
 if(LBY){
  try{chSetup(LBY.session())}catch(e){console.error('キャラ選択の準備に失敗',e)}
  pjInit=function(){const s=LBY.session();if(!s)return;LBX.s=s;LBX.t0=performance.now();NET.want=1;NET.myName=String(s.name||'').slice(0,10);DIFF=Math.max(0,Math.min(2,s.d|0));
@@ -2196,12 +2198,14 @@ function lbyTick(){const s=LBX.s;if(!s||LBX.out)return;try{LBY.state(S)}catch(e)
  if(LBX.played){if(NET.on)return;const now=performance.now();
   if(!LBX.tt){LBX.tt=now;LBX.re=!!(NET.toast&&/^再戦/.test(NET.toast.s));LBX.msg=NET.toast&&!NET.toast.ok?NET.toast.s:''}
   if(LBX.re&&now-LBX.tt<22000)return;lbyOut(LBX.msg);return}
- if(LBX.went)return;const el=performance.now()-LBX.t0;DIFF=Math.max(0,Math.min(2,s.d|0));
- if(s.solo){if(el>400){LBX.went=1;start()}return}
- if(!s.leader){if(el>45000)lbyOut('リーダーの出撃に間に合いませんでした');return}
- if(!NET.me)return;const want=s.part.filter(id=>id!==s.me),ps=mpPeers().filter(p=>!p.sameTab&&want.includes(p.peer)),
+ if(LBX.went)return;const now=performance.now(),el=now-LBX.t0,mv=!LBY.mv||LBY.mv();DIFF=Math.max(0,Math.min(2,s.d|0));
+ /* 出撃ムービーが終わる（スキップする）までは始めない。仲間はムービーが終わってから「準備OK」になる */
+ if(mv&&!LBX.mvAt)LBX.mvAt=now;const em=LBX.mvAt?now-LBX.mvAt:0;
+ if(s.solo){if(el>400&&mv){LBX.went=1;start()}return}
+ if(!s.leader){NET.want=mv?1:0;if(mv&&em>45000)lbyOut('リーダーの出撃に間に合いませんでした');return}
+ if(!NET.me||!mv)return;const want=s.part.filter(id=>id!==s.me),ps=mpPeers().filter(p=>!p.sameTab&&want.includes(p.peer)),
   rd=ps.filter(p=>p.presence&&p.presence.v===1&&p.presence.st==='title'&&p.presence.mp&&!p.presence.gid);
- if((rd.length>=want.length&&el>600)||(rd.length>=ps.length&&ps.length<want.length&&el>4000)||el>25000){LBX.went=1;start()}}
+ if((rd.length>=want.length&&el>600)||(rd.length>=ps.length&&ps.length<want.length&&em>4000)||em>25000){LBX.went=1;start()}}
 
 mpInstall();reset();requestAnimationFrame(loop);mpInit();
 </script>
