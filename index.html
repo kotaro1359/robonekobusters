@@ -64,12 +64,23 @@ button:disabled{cursor:default}
 .go:disabled{background:linear-gradient(180deg,#3a4458,#232a3a);border-color:rgba(255,255,255,.2);color:#aab4c8;box-shadow:none}
 .go.rdy{background:linear-gradient(180deg,#a8ffbe,#2ec27e);border-color:#e8fff0;color:#04240f;box-shadow:0 0 24px rgba(80,255,150,.45),0 8px 24px rgba(0,0,0,.4)}
 .note{min-height:22px;margin:10px 2px 0;font-size:13px;color:var(--gold)}
+.ctl{margin-top:8px}.ctlh{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:10px}.ctlh h3{margin:0}
+.ctltab{display:flex;gap:6px}.ctltab button{height:32px;padding:0 12px;border-radius:10px;border:1.5px solid rgba(255,255,255,.18);background:rgba(255,255,255,.05);font:800 13px var(--f);color:#9fb3d6}
+.ctltab button.on{color:#0a0f1c;background:var(--cc);border-color:#fff}
+.ctlg{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:18px}.ctlg h4{margin:0 0 6px;font-size:12.5px;color:var(--sky);letter-spacing:.06em}
+.keys{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:5px}
+.keys li{display:grid;grid-template-columns:118px minmax(0,1fr);align-items:center;gap:10px;font-size:13px;color:#dbe6fb;line-height:1.4}
+.keys li.sp{grid-template-columns:118px minmax(0,1fr);background:rgba(255,210,74,.07);border-radius:8px;padding:2px 0}
+.keys .k{display:flex;flex-wrap:wrap;gap:4px;justify-content:flex-end}
+.keys kbd{display:inline-flex;align-items:center;justify-content:center;min-width:26px;height:24px;padding:0 6px;border-radius:6px;background:linear-gradient(180deg,#f4f7ff,#c8d2ea);color:#101a30;font:900 12px var(--n);box-shadow:0 2px 0 #6a7898}
+.keys kbd.m{font:800 11px var(--f)}.keys small{color:var(--dim);font-size:11.5px}
+@media (max-width:680px){.ctlg{grid-template-columns:minmax(0,1fr)}.keys li,.keys li.sp{grid-template-columns:100px minmax(0,1fr)}}
 .panel{border-radius:20px;padding:16px 18px;background:linear-gradient(180deg,rgba(16,26,50,.94),rgba(7,11,24,.94));border:1.5px solid rgba(160,205,255,.42);box-shadow:0 10px 34px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.07);margin-bottom:14px}
 .panel h3{margin:0 0 10px;font-size:16px;color:#fff;display:flex;align-items:baseline;gap:10px}.panel h3 span{font-size:12px;color:var(--dim)}
 .panel label{display:flex;align-items:center;gap:10px;font-size:13px;color:#c9d6ef}
 input{flex:1;min-width:0;height:42px;padding:0 12px;border-radius:11px;border:1px solid rgba(160,205,255,.5);background:rgba(0,0,0,.45);color:#fff;font:700 17px var(--f);outline:none}
 input:focus{border-color:var(--sky);box-shadow:0 0 0 3px rgba(159,216,255,.25)}input::placeholder{color:#5f6d86}
-#code{flex:0 0 132px;text-transform:uppercase;letter-spacing:.38em;font:900 20px var(--n);text-align:center}
+#code{flex:0 0 150px;text-transform:uppercase;letter-spacing:.38em;font:900 20px var(--n);text-align:center}#code::placeholder{font:800 13px var(--f);letter-spacing:0}
 .btn{height:44px;border-radius:12px;border:1px solid rgba(255,255,255,.3);font:800 15px var(--f);padding:0 14px;white-space:nowrap}
 .btn:disabled{opacity:.45}
 .bh{width:100%;background:linear-gradient(180deg,#ffd86a,#ff9a2a);color:#2a1400;border-color:rgba(255,240,200,.85)}
@@ -114,7 +125,6 @@ footer{margin-top:20px;font-size:12.5px;color:var(--mute);text-align:center}foot
 <div id="app">
  <header class="top">
   <div class="logo"><b>ロボネコバスターズ</b><i>LOBBY</i></div>
-  <p>待ち部屋：パーティーを組んで、ボスに挑もう（ひとりでもOK）</p>
  </header>
  <div class="grid">
   <section>
@@ -127,6 +137,13 @@ footer{margin-top:20px;font-size:12.5px;color:var(--mute);text-align:center}foot
     <button class="go" id="go" type="button"><b>出撃！</b><small id="goSub">ひとりで</small></button>
    </div>
    <p class="note" id="note" aria-live="polite"></p>
+   <div class="panel ctl" id="ctl">
+    <div class="ctlh"><h3>操作方法</h3><div class="ctltab" id="ctlTab" role="tablist" aria-label="キャラごとの操作"></div></div>
+    <div class="ctlg">
+     <div><h4>キーボード・マウス</h4><ul class="keys" id="ctlKey"></ul></div>
+     <div><h4>スマホ・タブレット</h4><ul class="keys" id="ctlTouch"></ul></div>
+    </div>
+   </div>
   </section>
   <aside class="side">
    <div class="panel">
@@ -137,10 +154,10 @@ footer{margin-top:20px;font-size:12.5px;color:var(--mute);text-align:center}foot
     <div class="col" id="v0">
      <button class="btn bh" id="create" type="button">パーティーをつくる（リーダーになる）</button>
      <div class="or">または 仲間のパーティーに入る</div>
-     <div class="row"><input id="code" maxlength="4" placeholder="コード" autocomplete="off" spellcheck="false" aria-label="パーティーのコード"><button class="btn bj" id="join" type="button">参加する</button></div>
+     <div class="row"><input id="code" maxlength="4" placeholder="パーティーコード" autocomplete="off" spellcheck="false" aria-label="パーティーコード"><button class="btn bj" id="join" type="button">参加する</button></div>
     </div>
     <div class="col" id="v1" hidden>
-     <div class="codebox"><div><small>パーティーのコード</small><strong id="codeShow"></strong></div><button class="btn bs" id="copy" type="button">招待リンクをコピー</button></div>
+     <div class="codebox"><div><small>パーティーコード</small><strong id="codeShow"></strong></div><button class="btn bs" id="copy" type="button">招待リンクをコピー</button></div>
      <ul id="list"></ul>
      <div class="ft"><button class="btn bs" id="leave" type="button">パーティーを抜ける</button></div>
     </div>
@@ -150,9 +167,9 @@ footer{margin-top:20px;font-size:12.5px;color:var(--mute);text-align:center}foot
     <h3>遊び方</h3>
     <ol>
      <li><b>ひとりで</b>：ボス・キャラ・難易度を選んで「出撃！」</li>
-     <li><b>みんなで</b>：だれか1人が「パーティーをつくる」→ 出た4文字のコード（または招待リンク）を仲間に送る</li>
-     <li>仲間は名前とコードを入れて「参加する」</li>
-     <li>それぞれキャラを選んで「準備OK」（準備OKの間はキャラが固定。もう一度押すと変えられる）</li>
+     <li><b>みんなで</b>：だれか1人が「パーティーをつくる」→ 出た4文字のパーティーコード（または招待リンク）を仲間に送る</li>
+     <li>仲間は名前とパーティーコードを入れて「参加する」</li>
+     <li>それぞれキャラを選んで「準備OK」</li>
      <li>全員が準備OKになったら、リーダーがボスと難易度を選んで「出撃！」</li>
      <li>バトルが終わると、パーティーのままここに戻ってきます</li>
     </ol>
@@ -185,6 +202,17 @@ const CHARS=[
  {id:'kage',name:'ツキカゲ',type:'すばやく斬る忍びタイプ',moves:'三段こうげき・神速アタック／必殺：月影十連斬',c:'#9fb2ff',
   svg:'<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M48 36l12-5M48 40l12 3" stroke="#4a5ad8" stroke-width="3.5" stroke-linecap="round"/><circle cx="32" cy="35" r="19" fill="#4a5ad8"/><path d="M14 37c8 5 28 5 36 0v4c-5 10-31 10-36 0Z" fill="#07060c"/><path d="M14 31c8 4 28 4 36 0" stroke="#07060c" stroke-width="5"/><path d="M21 30l8 3M43 30l-8 3" stroke="#ffc84a" stroke-width="3.6" stroke-linecap="round"/><path d="M29 11a7 7 0 1 0 8.6 9.4 5.6 5.6 0 1 1-8.6-9.4Z" fill="#dfe6f2"/></svg>'}];
 const DIF=[['NORMAL','#9fd8ff'],['HARD','#ffd24a'],['極','#ff6a6a']];
+/* 操作方法（[キー, 説明, 補足]。キーは「+」で並べる。m: はマウス・文字のキー） */
+const CTL={
+ hyu:{key:[['J|m:左クリック','ビームショット','押しっぱなしで連射'],['K|m:右クリック','チャージビーム','長押しでためて、離すと発射'],['L|m:サイドボタン','突撃ラッシュ','敵に突っこんで連続攻撃'],['I','必殺技「びりびりビーム」','ゲージが100%でつかえる']],
+  touch:[['m:ショット','ビームショット','押しっぱなしで連射'],['m:チャージ','チャージビーム','長押しして離す'],['m:突撃','突撃ラッシュ',''],['m:必殺|m:ひっさつ','必殺技','ゲージ100%で光る']]},
+ shiro:{key:[['J|m:左クリック','三段攻撃','続けて押すと3段目まで'],['K|L|m:右クリック','神速アタック','敵に一気に斬りこむ'],['I','必殺技「みじん切り」','ゲージが100%でつかえる']],
+  touch:[['m:攻撃','三段攻撃','続けて押す'],['m:神速','神速アタック',''],['m:必殺|m:ひっさつ','必殺技','ゲージ100%で光る']]},
+ kage:{key:[['J|m:左クリック','三段こうげき','続けて押すと3段目まで'],['K|m:右クリック','神速アタック','敵に一気に斬りこむ'],['I','必殺技「月影十連斬」','ゲージが100%でつかえる']],
+  touch:[['m:こうげき','三段こうげき','続けて押す'],['m:神速','神速アタック',''],['m:必殺|m:ひっさつ','必殺技','ゲージ100%で光る']]},
+ common:{key:[['W|A|S|D','移動',''],['Shift','走る','スタミナをつかう'],['Space','回避','攻撃をよける'],['F','長押しで仲間を助ける','ロボネコ24号では端末も起動'],['Tab','ねらう敵を切りかえ',''],['Q|E','カメラを回す',''],['P','ポーズ',''],['M','音のオン・オフ','']],
+  touch:[['m:画面の左側','ドラッグで移動','さわった所がスティックになる'],['m:回避','回避',''],['m:右下のボタン','わざ（上のとおり）','']]}};
+let ctlCh=null;
 const PCOL=['#7dffc8','#ff9ad0','#ffd24a','#9fb8ff'];
 const CROWN='<svg width="20" height="16" viewBox="-8 -7 16 11" aria-label="リーダー"><path d="M-6 3L-7-4L-3.2-.8L0-6L3.2-.8L7-4L6 3Z" fill="#ffd24a" stroke="#7a4a00" stroke-width="1.1" stroke-linejoin="round"/><rect x="-5.5" y="1.2" width="11" height="1.4" fill="#fff6c8"/></svg>';
 const $=id=>document.getElementById(id);
@@ -214,6 +242,7 @@ function buildStatic(){
  const cx=$('chars');for(const c of CHARS){const el=document.createElement('button');el.type='button';el.className='chr';el.dataset.c=c.id;el.setAttribute('role','radio');el.style.setProperty('--cc',c.c);
   el.innerHTML=c.svg+'<span class="cn"></span><span class="ct"></span><span class="cm"></span><span class="chk" aria-hidden="true">✓</span>';
   el.querySelector('.cn').textContent=c.name;el.querySelector('.ct').textContent=c.type;el.querySelector('.cm').textContent=c.moves;el.addEventListener('click',()=>pickChar(c.id));cx.appendChild(el)}
+ const tb=$('ctlTab');for(const c of CHARS){const b=document.createElement('button');b.type='button';b.dataset.c=c.id;b.setAttribute('role','tab');b.textContent=c.name;b.style.setProperty('--cc',c.c);b.addEventListener('click',()=>renderCtl(c.id));tb.appendChild(b)}
  const dx=$('diff');DIF.forEach(([n,c],i)=>{const el=document.createElement('button');el.type='button';el.textContent=n;el.className=i===2?'kw':'';el.style.setProperty('--dc',c);el.setAttribute('role','radio');el.addEventListener('click',()=>pick(null,i));dx.appendChild(el)})}
 function hostLP(){return N.lp.get(N.hostId)||null}
 function inParty(){return N.state==='open'}
@@ -238,8 +267,8 @@ function render(){
  else if(mem){go.disabled=!!G;if(ME.rd){go.classList.add('rdy');gb.textContent='準備OK！';sub.textContent='押すと取り消し（キャラを変えられる）'}else{gb.textContent='準備OK';sub.textContent=charOf(ME.ch).name+' で決定する'}
   const hp=hostLP();note=hp&&hp.st==='game'?'リーダーはいまバトル中です。終わったら一緒に出撃できます':ME.rd?'リーダーの出撃を待っています':'キャラを選んだら「準備OK」を押してね'}
  else{const ids=memberIds().filter(id=>id!==N.me),idle=ids.filter(id=>!busyOf(id)),busy=ids.filter(busyOf),wait=idle.filter(id=>!lpOf(id).rd);const n=Math.min(4,1+idle.length);
-  go.disabled=!!G||wait.length>0;sub.textContent=wait.length?'準備OKを待っています（'+(idle.length-wait.length)+'/'+idle.length+'人）':n>1?n+'人で':'ひとりで（仲間を待つなら少し待ってね）';
-  if(!ids.length)note='コードか招待リンクを仲間に送って、参加を待とう';else if(wait.length)note=wait.map(nameOf).join('、')+' の準備OKを待っています';else if(busy.length)note=busy.map(nameOf).join('、')+' はバトル中なので、今回は参加しません';}
+  go.disabled=!!G||wait.length>0;sub.textContent=wait.length?'準備OKを待っています（'+(idle.length-wait.length)+'/'+idle.length+'人）':n>1?n+'人で':'ひとりで';
+  if(wait.length)note=wait.map(nameOf).join('、')+' の準備OKを待っています';else if(busy.length)note=busy.map(nameOf).join('、')+' はバトル中なので、今回は参加しません';}
  $('note').textContent=note;
  $('v0').hidden=party;$('v1').hidden=!party;$('create').disabled=$('join').disabled=!!N.busy;$('leave').disabled=!!G;
  if(party){$('codeShow').textContent=N.code;const ul=$('list');ul.textContent='';const ids=memberIds();
@@ -250,7 +279,13 @@ function render(){
    st.textContent=bz?'バトル中（'+bossOf(p.b).name+'）':ld?'':p.rd?'準備OK':'えらび中';li.appendChild(st);ul.appendChild(li)});
   if(ids.length<4){const li=document.createElement('li');li.className='empty';li.textContent='あと'+(4-ids.length)+'人まで参加できます';ul.appendChild(li)}}
  if(G&&!G.started)loadText()}
-function pickChar(c){if(G||(isMember()&&ME.rd))return;ME.ch=cC(c);LS.s('rnb_lobby_ch',ME.ch);if(inParty())lpSet({});ui()}
+function kc(s){return s.split('|').map(k=>k.startsWith('m:')?'<kbd class="m">'+k.slice(2)+'</kbd>':'<kbd>'+k+'</kbd>').join('')}
+function ctlRow(r,sp){const li=document.createElement('li');if(sp)li.className='sp';li.innerHTML='<span class="k">'+kc(r[0])+'</span><span></span>';const d=li.lastChild;d.textContent=r[1];if(r[2]){const sm=document.createElement('small');sm.textContent='（'+r[2]+'）';d.append(' ',sm)}return li}
+function renderCtl(c){ctlCh=cC(c);const C2=CTL[ctlCh],K=$('ctlKey'),T2=$('ctlTouch');K.textContent='';T2.textContent='';
+ for(const r of C2.key)K.appendChild(ctlRow(r,1));for(const r of CTL.common.key)K.appendChild(ctlRow(r));
+ for(const r of C2.touch)T2.appendChild(ctlRow(r,1));for(const r of CTL.common.touch)T2.appendChild(ctlRow(r));
+ for(const b of $('ctlTab').children){const on=b.dataset.c===ctlCh;b.classList.toggle('on',on);b.setAttribute('aria-selected',on?'true':'false')}}
+function pickChar(c){if(G||(isMember()&&ME.rd))return;ME.ch=cC(c);LS.s('rnb_lobby_ch',ME.ch);renderCtl(ME.ch);if(inParty())lpSet({});ui()}
 function toggleReady(){if(!isMember()||G)return;ME.rd=ME.rd?0:1;lpSet({});ui()}
 function pick(b,d){if(isMember()||G)return;if(b!=null){ME.b=cB(b);LS.s('rnb_lobby_b',String(ME.b))}if(d!=null){ME.d=cD(d);LS.s('rnb_lobby_d',String(ME.d))}if(inParty())lpSet({sel:{b:ME.b,d:ME.d}});ui()}
 
@@ -263,11 +298,11 @@ const bcast=(m,ex)=>{for(const c of N.conns.values())if(c.peer!==ex)send(c,m)};
 function up(m){if(N.state!=='open')return;if(N.host)bcast(Object.assign({id:N.me},m));else send(N.hc,m)}
 function lpSet(patch){const p=Object.assign({},N.myLP);for(const k in patch){if(patch[k]==null)delete p[k];else p[k]=patch[k]}p.v=VER;p.nm=ME.name;p.ch=ME.ch;p.rd=ME.rd?1:0;if(!p.st)p.st='lobby';N.myLP=p;
  if(N.state==='open'){N.lp.set(N.me,p);up({t:'p',p})}ui()}
-function errText(err){const t=err&&err.type;return t==='peer-unavailable'?'パーティーがみつかりません。コードを確かめてね':t==='browser-incompatible'?'このブラウザは通信に対応していません':
+function errText(err){const t=err&&err.type;return t==='peer-unavailable'?'パーティーがみつかりません。パーティーコードを確かめてね':t==='browser-incompatible'?'このブラウザは通信に対応していません':
  t==='network'||t==='server-error'||t==='socket-error'||t==='socket-closed'?'通信サーバーにつながりませんでした。少し待ってもう一度ためしてね':'つながりませんでした'+(t?'（'+t+'）':'')}
 function setup(peer,host,code,id){Object.assign(N,{peer,host:host?1:0,code,me:id,hostId:host?id:PFX+code,state:'open',busy:0,leaving:0,conns:new Map(),lp:new Map(),gp:new Map(),order:[id]});
  N.myLP={};lpSet(host?{st:G?'game':'lobby',sel:{b:ME.b,d:ME.d},ord:[id]}:{st:G?'game':'lobby'});
- try{history.replaceState(null,'','#'+code)}catch(e){}msg(host?'パーティーをつくりました。コードを仲間に伝えよう':'パーティーに入りました');if(G&&G.view)G.view.rebuild();ui()}
+ try{history.replaceState(null,'','#'+code)}catch(e){}msg(host?'パーティーをつくりました。パーティーコードを仲間に伝えよう':'パーティーに入りました');if(G&&G.view)G.view.rebuild();ui()}
 function reset(){const p=N.peer;N.leaving=1;ME.rd=0;for(const c of N.conns.values())try{c.close()}catch(e){}try{N.hc&&N.hc.close()}catch(e){}try{p&&p.destroy()}catch(e){}
  Object.assign(N,{peer:null,host:0,code:'',me:null,hostId:'',conns:new Map(),hc:null,lp:new Map(),gp:new Map(),order:[],myLP:{},state:'idle',busy:0});
  try{history.replaceState(null,'',location.pathname+location.search)}catch(e){}if(G&&G.view)G.view.rebuild();ui()}
@@ -283,12 +318,12 @@ async function create(){if(N.busy||N.state!=='idle'||G)return;if(!nameOk())retur
   peer.on('disconnected',()=>{if(N.peer===peer&&!N.leaving)try{peer.reconnect()}catch(e){}});
   peer.on('error',err=>{if(!done){if(err&&err.type==='unavailable-id'&&tries++<5){done=1;clearTimeout(to);try{peer.destroy()}catch(e){}go();return}done=1;clearTimeout(to);try{peer.destroy()}catch(e){}N.busy=0;msg(errText(err),1);ui()}})};go()}
 async function join(){if(N.busy||N.state!=='idle'||G)return;if(!nameOk())return;const ci=$('code'),code=(ci.value||'').toUpperCase().replace(/[^A-Z0-9]/g,'');ci.value=code;
- if(code.length!==4){msg('4文字のコードを入れてね',1);ci.focus();return}
+ if(code.length!==4){msg('4文字のパーティーコードを入れてね',1);ci.focus();return}
  N.busy=1;msg('パーティー '+code+' につないでいます…');ui();let Peer;
  try{Peer=await loadLib()}catch(e){N.busy=0;msg('通信の準備に失敗しました。ネットにつながっているか確かめてね',1);ui();return}
  let peer,done=0;try{peer=new Peer({debug:0})}catch(e){N.busy=0;msg(errText(e),1);ui();return}
  const fail=m=>{if(done)return;done=1;clearTimeout(to);try{peer.destroy()}catch(e){}N.busy=0;msg(m,1);ui()};
- const to=setTimeout(()=>fail('パーティーがみつかりません。コードを確かめてね'),15000);
+ const to=setTimeout(()=>fail('パーティーがみつかりません。パーティーコードを確かめてね'),15000);
  peer.on('open',id=>{if(done)return;const c=peer.connect(PFX+code,{reliable:true,serialization:'json'});
   c.on('open',()=>{if(done)return;done=1;clearTimeout(to);N.hc=c;setup(peer,0,code,id);N.hc=c;lpSet({})});
   c.on('data',m=>{if(N.hc===c)onHost(m)});
@@ -380,11 +415,11 @@ function init(){buildStatic();const nm=$('name'),ci=$('code');nm.value=ME.name;
  $('create').addEventListener('click',create);$('join').addEventListener('click',join);$('leave').addEventListener('click',leave);$('go').addEventListener('click',()=>{if(isMember())toggleReady();else sortie()});
  $('lBack').addEventListener('click',()=>back(''));
  $('copy').addEventListener('click',()=>{const link=location.href.split('#')[0]+'#'+N.code;const ok=()=>msg('招待リンクをコピーしました。仲間に送ってね');
-  try{navigator.clipboard.writeText(link).then(ok,()=>msg('コピーできませんでした。コード「'+N.code+'」を伝えてね',1))}catch(e){msg('コピーできませんでした。コード「'+N.code+'」を伝えてね',1)}});
+  try{navigator.clipboard.writeText(link).then(ok,()=>msg('コピーできませんでした。パーティーコード「'+N.code+'」を伝えてね',1))}catch(e){msg('コピーできませんでした。パーティーコード「'+N.code+'」を伝えてね',1)}});
  if(location.protocol==='file:')$('copy').hidden=true;
  addEventListener('pagehide',()=>{if(N.state!=='idle'){reset()}});
- try{const h=(location.hash||'').replace('#','').toUpperCase();if(/^[A-Z0-9]{4}$/.test(h)){ci.value=h;msg(ME.name?'招待コードが入っています。「参加する」を押してね':'招待コードが入っています。名前を入れて「参加する」を押してね');(ME.name?$('join'):nm).focus()}}catch(e){}
- render()}
+ try{const h=(location.hash||'').replace('#','').toUpperCase();if(/^[A-Z0-9]{4}$/.test(h)){ci.value=h;msg(ME.name?'パーティーコードが入っています。「参加する」を押してね':'パーティーコードが入っています。名前を入れて「参加する」を押してね');(ME.name?$('join'):nm).focus()}}catch(e){}
+ renderCtl(ME.ch);render()}
 init();
 })();
 </script>
