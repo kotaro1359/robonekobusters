@@ -2218,7 +2218,7 @@ function sync(){PL.visible=!(P.inv>0&&P.inv<.9&&Math.floor(T*20)%2);const[mx,my]
  function rfx(r){if(S!=='play'||r.d)return;const t=tOK(B)?B:null,a=t?ang(r,t):r.face;shots.push({x:r.x,y:r.y,vx:Math.cos(a)*SHOT_V,vy:Math.sin(a)*SHOT_V,t:0,d:0,r:7,tg:t,cos:1})}
  function proxy(g,slot){const rt=g.getObjectByName('CH_hyu');if(!rt)return null;const c=PAL[slot%4],pm=PMh.clone();pm.color.setHex(c[0]);pm.emissive.setHex(c[1]);let chg=null;
   rt.traverse(o=>{if(o.isMesh&&o.material===PMh)o.material=pm;if(o.name==='H_chg')chg=o});if(chg){chg.material=chg.material.clone();chg.visible=false}rt.visible=false;return{root:rt,pb:rt.children[0],pm,chg}}
- return{id:ID,name:NAME,ult:'びりびりビーム',build,show(on){root.visible=!!on},
+ return{id:ID,name:NAME,ult:'びりびりビーム',help:'<b>J</b>・左クリック ビームショット ／ <b>K</b>・右クリック 長押し チャージビーム ／ <b>L</b>・マウスのサイドボタン 突撃ラッシュ ／ ',build,show(on){root.visible=!!on},
   init(){Object.assign(P,{fire:0,qch:-1,qcd:0,mcd:0,rush:null,cbeam:null,uch:0,ua:0,uTick:0,chEnd:0,rushEnd:0});shots=[]},
   slot(i){const c=PAL[(i|0)%4];PMh.color.setHex(c[0]);EMI=c[1];PMh.emissive.setHex(EMI)},
   upd,tick,sync,vis,vfx,ground,wui,rsync,rground,rfx,proxy,
@@ -2417,7 +2417,7 @@ function sync(){PL.visible=!(P.inv>0&&P.inv<.9&&Math.floor(T*20)%2);const[mx,my]
  function proxy(g,slot){const rt=g.getObjectByName('CH_shiro');if(!rt)return null;const c=PAL[slot%4],pm=PM.clone();pm.color.setHex(c[0]);pm.emissive.setHex(c[1]);
   rt.traverse(o=>{if(o.isMesh&&o.material===PM)o.material=pm});const h=hnd(rt);if(h.gl)h.gl.material=PSWGL.clone();rt.visible=false;
   return{root:rt,h,pm,tr:mkTrail(new THREE.Color(c[2]).getHex(),26,.17)}}
- return{id:ID,name:NAME,ult:'みじん切り',build,show(on){root.visible=!!on},
+ return{id:ID,name:NAME,ult:'みじん切り',help:'<b>J</b>・左クリック 三段攻撃 ／ <b>K</b>・右クリック 神速アタック ／ ',build,show(on){root.visible=!!on},
   init(){Object.assign(P,{atk:null,aq:0,acd:0,dash:null,fin:0,mj:null,mcd:0,uch:0,fy:0});PTR.s=[]},
   slot(i){const c=PAL[(i|0)%4];PM.color.setHex(c[0]);EMI=c[1];PM.emissive.setHex(EMI)},
   upd,tick(){},sync,vis,vfx,ground,wui:null,rsync,rground:null,rfx,proxy,
@@ -2437,7 +2437,7 @@ function chSetup(s){const c=s&&chOK(s.char)?s.char:CH_NATIVE;MYCH=c;
  const need=s&&!s.solo?CH_FOREIGN.slice():(c!==CH_NATIVE?[c]:[]);
  for(const k of need){try{CHP[k]=CH_FACT[k]();CHP[k].build()}catch(e){console.error('キャラの準備に失敗',k,e);delete CHP[k]}}
  PK=c!==CH_NATIVE&&CHP[c]?CHP[c]:null;if(!PK)MYCH=CH_NATIVE;
- if(PK){pb.visible=false;PK.show(true);PK.slot(0);chTB()}
+ if(PK){pb.visible=false;PK.show(true);PK.slot(0);chTB();for(const q of document.querySelectorAll('p'))if(q.innerHTML.includes('<b>WASD</b>'))q.innerHTML=q.innerHTML.replace(/<b>J<\/b>[\s\S]*?(?=<b>Space<\/b>)/,PK.help)}
  chInstall()}
 function chInstall(){
  if(PK){
