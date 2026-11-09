@@ -40,6 +40,17 @@ button:disabled{cursor:default}
 .boss .bc{margin-top:auto;padding-top:10px;font-size:11.5px;color:var(--dim)}
 .boss .chk{position:absolute;right:12px;top:12px;width:30px;height:30px;border-radius:50%;display:none;align-items:center;justify-content:center;background:var(--c1);color:#08101e;font:900 17px var(--f);box-shadow:0 0 14px var(--c1)}
 .boss.on .chk{display:flex}
+.chars{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.chr{position:relative;display:grid;grid-template-columns:58px minmax(0,1fr);column-gap:12px;row-gap:1px;align-items:center;text-align:left;padding:10px 14px;border-radius:16px;min-height:88px;
+ border:1.5px solid rgba(160,205,255,.25);background:linear-gradient(180deg,rgba(16,26,50,.92),rgba(7,11,24,.92));box-shadow:0 8px 22px rgba(0,0,0,.35);transition:transform .15s,box-shadow .15s,border-color .15s}
+.chr svg{width:58px;height:58px;grid-row:1/4;filter:drop-shadow(0 3px 10px color-mix(in srgb,var(--cc) 45%,transparent))}
+.chr .cn{font:900 19px/1.2 var(--f);color:#fff}.chr .ct{font-size:11.5px;color:var(--cc)}.chr .cm{font-size:11px;line-height:1.45;color:var(--dim)}
+.chr:not(:disabled):hover{transform:translateY(-2px);border-color:color-mix(in srgb,var(--cc) 70%,transparent)}
+.chr.on{border:2.5px solid var(--cc);box-shadow:0 0 0 3px color-mix(in srgb,var(--cc) 22%,transparent),0 0 22px color-mix(in srgb,var(--cc) 40%,transparent)}
+.chr:disabled{opacity:.5}.chr.on:disabled{opacity:1}
+.chr .chk{position:absolute;right:10px;top:10px;width:24px;height:24px;border-radius:50%;display:none;align-items:center;justify-content:center;background:var(--cc);color:#08101e;font:900 14px var(--f)}
+.chr.on .chk{display:flex}
+.sec2{margin-top:20px}
 .dock{display:flex;gap:14px;align-items:stretch;margin-top:16px;flex-wrap:wrap}
 .diff{display:flex;gap:8px;flex:1;min-width:280px;padding:8px;border-radius:18px;background:rgba(8,13,26,.75);border:1px solid var(--line)}
 .diff button{flex:1;height:56px;border-radius:13px;border:1.5px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04);font:900 18px var(--n);letter-spacing:.06em;color:#8d99b3;transition:background .15s,color .15s}
@@ -51,6 +62,7 @@ button:disabled{cursor:default}
 .go b{font:900 30px/1.1 var(--f);letter-spacing:.14em}.go small{font-size:13px;opacity:.85}
 .go:not(:disabled):hover{transform:translateY(-2px);filter:brightness(1.06)}.go:not(:disabled):active{transform:translateY(1px)}
 .go:disabled{background:linear-gradient(180deg,#3a4458,#232a3a);border-color:rgba(255,255,255,.2);color:#aab4c8;box-shadow:none}
+.go.rdy{background:linear-gradient(180deg,#a8ffbe,#2ec27e);border-color:#e8fff0;color:#04240f;box-shadow:0 0 24px rgba(80,255,150,.45),0 8px 24px rgba(0,0,0,.4)}
 .note{min-height:22px;margin:10px 2px 0;font-size:13px;color:var(--gold)}
 .panel{border-radius:20px;padding:16px 18px;background:linear-gradient(180deg,rgba(16,26,50,.94),rgba(7,11,24,.94));border:1.5px solid rgba(160,205,255,.42);box-shadow:0 10px 34px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.07);margin-bottom:14px}
 .panel h3{margin:0 0 10px;font-size:16px;color:#fff;display:flex;align-items:baseline;gap:10px}.panel h3 span{font-size:12px;color:var(--dim)}
@@ -69,11 +81,12 @@ input:focus{border-color:var(--sky);box-shadow:0 0 0 3px rgba(159,216,255,.25)}i
 .codebox{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 12px;border-radius:13px;background:rgba(255,210,74,.09);border:1px solid rgba(255,210,74,.5)}
 .codebox small{display:block;font-size:11px;color:#ffe9a8}.codebox strong{font:900 32px/1.1 var(--n);letter-spacing:.2em;color:#fff6d0;text-shadow:0 0 12px rgba(255,190,60,.6)}
 #list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
-#list li{display:flex;align-items:center;gap:10px;min-height:38px;padding:4px 12px;border-radius:11px;background:rgba(255,255,255,.06);font-size:15px}
+#list li{display:flex;align-items:center;gap:8px;min-height:38px;padding:4px 12px;border-radius:11px;background:rgba(255,255,255,.06);font-size:15px}
 #list .dot{width:12px;height:12px;border-radius:50%;flex:none}
 #list .nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#fff}
-#list .you{font-size:11px;color:#0b1020;background:var(--sky);border-radius:7px;padding:1px 7px;margin-left:8px;vertical-align:2px}
-#list .st{font-size:12px;color:#9cffb0;white-space:nowrap}#list .st.pl{color:#ffd27a}
+#list .you{flex:none;font-size:11px;color:#0b1020;background:var(--sky);border-radius:7px;padding:1px 7px}
+#list .st{font-size:12px;color:#9cffb0;white-space:nowrap}#list .st.pl{color:#ffd27a}#list .st.wt{color:#9fb3d6}
+#list .cc{font-size:11px;padding:1px 7px;border-radius:7px;border:1px solid currentColor;white-space:nowrap;flex:none}
 #list svg{flex:none;filter:drop-shadow(0 0 4px rgba(255,200,40,.85))}
 #list li.empty{min-height:30px;background:none;border:1px dashed rgba(255,255,255,.16);color:#6a7891;font-size:12px;justify-content:center}
 .ft{display:flex;justify-content:flex-end}
@@ -93,7 +106,7 @@ footer{margin-top:20px;font-size:12.5px;color:var(--mute);text-align:center}foot
 @keyframes sp{to{transform:rotate(360deg)}}
 @media (prefers-reduced-motion:reduce){.spin{animation-duration:3s}.boss,.go{transition:none}}
 @media (max-width:940px){.grid{grid-template-columns:minmax(0,1fr)}.side{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px}.side .panel{margin:0}.side .how{grid-column:1/-1}}
-@media (max-width:680px){#app{padding:14px 12px 22px}.logo b{font-size:26px}.bosses{grid-template-columns:minmax(0,1fr)}.boss{min-height:0;display:grid;grid-template-columns:72px minmax(0,1fr);column-gap:14px;row-gap:2px;align-items:start}
+@media (max-width:680px){.chars{grid-template-columns:minmax(0,1fr)}.chr{min-height:0}#app{padding:14px 12px 22px}.logo b{font-size:26px}.bosses{grid-template-columns:minmax(0,1fr)}.boss{min-height:0;display:grid;grid-template-columns:72px minmax(0,1fr);column-gap:14px;row-gap:2px;align-items:start}
  .boss .emb{grid-row:1/5;width:72px;height:72px;margin:0}.boss .bc{padding-top:4px}.side{grid-template-columns:minmax(0,1fr)}.go{flex:1;min-width:0}.diff{min-width:0;flex-basis:100%}}
 </style>
 </head>
@@ -107,6 +120,8 @@ footer{margin-top:20px;font-size:12.5px;color:var(--mute);text-align:center}foot
   <section>
    <h2 class="sec">ボスをえらぶ <small id="selNote"></small></h2>
    <div class="bosses" id="bosses" role="radiogroup" aria-label="ボス"></div>
+   <h2 class="sec sec2">キャラをえらぶ <small id="chNote"></small></h2>
+   <div class="chars" id="chars" role="radiogroup" aria-label="自分のキャラ"></div>
    <div class="dock">
     <div class="diff" id="diff" role="radiogroup" aria-label="難易度"></div>
     <button class="go" id="go" type="button"><b>出撃！</b><small id="goSub">ひとりで</small></button>
@@ -134,16 +149,17 @@ footer{margin-top:20px;font-size:12.5px;color:var(--mute);text-align:center}foot
    <div class="panel how">
     <h3>遊び方</h3>
     <ol>
-     <li><b>ひとりで</b>：ボスと難易度を選んで「出撃！」</li>
+     <li><b>ひとりで</b>：ボス・キャラ・難易度を選んで「出撃！」</li>
      <li><b>みんなで</b>：だれか1人が「パーティーをつくる」→ 出た4文字のコード（または招待リンク）を仲間に送る</li>
      <li>仲間は名前とコードを入れて「参加する」</li>
-     <li>リーダーがボスと難易度を選んで「出撃！」→ 全員そろってバトル開始</li>
+     <li>それぞれキャラを選んで「準備OK」（準備OKの間はキャラが固定。もう一度押すと変えられる）</li>
+     <li>全員が準備OKになったら、リーダーがボスと難易度を選んで「出撃！」</li>
      <li>バトルが終わると、パーティーのままここに戻ってきます</li>
     </ol>
    </div>
   </aside>
  </div>
- <footer>ゲームは単体でも遊べます：<a href="1/">ロボネコ24号</a> ／ <a href="2/">ツキ王</a> ／ <a href="3/">朧宰相</a></footer>
+ <footer>ゲームは単体でも遊べます：<a href="1/">ロボネコ24号</a> ／ <a href="2/">ツキ王</a> ／ <a href="3/">ぐらりぼぉん</a></footer>
 </div>
 <div id="stage" hidden>
  <div id="load"><div class="lbox"><div class="spin"></div><b id="lTitle"></b><span id="lText"></span><button class="btn bs" id="lBack" type="button">待ち部屋にもどる</button></div></div>
@@ -152,15 +168,22 @@ footer{margin-top:20px;font-size:12.5px;color:var(--mute);text-align:center}foot
 <script>
 (()=>{'use strict';
 /* ================= 設定 ================= */
-const VER=1,PFX='rnb-lobby-v1-',CH='ABCDEFGHJKLMNPQRSTUVWXYZ23456789',
+const VER=2,PFX='rnb-lobby-v1-',CH='ABCDEFGHJKLMNPQRSTUVWXYZ23456789',
  LIBS=['https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js','https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js','https://cdnjs.cloudflare.com/ajax/libs/peerjs/1.5.4/peerjs.min.js'];
 const BOSS=[
  {id:1,dir:'1/',name:'ロボネコ24号',game:'ロボネコバスターズ',desc:'滑走路と高架の未来都市。ビームと突撃ラッシュで巨大ロボに立ち向かえ。',pc:'ヒュードロ',c1:'#5fe1ff',c2:'#1d5296',c3:'#0a1a34',
   svg:'<svg class="emb" viewBox="0 0 100 100" aria-hidden="true"><path d="M24 42L19 13L43 31Z M76 42L81 13L57 31Z" fill="#6aa6dc" stroke="#d6f0ff" stroke-width="2.5" stroke-linejoin="round"/><line x1="50" y1="30" x2="50" y2="15" stroke="#d6f0ff" stroke-width="3"/><circle cx="50" cy="12" r="5" fill="#ffd24a"/><rect x="17" y="29" width="66" height="54" rx="17" fill="#245a98" stroke="#d6f0ff" stroke-width="3"/><rect x="25" y="43" width="50" height="18" rx="9" fill="#071426"/><circle cx="39" cy="52" r="5.5" fill="#6af0ff"/><circle cx="61" cy="52" r="5.5" fill="#6af0ff"/><path d="M43 70Q50 75 57 70" stroke="#d6f0ff" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M10 54H17M83 54H90" stroke="#6af0ff" stroke-width="3" stroke-linecap="round"/></svg>'},
  {id:2,dir:'2/',name:'ツキ王',game:'武者の陣',desc:'剣が眠る古戦場。場外から飛んでくる魂を斬って、王に力を吸わせるな。',pc:'シロマル',c1:'#ffcf5a',c2:'#9a1a2a',c3:'#26080e',
   svg:'<svg class="emb" viewBox="0 0 100 100" aria-hidden="true"><path d="M58 10A36 36 0 1 0 90 62A29 29 0 1 1 58 10Z" fill="#ffe08a"/><g transform="rotate(-36 50 56)"><rect x="8" y="53" width="66" height="6" rx="3" fill="#eef3fb"/><rect x="74" y="50" width="5" height="12" rx="1.5" fill="#ffd24a"/><rect x="79" y="52.5" width="17" height="7" rx="2.5" fill="#8a1424"/></g></svg>'},
- {id:3,dir:'3/',name:'朧宰相',game:'朧月討魔伝',desc:'朧月の間で、宰相と二体の護衛を討て。その先には大妖魔オボロガミが待つ。',pc:'ツキカゲ',c1:'#d4b0ff',c2:'#5a2fa0',c3:'#150a2a',
+ {id:3,dir:'3/',name:'ぐらりぼぉん',game:'朧月討魔伝',desc:'朧月の間で、ぐらりぼぉんと二体の護衛を討て。その先には大妖魔オボロガミが待つ。',pc:'ツキカゲ',c1:'#d4b0ff',c2:'#5a2fa0',c3:'#150a2a',
   svg:'<svg class="emb" viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="42" r="35" fill="none" stroke="#c79bff" stroke-opacity=".35" stroke-width="7"/><circle cx="50" cy="42" r="27" fill="#ecdcff"/><path d="M8 62Q29 53 50 62T92 61" stroke="#b48cff" stroke-width="8" fill="none" stroke-linecap="round" opacity=".9"/><path d="M16 78Q37 69 58 78T96 75" stroke="#7a52c8" stroke-width="7" fill="none" stroke-linecap="round" opacity=".85"/><path d="M38 37L46 41M62 37L54 41" stroke="#4a1a7a" stroke-width="3.5" stroke-linecap="round"/></svg>'}];
+const CHARS=[
+ {id:'hyu',name:'ウォスパー',type:'ビームで戦う遠距離タイプ',moves:'ショット・チャージ・突撃ラッシュ／必殺：びりびりビーム',c:'#7dffc8',
+  svg:'<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M24 10 19 2M40 10 45 2" stroke="#ffd23f" stroke-width="3.5" stroke-linecap="round"/><path d="M32 8C19 8 12 17 12 28c0 8 3 13 7 17l-2 12 9-6h11c9-3 15-11 15-23C52 17 45 8 32 8Z" fill="#9ff2da" stroke="#e0fff6" stroke-width="2"/><circle cx="24.5" cy="27" r="6.5" fill="#173a6e" stroke="#f4f4f4" stroke-width="2.2"/><circle cx="39.5" cy="27" r="6.5" fill="#173a6e" stroke="#f4f4f4" stroke-width="2.2"/><circle cx="26" cy="25.5" r="2.2" fill="#6af0ff"/><circle cx="41" cy="25.5" r="2.2" fill="#6af0ff"/></svg>'},
+ {id:'shiro',name:'シロマル',type:'刀で斬りこむ剣士タイプ',moves:'三段攻撃・神速アタック／必殺：みじん切り',c:'#ffb46a',
+  svg:'<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M6 59 56 9" stroke="#eef4fb" stroke-width="3.4" stroke-linecap="round"/><path d="M11 50l7 7" stroke="#d8a838" stroke-width="4.5" stroke-linecap="round"/><path d="M14 31 12 10 27 20ZM50 31 52 10 37 20Z" fill="#f2a85c" stroke="#ffe0bc" stroke-width="1.5" stroke-linejoin="round"/><ellipse cx="32" cy="35" rx="19" ry="16.5" fill="#f2a85c"/><ellipse cx="32" cy="41" rx="9.5" ry="6.5" fill="#f4f0e8"/><circle cx="25" cy="32" r="3.3" fill="#1a1d26"/><circle cx="39" cy="32" r="3.3" fill="#1a1d26"/><circle cx="32" cy="38" r="1.8" fill="#ff9ab0"/><path d="M14 46h36" stroke="#c81e2a" stroke-width="4" stroke-linecap="round"/></svg>'},
+ {id:'kage',name:'ツキカゲ',type:'すばやく斬る忍びタイプ',moves:'三段こうげき・神速アタック／必殺：月影十連斬',c:'#9fb2ff',
+  svg:'<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M48 36l12-5M48 40l12 3" stroke="#4a5ad8" stroke-width="3.5" stroke-linecap="round"/><circle cx="32" cy="35" r="19" fill="#4a5ad8"/><path d="M14 37c8 5 28 5 36 0v4c-5 10-31 10-36 0Z" fill="#07060c"/><path d="M14 31c8 4 28 4 36 0" stroke="#07060c" stroke-width="5"/><path d="M21 30l8 3M43 30l-8 3" stroke="#ffc84a" stroke-width="3.6" stroke-linecap="round"/><path d="M29 11a7 7 0 1 0 8.6 9.4 5.6 5.6 0 1 1-8.6-9.4Z" fill="#dfe6f2"/></svg>'}];
 const DIF=[['NORMAL','#9fd8ff'],['HARD','#ffd24a'],['極','#ff6a6a']];
 const PCOL=['#7dffc8','#ff9ad0','#ffd24a','#9fb8ff'];
 const CROWN='<svg width="20" height="16" viewBox="-8 -7 16 11" aria-label="リーダー"><path d="M-6 3L-7-4L-3.2-.8L0-6L3.2-.8L7-4L6 3Z" fill="#ffd24a" stroke="#7a4a00" stroke-width="1.1" stroke-linejoin="round"/><rect x="-5.5" y="1.2" width="11" height="1.4" fill="#fff6c8"/></svg>';
@@ -169,9 +192,10 @@ const LS={g(k){try{return localStorage.getItem(k)}catch(e){return null}},s(k,v){
 const clean=v=>String(v||'').replace(/[\u0000-\u001f\u007f<>]/g,'').trim().slice(0,10);
 const cB=v=>{v=parseInt(v,10);return v>=1&&v<=3?v:1},cD=v=>{v=parseInt(v,10);return v>=0&&v<=2?v:0};
 const bossOf=b=>BOSS[cB(b)-1];
+const cC=v=>CHARS.some(c=>c.id===v)?v:'hyu',charOf=v=>CHARS.find(c=>c.id===cC(v));
 
 /* ================= 状態 ================= */
-const ME={name:clean(LS.g('rnb_name')),b:cB(LS.g('rnb_lobby_b')),d:cD(LS.g('rnb_lobby_d'))};
+const ME={name:clean(LS.g('rnb_name')),b:cB(LS.g('rnb_lobby_b')),d:cD(LS.g('rnb_lobby_d')),ch:cC(LS.g('rnb_lobby_ch')),rd:0};
 /* N：パーティーの通信（リーダーを中心にした星型。リーダー＝ホスト） */
 const N={state:'idle',busy:0,host:0,code:'',me:null,hostId:'',peer:null,conns:new Map(),hc:null,lp:new Map(),gp:new Map(),order:[],myLP:{},leaving:0};
 let G=null,lastSid='';
@@ -184,9 +208,12 @@ function msg(s,err){const el=$('msg');el.textContent=s||'';el.classList.toggle('
 function buildStatic(){
  const bx=$('bosses');for(const b of BOSS){const el=document.createElement('button');el.type='button';el.className='boss';el.dataset.b=b.id;el.setAttribute('role','radio');
   el.style.cssText='--c1:'+b.c1+';--c2:'+b.c2+';--c3:'+b.c3;
-  el.innerHTML=b.svg+'<span class="bn"></span><span class="bt"></span><span class="bd"></span><span class="bc"></span><span class="chk" aria-hidden="true">✓</span>';
-  el.querySelector('.bn').textContent=b.name;el.querySelector('.bt').textContent=b.game;el.querySelector('.bd').textContent=b.desc;el.querySelector('.bc').textContent='使うキャラ：'+b.pc;
+  el.innerHTML=b.svg+'<span class="bn"></span><span class="bt"></span><span class="bd"></span><span class="chk" aria-hidden="true">✓</span>';
+  el.querySelector('.bn').textContent=b.name;el.querySelector('.bt').textContent=b.game;el.querySelector('.bd').textContent=b.desc;
   el.addEventListener('click',()=>pick(b.id,null));bx.appendChild(el)}
+ const cx=$('chars');for(const c of CHARS){const el=document.createElement('button');el.type='button';el.className='chr';el.dataset.c=c.id;el.setAttribute('role','radio');el.style.setProperty('--cc',c.c);
+  el.innerHTML=c.svg+'<span class="cn"></span><span class="ct"></span><span class="cm"></span><span class="chk" aria-hidden="true">✓</span>';
+  el.querySelector('.cn').textContent=c.name;el.querySelector('.ct').textContent=c.type;el.querySelector('.cm').textContent=c.moves;el.addEventListener('click',()=>pickChar(c.id));cx.appendChild(el)}
  const dx=$('diff');DIF.forEach(([n,c],i)=>{const el=document.createElement('button');el.type='button';el.textContent=n;el.className=i===2?'kw':'';el.style.setProperty('--dc',c);el.setAttribute('role','radio');el.addEventListener('click',()=>pick(null,i));dx.appendChild(el)})}
 function hostLP(){return N.lp.get(N.hostId)||null}
 function inParty(){return N.state==='open'}
@@ -203,22 +230,28 @@ function render(){
  for(const el of $('bosses').children){const on=+el.dataset.b===s.b;el.classList.toggle('on',on);el.setAttribute('aria-checked',on?'true':'false');el.disabled=mem||!!G}
  [...$('diff').children].forEach((el,i)=>{const on=i===s.d;el.classList.toggle('on',on);el.setAttribute('aria-checked',on?'true':'false');el.disabled=mem||!!G});
  $('selNote').textContent=mem?'リーダーが選びます':'';
- const go=$('go'),sub=$('goSub');let note='';
+ const lock=!!G||(mem&&ME.rd);for(const el of $('chars').children){const on=el.dataset.c===ME.ch;el.classList.toggle('on',on);el.setAttribute('aria-checked',on?'true':'false');el.disabled=lock}
+ $('chNote').textContent=mem&&ME.rd?'準備OKの間は変えられません':party?'自分のキャラを選ぼう':'';
+ const go=$('go'),sub=$('goSub'),gb=go.querySelector('b');let note='';go.classList.remove('rdy');gb.textContent='出撃！';
  if(N.busy){go.disabled=true;sub.textContent='つないでいます…'}
- else if(!party){go.disabled=!!G;sub.textContent='ひとりで'}
- else if(mem){go.disabled=true;go.querySelector('b').textContent='出撃！';sub.textContent='リーダーの出撃を待っています';const hp=hostLP();if(hp&&hp.st==='game')note='リーダーはいまバトル中です。終わったら一緒に出撃できます'}
- else{const ids=memberIds().filter(id=>id!==N.me),idle=ids.filter(id=>!busyOf(id)),busy=ids.filter(busyOf);const n=Math.min(4,1+idle.length);
-  go.disabled=!!G;sub.textContent=n>1?n+'人で':'ひとりで（仲間を待つなら少し待ってね）';
-  if(!ids.length)note='コードか招待リンクを仲間に送って、参加を待とう';else if(busy.length)note=busy.map(nameOf).join('、')+' はバトル中なので、今回は参加しません';}
+ else if(!party){go.disabled=!!G;sub.textContent='ひとりで（'+charOf(ME.ch).name+'）'}
+ else if(mem){go.disabled=!!G;if(ME.rd){go.classList.add('rdy');gb.textContent='準備OK！';sub.textContent='押すと取り消し（キャラを変えられる）'}else{gb.textContent='準備OK';sub.textContent=charOf(ME.ch).name+' で決定する'}
+  const hp=hostLP();note=hp&&hp.st==='game'?'リーダーはいまバトル中です。終わったら一緒に出撃できます':ME.rd?'リーダーの出撃を待っています':'キャラを選んだら「準備OK」を押してね'}
+ else{const ids=memberIds().filter(id=>id!==N.me),idle=ids.filter(id=>!busyOf(id)),busy=ids.filter(busyOf),wait=idle.filter(id=>!lpOf(id).rd);const n=Math.min(4,1+idle.length);
+  go.disabled=!!G||wait.length>0;sub.textContent=wait.length?'準備OKを待っています（'+(idle.length-wait.length)+'/'+idle.length+'人）':n>1?n+'人で':'ひとりで（仲間を待つなら少し待ってね）';
+  if(!ids.length)note='コードか招待リンクを仲間に送って、参加を待とう';else if(wait.length)note=wait.map(nameOf).join('、')+' の準備OKを待っています';else if(busy.length)note=busy.map(nameOf).join('、')+' はバトル中なので、今回は参加しません';}
  $('note').textContent=note;
  $('v0').hidden=party;$('v1').hidden=!party;$('create').disabled=$('join').disabled=!!N.busy;$('leave').disabled=!!G;
  if(party){$('codeShow').textContent=N.code;const ul=$('list');ul.textContent='';const ids=memberIds();
   ids.forEach((id,i)=>{const li=document.createElement('li'),dot=document.createElement('span');dot.className='dot';dot.style.background=PCOL[i%4];li.appendChild(dot);
-   const nm=document.createElement('span');nm.className='nm';nm.textContent=nameOf(id);if(id===N.me){const y=document.createElement('span');y.className='you';y.textContent='あなた';nm.appendChild(y)}li.appendChild(nm);
-   if(id===N.hostId)li.insertAdjacentHTML('beforeend',CROWN);const st=document.createElement('span'),p=lpOf(id),bz=p.st==='game';st.className='st'+(bz?' pl':'');
-   st.textContent=bz?'バトル中（'+bossOf(p.b).name+'）':'待ち部屋';li.appendChild(st);ul.appendChild(li)});
+   const nm=document.createElement('span');nm.className='nm';nm.textContent=nameOf(id);li.appendChild(nm);if(id===N.me){const y=document.createElement('span');y.className='you';y.textContent='あなた';li.appendChild(y)}
+   const p=lpOf(id),ch=charOf(p.ch),cc=document.createElement('span');cc.className='cc';cc.style.color=ch.c;cc.textContent=ch.name;li.appendChild(cc);
+   if(id===N.hostId)li.insertAdjacentHTML('beforeend',CROWN);const st=document.createElement('span'),bz=p.st==='game',ld=id===N.hostId;st.className='st'+(bz?' pl':!ld&&!p.rd?' wt':'');
+   st.textContent=bz?'バトル中（'+bossOf(p.b).name+'）':ld?'':p.rd?'準備OK':'えらび中';li.appendChild(st);ul.appendChild(li)});
   if(ids.length<4){const li=document.createElement('li');li.className='empty';li.textContent='あと'+(4-ids.length)+'人まで参加できます';ul.appendChild(li)}}
  if(G&&!G.started)loadText()}
+function pickChar(c){if(G||(isMember()&&ME.rd))return;ME.ch=cC(c);LS.s('rnb_lobby_ch',ME.ch);if(inParty())lpSet({});ui()}
+function toggleReady(){if(!isMember()||G)return;ME.rd=ME.rd?0:1;lpSet({});ui()}
 function pick(b,d){if(isMember()||G)return;if(b!=null){ME.b=cB(b);LS.s('rnb_lobby_b',String(ME.b))}if(d!=null){ME.d=cD(d);LS.s('rnb_lobby_d',String(ME.d))}if(inParty())lpSet({sel:{b:ME.b,d:ME.d}});ui()}
 
 /* ================= 通信（PeerJS：ブラウザ同士を直接つなぐ） ================= */
@@ -228,14 +261,14 @@ const newCode=()=>{let s='';for(let i=0;i<4;i++)s+=CH[Math.floor(Math.random()*C
 const send=(c,m)=>{try{if(c&&c.open)c.send(m)}catch(e){}};
 const bcast=(m,ex)=>{for(const c of N.conns.values())if(c.peer!==ex)send(c,m)};
 function up(m){if(N.state!=='open')return;if(N.host)bcast(Object.assign({id:N.me},m));else send(N.hc,m)}
-function lpSet(patch){const p=Object.assign({},N.myLP);for(const k in patch){if(patch[k]==null)delete p[k];else p[k]=patch[k]}p.v=VER;p.nm=ME.name;if(!p.st)p.st='lobby';N.myLP=p;
+function lpSet(patch){const p=Object.assign({},N.myLP);for(const k in patch){if(patch[k]==null)delete p[k];else p[k]=patch[k]}p.v=VER;p.nm=ME.name;p.ch=ME.ch;p.rd=ME.rd?1:0;if(!p.st)p.st='lobby';N.myLP=p;
  if(N.state==='open'){N.lp.set(N.me,p);up({t:'p',p})}ui()}
 function errText(err){const t=err&&err.type;return t==='peer-unavailable'?'パーティーがみつかりません。コードを確かめてね':t==='browser-incompatible'?'このブラウザは通信に対応していません':
  t==='network'||t==='server-error'||t==='socket-error'||t==='socket-closed'?'通信サーバーにつながりませんでした。少し待ってもう一度ためしてね':'つながりませんでした'+(t?'（'+t+'）':'')}
 function setup(peer,host,code,id){Object.assign(N,{peer,host:host?1:0,code,me:id,hostId:host?id:PFX+code,state:'open',busy:0,leaving:0,conns:new Map(),lp:new Map(),gp:new Map(),order:[id]});
  N.myLP={};lpSet(host?{st:G?'game':'lobby',sel:{b:ME.b,d:ME.d},ord:[id]}:{st:G?'game':'lobby'});
  try{history.replaceState(null,'','#'+code)}catch(e){}msg(host?'パーティーをつくりました。コードを仲間に伝えよう':'パーティーに入りました');if(G&&G.view)G.view.rebuild();ui()}
-function reset(){const p=N.peer;N.leaving=1;for(const c of N.conns.values())try{c.close()}catch(e){}try{N.hc&&N.hc.close()}catch(e){}try{p&&p.destroy()}catch(e){}
+function reset(){const p=N.peer;N.leaving=1;ME.rd=0;for(const c of N.conns.values())try{c.close()}catch(e){}try{N.hc&&N.hc.close()}catch(e){}try{p&&p.destroy()}catch(e){}
  Object.assign(N,{peer:null,host:0,code:'',me:null,hostId:'',conns:new Map(),hc:null,lp:new Map(),gp:new Map(),order:[],myLP:{},state:'idle',busy:0});
  try{history.replaceState(null,'',location.pathname+location.search)}catch(e){}if(G&&G.view)G.view.rebuild();ui()}
 function closed(m){if(N.leaving||N.state==='idle')return;reset();N.leaving=0;msg(m,1);toast(m)}
@@ -311,13 +344,16 @@ const newSid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
 function sortie(){if(G||N.busy)return;const s=sel();
  if(!inParty()){startGame({sid:newSid(),b:s.b,d:s.d,solo:1});return}
  if(!N.host)return;const idle=memberIds().filter(id=>id!==N.me&&!busyOf(id)),sid=newSid();
+ if(idle.some(id=>!lpOf(id).rd))return;
  if(!idle.length){startGame({sid,b:s.b,d:s.d,solo:1});return}
- const part=[N.me,...idle].slice(0,4);lastSid=sid;lpSet({go:{sid,b:s.b,d:s.d,part}});startGame({sid,b:s.b,d:s.d,part})}
+ const part=[N.me,...idle].slice(0,4),chars={};for(const id of part)chars[id]=id===N.me?ME.ch:cC(lpOf(id).ch);
+ lastSid=sid;lpSet({go:{sid,b:s.b,d:s.d,part,chars}});startGame({sid,b:s.b,d:s.d,part,chars})}
 function checkGo(hp){const go=hp&&hp.go;if(!go||typeof go!=='object'||typeof go.sid!=='string')return;
  if(go.x){if(G&&G.sess.sid===go.sid&&!G.started)back('リーダーが出撃を取りやめました');return}
- if(go.sid===lastSid||G||!Array.isArray(go.part)||!go.part.includes(N.me))return;lastSid=go.sid;startGame({sid:go.sid,b:go.b,d:go.d,part:go.part})}
+ if(go.sid===lastSid||G||!Array.isArray(go.part)||!go.part.includes(N.me))return;lastSid=go.sid;startGame({sid:go.sid,b:go.b,d:go.d,part:go.part,chars:go.chars&&typeof go.chars==='object'?go.chars:null})}
 function startGame(o){if(G)return;const b=bossOf(o.b),solo=!!o.solo;
- const sess={v:1,sid:o.sid,b:b.id,d:cD(o.d),solo,leader:solo||!!N.host,leaderId:solo?null:N.hostId,me:solo?null:N.me,code:N.code,name:ME.name,part:solo?[]:o.part.slice(0,4)};
+ const myc=solo?ME.ch:cC(o.chars&&o.chars[N.me]?o.chars[N.me]:ME.ch);
+ const sess={v:1,sid:o.sid,b:b.id,d:cD(o.d),solo,leader:solo||!!N.host,leaderId:solo?null:N.hostId,me:solo?null:N.me,code:N.code,name:ME.name,part:solo?[]:o.part.slice(0,4),char:myc,chars:o.chars||null};
  G={sess,started:0,gs:'',view:null,t0:performance.now()};if(!solo){G.view=makeView(sess);sess.room=G.view.room;sess.members=G.view.ents}
  lpSet({st:'game',b:b.id});
  $('lTitle').textContent=b.name;$('lText').textContent='読み込んでいます…';$('load').hidden=false;$('stage').hidden=false;document.body.style.overflow='hidden';
@@ -331,7 +367,7 @@ function gameState(s){if(!G)return;G.gs=String(s||'');if(G.gs&&G.gs!=='title'&&!
 function back(m){if(!G)return;const g=G;G=null;clearInterval(g.iv);
  if(g.sess.leader&&!g.sess.solo&&!g.started){const go=N.myLP.go;if(go&&go.sid===g.sess.sid)lpSet({go:Object.assign({},go,{x:1})})}
  try{g.fr.src='about:blank'}catch(e){}g.fr.remove();$('stage').hidden=true;$('load').hidden=false;document.body.style.overflow='';
- if(inParty()){N.gp.delete(N.me);up({t:'gp',s:null,p:null})}lpSet({st:'lobby',b:null});if(m)toast(m);ui();try{$('go').focus()}catch(e){}}
+ if(inParty()){N.gp.delete(N.me);up({t:'gp',s:null,p:null})}if(!N.host)ME.rd=0;lpSet({st:'lobby',b:null});if(m)toast(m);ui();try{$('go').focus()}catch(e){}}
 
 /* ゲーム（iframe）から呼ばれる窓口 */
 window.RNB_LOBBY=Object.freeze({v:1,session:()=>G?G.sess:null,state:s=>gameState(s),back:m=>setTimeout(()=>back(typeof m==='string'?m:''),0)});
@@ -341,7 +377,7 @@ function init(){buildStatic();const nm=$('name'),ci=$('code');nm.value=ME.name;
  nm.addEventListener('input',()=>{const v=clean(nm.value);if(v){ME.name=v;LS.s('rnb_name',v);if(inParty())lpSet({})}});
  ci.addEventListener('input',()=>{const v=ci.value.toUpperCase().replace(/[^A-Z0-9]/g,'').slice(0,4);if(v!==ci.value)ci.value=v});
  ci.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();join()}});nm.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();nm.blur()}});
- $('create').addEventListener('click',create);$('join').addEventListener('click',join);$('leave').addEventListener('click',leave);$('go').addEventListener('click',sortie);
+ $('create').addEventListener('click',create);$('join').addEventListener('click',join);$('leave').addEventListener('click',leave);$('go').addEventListener('click',()=>{if(isMember())toggleReady();else sortie()});
  $('lBack').addEventListener('click',()=>back(''));
  $('copy').addEventListener('click',()=>{const link=location.href.split('#')[0]+'#'+N.code;const ok=()=>msg('招待リンクをコピーしました。仲間に送ってね');
   try{navigator.clipboard.writeText(link).then(ok,()=>msg('コピーできませんでした。コード「'+N.code+'」を伝えてね',1))}catch(e){msg('コピーできませんでした。コード「'+N.code+'」を伝えてね',1)}});
