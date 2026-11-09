@@ -1974,7 +1974,7 @@ const HX={clamp(o){inArena(o,PR+8)},
  push(){if(B.sky===0&&B.dying<=0&&B.z<60){const d=dist(B,P),mn=B.r*1.02+PR;if(d<mn){const a=ang(B,P);P.x=B.x+Math.cos(a)*mn;P.y=B.y+Math.sin(a)*mn}}
   for(const mo of mobs)if(!mo.dead&&mo.spawn<=0&&!mo.soul){const d=dist(mo,P),mn=mo.r+PR;if(d<mn&&d>0){const a=ang(mo,P);P.x=mo.x+Math.cos(a)*mn;P.y=mo.y+Math.sin(a)*mn}}},
  holdF(){return !!((TM.on&&TM.hold>=0&&keys.KeyF)||(NET.rv.t>0&&keys.KeyF))},
- src(k){return k==='rushFin'?'dash':k},tickP(){B.gT=Math.max(0,(B.gT||0)-DT)},swing(){},shotBall(){return false},hitH(e){return e===B?B.z+rnd(130,250):e.soul?70:55}};
+ src(k){return k==='rushFin'||k==='charge'?'dash':k},tickP(){B.gT=Math.max(0,(B.gT||0)-DT)},swing(){},shotBall(){return false},hitH(e){return e===B?B.z+rnd(130,250):e.soul?70:55}};
 
 /* ---------- キャラ：ウォスパー（ロボネコ24号の自分キャラ）をこのボス戦でも使えるようにする ---------- */
 function PKF_hyu(){
