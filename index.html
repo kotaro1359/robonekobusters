@@ -143,7 +143,6 @@ footer{margin:6px 0 0;padding:0 0 18px;font-size:12.5px;color:var(--mute);text-a
 .mvcap{position:absolute;left:3%;top:calc(7% + 14px);display:flex;flex-direction:column;gap:2px;padding-left:12px;border-left:6px solid var(--yel);text-shadow:0 2px 10px rgba(0,0,0,.8)}.mvcap small{font:700 11.5px var(--n);letter-spacing:.3em;color:var(--cy)}.mvcap b{font:400 clamp(16px,2.4vw,26px) var(--d);color:var(--yel)}
 .mvhud{position:absolute;right:3%;top:calc(7% + 14px);display:flex;flex-direction:column;align-items:flex-end;gap:2px;font-family:var(--n);text-shadow:0 2px 8px #000;opacity:0;transition:opacity .3s}.mvhud.on{opacity:1}
 .mvhud span{display:flex;align-items:baseline;gap:6px}.mvhud i{font:700 11px var(--f);font-style:normal;color:var(--cy);letter-spacing:.1em}.mvhud b{font:700 clamp(20px,3vw,34px)/1 var(--n);min-width:2.6em;text-align:right;color:#fff}.mvhud em{font:700 11px var(--n);font-style:normal;color:var(--dim)}
-.mvsub{position:absolute;left:0;right:0;bottom:calc(7% + 22px);text-align:center;font:400 clamp(20px,3.4vw,38px) var(--d);letter-spacing:.04em;opacity:0;transform:translateY(8px);transition:opacity .2s,transform .2s;text-shadow:0 4px 0 rgba(0,0,0,.6),0 0 22px rgba(90,170,255,.5)}.mvsub.on{opacity:1;transform:none}
 .mvcard{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;opacity:0;transform:scale(1.15);transition:opacity .35s,transform .45s}.mvcard.on{opacity:1;transform:none}
 .mvcard b{font:400 clamp(56px,11vw,130px)/1 var(--d);letter-spacing:.08em;color:var(--yel);text-shadow:0 6px 0 #7a3a00,0 0 40px rgba(255,170,40,.6);transform:skewX(-8deg)}
 .mvcard span{font:400 clamp(18px,2.8vw,32px) var(--d);letter-spacing:.06em;text-shadow:0 3px 0 rgba(0,0,0,.7)}
@@ -387,12 +386,12 @@ function play(o){stop();
  const TRN=new THREE.InstancedMesh(new THREE.TorusGeometry(10.5,.22,6,36),AM(0xc8a0ff,.55),8);TRN.frustumCulled=false;TUN.add(TRN);const _m4=new THREE.Matrix4();
 
  /* ---------- 画面の文字（帯・字幕・スキップ） ---------- */
- const UI=document.createElement('div');UI.className='mvui';UI.innerHTML='<div class="mvbar t"></div><div class="mvbar b"></div><div class="mvcap"><small>MISSION</small><b></b></div><div class="mvsub"></div>'+
+ const UI=document.createElement('div');UI.className='mvui';UI.innerHTML='<div class="mvbar t"></div><div class="mvbar b"></div><div class="mvcap"><small>MISSION</small><b></b></div>'+
   '<div class="mvhud"><span><i>スピード</i><b class="hs">0</b><em>km/h</em></span><span><i>ゲート同調</i><b class="hg">0</b><em>%</em></span></div><div class="mvcard"><b>出撃！</b><span></span></div><div class="mvst"></div><button type="button" class="mvskip">スキップ ▶▶</button>';
  root.appendChild(UI);UI.querySelector('.mvcap b').textContent='VS '+(o.boss||'');UI.querySelector('.mvcard span').textContent='VS '+(o.boss||'');
  const HUD=UI.querySelector('.mvhud'),HS=UI.querySelector('.hs'),HG=UI.querySelector('.hg');let hsv=-1,hgv=-1;
- const SUB=UI.querySelector('.mvsub'),CARD=UI.querySelector('.mvcard'),ST=UI.querySelector('.mvst'),SKB=UI.querySelector('.mvskip');
- const SUBS=[[0,2.7,'出撃準備！'],[2.8,4.3,'バスターズ号に乗りこめ！'],[4.4,5.8,'発進！'],[5.9,6.85,'フルスロットル！'],[6.9,7.95,'ウイング展開！'],[8.0,8.6,'テイクオフ！'],[8.65,9.35,'次元の裂け目へ突入！！']];
+ const CARD=UI.querySelector('.mvcard'),ST=UI.querySelector('.mvst'),SKB=UI.querySelector('.mvskip');
+ 
 
  /* ---------- 音（小さめ。効果音の音量設定に合わせる） ---------- */
  let AC=null,VOL=.22,eng=null;
@@ -501,7 +500,7 @@ function play(o){stop();
   R.render(SC,CAM);
   /* 重い端末では解像度を下げる（1秒ごとに見直す） */
   if(t>.3&&t<TUNT){fN++;fAcc+=rdt;if(fN>=30){const av=fAcc/fN;fN=fAcc=0;if(av>.023&&PR>.76){PR=Math.max(.75,PR-.25);R.setPixelRatio(PR);R.setSize(W0(),H0())}}}}
- function ui(t){let s='';for(const q of SUBS)if(t>=q[0]&&t<q[1])s=q[2];if(SUB.textContent!==s){SUB.textContent=s;SUB.classList.toggle('on',!!s)}
+ function ui(t){
   const wt=t>=TUNT;CARD.classList.toggle('on',wt);ST.classList.toggle('on',wt);SKB.classList.toggle('off',wt);UI.classList.toggle('fl',t>9.2&&t<9.5);
   HUD.classList.toggle('on',t>4.5&&!wt);const sv=wt?0:Math.round(Math.max(0,(vz(t-.05)-vz(t))/.05)*4.6/5)*5,gv=Math.round(sst(5.2,9.3,t)*100);if(sv!==hsv){hsv=sv;HS.textContent=sv}if(gv!==hgv){hgv=gv;HG.textContent=gv}}
  function finish(){if(done)return;done=true;engStop();if(!loadSent){loadSent=1;try{o.onLoad&&o.onLoad()}catch(e){}}try{o.onDone&&o.onDone()}catch(e){}}
