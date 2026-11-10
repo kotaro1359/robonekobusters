@@ -2230,7 +2230,7 @@ function sync(){const blink=P.inv>0&&P.inv<.9&&Math.floor(T*20)%2;PL.visible=!bl
  if(NET.on&&P.dead)PM.emissive.setHex(0x333a44)}
  function vis(){if(P.ultT>0)gp(GLW,P.x,P.y,46,160+Math.random()*60,'#ffe9a0',.5)}
  function vfx(){updSlash();updGhost()}
- function wui(pq){if(P.atk&&P.atk.n>1){X.save();X.globalAlpha=.85;txt(P.atk.n+'段',pq[0],pq[1]-34,P.atk.n===3?20:15,P.atk.n===3?'#fff2b0':'#dff0ff','center',null,{f:FONT});X.restore()}}
+ function wui(pq){}   // 「2段」「3段」の表示はなくした
  function rsync(r,h){const f=r.fl,cs=r.cs||{},b=cs.b|0,c=PAL[r.slot%4];r.g.position.y=r.d?1:0;h.swT+=DT;
   h.pb.rotation.x=lerp(h.pb.rotation.x,r.d?-1.4:f&32?-.6:b&2?.7:f&1?.3:f&16?.22:0,.35);h.pb.rotation.z=f&1?Math.sin(T*30)*.6:0;h.pb.position.y=f&16?Math.abs(Math.sin(T*16))*3:0;
   if(h.arm)h.arm.rotation.x=h.swT<.15?lerp(-2.4,.7,h.swT/.15):b&8?Math.sin(T*30)*2:lerp(h.arm.rotation.x,-.2,.2);
@@ -2252,7 +2252,7 @@ function sync(){const blink=P.inv>0&&P.inv<.9&&Math.floor(T*20)%2;PL.visible=!bl
   net(){return{b:(P.dash&&P.dash.ph===0?2:0)|(P.ultT>0?8:0),q:P.atk?P.atk.n:P.dash?3:0}},
   gs(){return[{k:'K',n:'神速アタック',f:1-P.kcd/3.5,rd:P.kcd<=0,c:'#59e0ff',s:P.kcd.toFixed(1),ic:icRush},{k:'SPACE',n:'回避',f:1-P.dcd/1.2,rd:P.dcd<=0,c:'#8affc1',s:P.dcd.toFixed(1),ic:icDodge}]},
   tbs(){return[{id:'xatk',x:872,y:450,r:54,k:'KeyJ',lab:'こうげき',c:'#ffb07a'},{id:'xdash',x:768,y:482,r:35,k:'KeyK',lab:'神速',c:'#59e0ff'},{id:'dodge',x:898,y:340,r:33},{id:'ult',x:808,y:280,r:31}]},
-  tb(b){if(b.id==='xatk')return[1,1,P.atk?'×'+P.atk.n:''];if(b.id==='xdash')return[1-P.kcd/3.5,P.kcd<=0,P.kcd<=0?'':P.kcd.toFixed(1)];if(b.id==='dodge')return[1-P.dcd/1.2,P.dcd<=0,P.dcd<=0?'':P.dcd.toFixed(1)];return null}}}
+  tb(b){if(b.id==='xatk')return[1,1,''];if(b.id==='xdash')return[1-P.kcd/3.5,P.kcd<=0,P.kcd<=0?'':P.kcd.toFixed(1)];if(b.id==='dodge')return[1-P.dcd/1.2,P.dcd<=0,P.dcd<=0?'':P.dcd.toFixed(1)];return null}}}
 
 /* ---- キャラ選択（待ち部屋モードでだけ動く。単体で開いたときは何もしない） ---- */
 const CHP={},CH_FOREIGN=['hyu', 'kage'],CH_TBN=['atk', 'dash'],CH_FACT={hyu:PKF_hyu,kage:PKF_kage};
