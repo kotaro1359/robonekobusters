@@ -69,6 +69,16 @@ button:disabled{cursor:default}
 .boss.on .chk,.chr.on .chk{display:flex}
 .boss:not(:disabled):not(.on):hover,.chr:not(:disabled):not(.on):hover{transform:translateY(-2px)}
 .boss:disabled:not(.on){opacity:.55}
+/* 難易度で、ボスの枠・相手パネルのふち・VSの字・出撃バーの色も変える */
+body[data-d="0"] .boss{--e:color-mix(in srgb,var(--c1) 22%,#3a4666);--p:linear-gradient(180deg,color-mix(in srgb,var(--c2) 18%,#2c3656),#222b48)}
+body[data-d="0"] .boss.on{--e:color-mix(in srgb,var(--c1) 55%,#aab4d0);--p:linear-gradient(180deg,color-mix(in srgb,var(--c2) 40%,#56607e),color-mix(in srgb,var(--c2) 22%,#3a4464))}
+body[data-d="0"] .show{--e:color-mix(in srgb,var(--c1) 50%,#aab4d0)}
+body[data-d="0"] .show::after{-webkit-text-stroke-color:color-mix(in srgb,var(--c1) 14%,transparent)}
+body[data-d="2"] .boss{--e:color-mix(in srgb,var(--c1) 45%,#000);--p:linear-gradient(180deg,color-mix(in srgb,var(--c2) 30%,#000),#05070f)}
+body[data-d="2"] .boss.on{--e:var(--c1);--p:linear-gradient(180deg,color-mix(in srgb,var(--c2) 62%,#000),color-mix(in srgb,var(--c2) 26%,#000))}
+body[data-d="2"] .boss.on::before,body[data-d="2"] .show::before{inset:4px}
+body[data-d="2"] .show::after{-webkit-text-stroke:3px color-mix(in srgb,var(--c1) 60%,transparent)}
+body[data-d="0"] .dkin{border-left-color:#9fd8ff}body[data-d="2"] .dkin{border-left-color:#ff4d5e;border-color:#7a2a3a;border-left-color:#ff4d5e}
 /* ---- キャラ ---- */
 .chars{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
 .chr{--e:#2a3b6c;display:grid;grid-template-columns:64px minmax(0,1fr);column-gap:12px;align-items:center;text-align:left;padding:12px 14px;min-height:96px;transition:transform .12s}
@@ -621,7 +631,7 @@ let uiQ=0;function ui(){if(uiQ)return;uiQ=1;const go=()=>{if(!uiQ)return;uiQ=0;r
 function render(){
  const s=sel(),mem=isMember(),party=inParty();
  {const b=bossOf(s.b),sg=$('stg');if(sg.dataset.b!==String(b.id)){sg.dataset.b=b.id;sg.style.cssText='--c1:'+b.c1+';--c2:'+b.c2+';--c3:'+b.c3;$('stgArt').innerHTML=b.svg;$('stgName').textContent=b.name;$('stgGame').textContent=b.game;$('stgDesc').textContent=b.desc}
-  sg.dataset.d=s.d;$('sum').textContent='VS '+b.name+' ／ '+DIF[s.d][0]+' ／ '+charOf(ME.ch).name}
+  sg.dataset.d=s.d;document.body.dataset.d=s.d;$('sum').textContent='VS '+b.name+' ／ '+DIF[s.d][0]+' ／ '+charOf(ME.ch).name}
  for(const el of $('bosses').children){const on=+el.dataset.b===s.b;el.classList.toggle('on',on);el.setAttribute('aria-checked',on?'true':'false');el.disabled=mem||!!G}
  [...$('diff').children].forEach((el,i)=>{const on=i===s.d;el.classList.toggle('on',on);el.setAttribute('aria-checked',on?'true':'false');el.disabled=mem||!!G});
  $('selNote').textContent=mem?'リーダーが選びます':'';
