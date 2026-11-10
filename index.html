@@ -328,6 +328,32 @@ function play(o){stop();
  const UND=L(new THREE.PlaneGeometry(3.6,7).rotateX(-PI/2),AM(0x40e8ff,0),VB,0,.08,0);
  V.position.set(0,0,-1.5);
 
+ /* ---------- 基地のかざり（外：ネコ耳・目の窓・ひげのネオン・司令塔・レーダー・誘導灯／中：モニター・ホログラム） ---------- */
+ const EXT=new THREE.Group();BASE.add(EXT);const BNAVY=LM(0x24345e),BGOLD=LM(0xd8a838,{emissive:0x4a3000}),UB=BOX(1,1,1);
+ const IQ=new THREE.Quaternion(),IE=new THREE.Euler(),IS=new THREE.Vector3(),IP=new THREE.Vector3(),IM4=new THREE.Matrix4();
+ const inst=(mat,list,par)=>{const im=new THREE.InstancedMesh(UB,mat,list.length);list.forEach((a,i)=>{IE.set(0,0,a[6]||0);IQ.setFromEuler(IE);IP.set(a[0],a[1],a[2]);IS.set(a[3],a[4],a[5]);IM4.compose(IP,IQ,IS);im.setMatrixAt(i,IM4)});im.frustumCulled=false;par.add(im);return im};
+ const EYEG=[];for(const s of[-1,1]){
+  const ear=L(CO(5.2,8.5,4),BNAVY,EXT,s*13.5,19.2,-5);ear.rotation.y=PI/4;const ei=L(CO(2.9,5.2,4),LM(0xff8fb0,{emissive:0x8a2848}),EXT,s*13.5,18.3,-6.9);ei.rotation.y=PI/4;
+  const e=L(new THREE.CircleGeometry(1.9,20),BM(0x8ff6ff),EXT,s*11.5,10.4,-10.56);e.rotation.y=PI;L(BOX(.55,3,.06),BM(0x0a1830),EXT,s*11.5,10.4,-10.6);const g=spr(0x60e8ff,10,.5,EXT);g.position.set(s*11.5,10.4,-11.2);EYEG.push(g);
+  L(CY(2.6,1.9,2.4,10),BNAVY,EXT,s*25,24.6,-6);L(CY(2.7,2.7,.7,10),BM(0x8ff0ff),EXT,s*25,24.9,-6)}
+ inst(AM(0x5fe8ff,.95),[[-19.6,7,-10.56,.25,14,.12],[19.6,7,-10.56,.25,14,.12],[-8.3,7,-10.56,.2,14,.12],[8.3,7,-10.56,.2,14,.12],[-20.55,7,-9.5,.12,14,.25],[20.55,7,-9.5,.12,14,.25],[-25,18,-7.65,.2,10,.12],[25,18,-7.65,.2,10,.12]],EXT);
+ inst(AM(0xffd24a,.9),[-1,1].flatMap(s=>[0,1,2].map(k=>[s*10.7,3.4+k*1.2,-10.56,3.4,.14,.1,s*(k-1)*.22])),EXT);
+ inst(BGOLD,[[-12.25,13.7,-10.56,15.5,.5,.2],[12.25,13.7,-10.56,15.5,.5,.2],[-13.5,15.2,-5,7.6,.4,7.6],[13.5,15.2,-5,7.6,.4,7.6],[-20.2,.5,-10.4,1.4,1,1.4],[20.2,.5,-10.4,1.4,1,1.4]],EXT);
+ const mkG=o2=>inst(AM(0xffd24a,.9),[-1,1].flatMap(s=>[0,1,2,3,4].map(k=>[s*5.7,.12,-13-(k*2+o2)*3.6,.7,.12,1.6])),EXT),GLA=mkG(0),GLB=mkG(1);
+ L(CY(3,4.2,5,8),BNAVY,EXT,0,17.5,4);L(CY(3.7,3.3,1.6,8),BM(0x8ff0ff),EXT,0,20.7,4);L(CY(2.2,3.8,.9,8),BGOLD,EXT,0,21.9,4);L(CY(.15,.15,7,6),LM(0x8890a8),EXT,0,25.8,4);
+ const HRG=new THREE.Group();HRG.position.set(0,25,4);EXT.add(HRG);{const a=L(new THREE.TorusGeometry(5.4,.16,6,40),AM(0xffd24a,.9),HRG);a.rotation.x=1.2;const b=L(new THREE.TorusGeometry(4.2,.12,6,36),AM(0x5fe8ff,.9),HRG);b.rotation.x=1.2;b.rotation.y=1.9}
+ {const t2=spr(0xffe6a0,6,.9,EXT);t2.position.set(0,29.4,4)}
+ const RAD=new THREE.Group();RAD.position.set(-7.5,15,7);EXT.add(RAD);L(CY(.3,.4,2,6),LM(0x8890a8),RAD,0,1,0);{const d=L(new THREE.SphereGeometry(2.1,12,6,0,TAU,0,PI/2),LM(0xd8dce8,{side:THREE.DoubleSide}),RAD,0,3,0);d.rotation.x=-1.05}
+ {const BAN=BM(0xffffff,{map:tex(128,256,(g,w,h)=>{g.fillStyle='#16254e';g.fillRect(0,0,w,h);g.strokeStyle='#ffc83a';g.lineWidth=8;g.strokeRect(6,6,w-12,h-12);g.fillStyle='#ffc83a';const c=w/2,y=96;
+   g.beginPath();g.moveTo(c-34,y-6);g.lineTo(c-30,y-44);g.lineTo(c-8,y-22);g.lineTo(c+8,y-22);g.lineTo(c+30,y-44);g.lineTo(c+34,y-6);g.arc(c,y+8,36,-.2,PI+.2);g.fill();g.fillStyle='#16254e';g.beginPath();g.arc(c-14,y+6,6,0,TAU);g.arc(c+14,y+6,6,0,TAU);g.fill();
+   g.font='900 34px "Chakra Petch",sans-serif';g.textAlign='center';g.fillStyle='#ffc83a';g.fillText('RNB',c,196);g.fillRect(24,214,w-48,6)})});
+  for(const s of[-1,1])L(new THREE.PlaneGeometry(3.4,6.8),BAN,EXT,s*15.4,9.2-2.2,-10.58).rotation.y=PI;
+  const PNL=BM(0xffffff,{map:tex(256,160,(g,w,h)=>{g.fillStyle='#06142a';g.fillRect(0,0,w,h);g.strokeStyle='#38c8ff';g.lineWidth=5;g.strokeRect(5,5,w-10,h-10);g.lineWidth=2;for(const r of[18,36,54]){g.beginPath();g.arc(72,80,r,0,TAU);g.stroke()}g.beginPath();g.moveTo(72,80);g.lineTo(118,46);g.stroke();
+   g.fillStyle='#ffd24a';g.beginPath();g.arc(96,64,5,0,TAU);g.fill();for(let i=0;i<6;i++){g.fillStyle=i%2?'#38c8ff':'#7dffc8';g.fillRect(150,26+i*20,30+((i*37)%60),10)}})});
+  for(const s of[-1,1])L(new THREE.PlaneGeometry(5,3.2),PNL,BASE,s*7.9,8.5,13.4).rotation.y=PI}
+ inst(AM(0x5fe8ff,.9),[[0,5.5,13.42,38,.14,.1],...[-1,1].flatMap(s=>[-6,2,10].map(z=>[s*19.42,7,z,.14,14,.3]))],BASE);
+ L(CY(1.6,1.9,1,10),LM(0x39405a),BASE,10.5,.5,10.8);const HOLO=new THREE.Group();HOLO.position.set(10.5,2.6,10.8);BASE.add(HOLO);{const m=AM(0x7ff0ff,.85);L(new THREE.TorusGeometry(1.25,.05,6,28),m,HOLO).rotation.x=PI/2;L(new THREE.TorusGeometry(1,.05,6,24),m,HOLO).rotation.x=.5;spr(0x7ff0ff,1.6,.9,HOLO)}
+
  /* ---------- キャラ（参加人数ぶん） ---------- */
  const CH=(o.chars||[]).slice(0,4);if(!CH.length)CH.push({ch:'hyu',name:'',col:'#7dffc8'});
  function mkChar(c){const g=new THREE.Group(),b=new THREE.Group();g.add(b);const parts={g,b};
@@ -411,6 +437,7 @@ function play(o){stop();
  /* 車の位置（時刻→z）：基地を出るまでゆっくり → 道路で一気に加速 */
  function vz(t){if(t<4.65)return VZ0;if(t<=TF0)return VZ0-148.5*Math.pow((t-4.65)/3.35,2.2);const q=Math.min(t-TF0,TFD);return -150-(97.5*q-8.73*q*q)}
  /* 離陸してからの高さ（u:0→1） */
+ const HW0=5.9,HWK=1.55,XT=(TF0-HW0)*(HWK-1),warp=r=>r<HW0?r:r<HW0+(TF0-HW0)*HWK?HW0+(r-HW0)/HWK:r-XT;   // 高速を走るところだけ時間を長く
  const fy=u=>{u=cl(u,0,1);return 17*u*u*(3-2*u)};
  let last=performance.now(),t0=performance.now(),tt=0,raf=0,done=false,skipped=false,ci=0,started=0,loadSent=0,fN=0,fAcc=0;
  function setT(t){
@@ -450,6 +477,7 @@ function play(o){stop();
   /* 衝撃波の輪 */
   {const r=RINGS[0],k=(t-TF0)/.7;r.visible=k>0&&k<1;if(r.visible){r.position.set(0,.25,-150);r.scale.setScalar(1.5+k*17);r.material.opacity=.9*(1-k)}
    for(let i=1;i<4;i++){const q=RINGS[i],u0=.18+i*.2,k2=(fu-u0)/.22;q.visible=!inT&&t>TF0&&k2>0&&k2<1;if(q.visible){q.position.set(0,fy(u0),vz(TF0+u0*TFD));q.scale.setScalar(2.2+k2*8);q.material.opacity=.8*(1-k2)}}}
+  EXT.visible=t>=4.3;HRG.rotation.y=t*1.1;RAD.rotation.y=t*1.5;HOLO.rotation.y=t*2;{const c=Math.floor(t*6)%2;GLA.material.opacity=c?.95:.2;GLB.material.opacity=c?.2:.95;for(const g of EYEG)g.material.opacity=.45+Math.sin(t*4)*.15}
   /* --- 基地のシャッター --- */
   SHUT.position.y=3.15+sst(4.25,4.7,t)*6.6;
   BLINK.forEach((s,i)=>s.material.opacity=Math.floor(t*2+i)%2?1:.15);SL.forEach((g,i)=>{g.rotation.z=Math.sin(t*.7+i*2)*.5;g.rotation.x=Math.cos(t*.5+i)*.3});
@@ -466,7 +494,7 @@ function play(o){stop();
  function camAt(t){let px,py,pz,lx,ly,lz,fov=52;const vzz=V.position.z;
   if(t<2.7){const u=sst(0,2.7,t);px=lerp(-2.6,2.2,u);py=lerp(1.5,1.9,u);pz=lerp(3.0,3.5,u);lx=lerp(-.6,.5,u);ly=1.15;lz=9.6;fov=54}
   else if(t<4.35){const u=sst(2.7,4.35,t);px=lerp(6.8,5,u);py=lerp(3.2,3.9,u);pz=lerp(10.5,9.2,u);lx=0;ly=lerp(1.4,2,u);lz=lerp(5,1.2,u)}
-  else if(t<5.9){const u=sst(4.35,5.9,t);px=lerp(7.5,11,u);py=lerp(1.6,3.2,u);pz=lerp(-25,-31,u);lx=lerp(0,0,u);ly=lerp(3,2.2,u);lz=Math.min(-8,vzz-1);fov=lerp(48,58,u)}
+  else if(t<5.9){const u=sst(4.35,5.9,t);px=lerp(15,11,u);py=lerp(1.2,3,u);pz=lerp(-45,-34,u);lx=0;ly=lerp(11.5,2.6,sst(.2,.9,u));lz=Math.min(-8,vzz-1);fov=lerp(60,56,u)}
   else if(t<6.9){const u=(t-5.9);px=-6.4;py=.8+u*.3;pz=vzz+lerp(-6,2,u);lx=0;ly=1.5;lz=vzz-.6;fov=60}
   else if(t<TF0){const u=sst(6.9,TF0,t);px=lerp(3.8,1.6,u)+Math.sin(t*1.3)*.4;py=lerp(4.4,3.1,u);pz=vzz+lerp(12.5,9.5,u);lx=0;ly=lerp(2.2,5.5,u);lz=vzz-30;fov=lerp(58,76,u)}
   else if(t<8.55){const u=(t-TF0)/.55;px=15;py=1.3;pz=-170;lx=0;ly=V.position.y+1.5;lz=vzz;fov=lerp(50,44,u)}
@@ -487,7 +515,7 @@ function play(o){stop();
    s.m.position.set(CAM.position.x+Math.cos(s.a)*s.r,CAM.position.y+Math.sin(s.a)*s.r*.6,CAM.position.z+s.z);s.m.material.opacity=.45*a}}
  let cueI=0;
  function frame(now){raf=requestAnimationFrame(frame);if(!started){started=1;t0=last=now;cvEl.classList.add('on')}
-  let dt=Math.min(.05,(now-last)/1000);const rdt=(now-last)/1000;last=now;let t=(now-t0)/1000;if(skipped&&t<TUNT){t0=now-TUNT*1000;t=TUNT}tt=t;
+  let dt=Math.min(.05,(now-last)/1000);const rdt=(now-last)/1000;last=now;let rt=(now-t0)/1000;if(skipped&&rt<TUNT+XT){t0=now-(TUNT+XT)*1000;rt=TUNT+XT}const t=warp(rt);tt=t;
   while(cueI<CUES.length&&CUES[cueI][0]<=t){if(!skipped)try{CUES[cueI][1]()}catch(e){}cueI++}
   if(eng)engSet(sst(4.6,8.9,t));
   setT(t);camAt(t);fx(t,dt);
@@ -503,9 +531,9 @@ function play(o){stop();
  const onRs=()=>{R.setSize(W0(),H0());CAM.aspect=W0()/H0();CAM.updateProjectionMatrix()};addEventListener('resize',onRs);
  const doSkip=()=>{if(done)return;skipped=true;engStop();finish()};
  SKB.addEventListener('click',doSkip);const onKey=e=>{if(e.code==='Enter'||e.code==='Space'||e.code==='Escape'){e.preventDefault();doSkip()}};addEventListener('keydown',onKey);
- const tm=setTimeout(finish,TOTAL*1000+200);   // 裏のタブでも時間どおりに「終わった」にする
+ const tm=setTimeout(finish,(TOTAL+XT)*1000+200);   // 裏のタブでも時間どおりに「終わった」にする
  /* 再生の前に：材質（シェーダー）と画像をぜんぶ準備しておく。こうしないと最初の数コマがカクつく */
- try{setT(0);camAt(0);TUN.visible=true;WORLD.visible=true;for(const r of RINGS)r.visible=true;for(const q of SPD)q.m.visible=true;R.compile(SC,CAM);if(R.initTexture)for(const x of[TT,SWIRL,ROADT,GLOW,EMB,MON])R.initTexture(x);R.render(SC,CAM);setT(0)}catch(e){}
+ try{setT(0);camAt(0);EXT.visible=true;TUN.visible=true;WORLD.visible=true;for(const r of RINGS)r.visible=true;for(const q of SPD)q.m.visible=true;R.compile(SC,CAM);if(R.initTexture)for(const x of[TT,SWIRL,ROADT,GLOW,EMB,MON])R.initTexture(x);R.render(SC,CAM);setT(0)}catch(e){}
  raf=requestAnimationFrame(frame);
  let stopped=0;M={stop(){if(stopped)return;stopped=1;cancelAnimationFrame(raf);clearTimeout(tm);removeEventListener('resize',onRs);removeEventListener('keydown',onKey);engStop();
    SC.traverse(q=>{if(q.geometry)q.geometry.dispose();const ms=q.material?(Array.isArray(q.material)?q.material:[q.material]):[];for(const m of ms){if(m.map)m.map.dispose();if(m.emissiveMap&&m.emissiveMap!==m.map)m.emissiveMap.dispose();m.dispose()}});
