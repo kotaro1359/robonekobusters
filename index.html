@@ -40,7 +40,7 @@ button:disabled{cursor:default}
 .sec::before{content:"";width:8px;height:20px;background:var(--yel);transform:skewX(-14deg)}
 .sec small{font:700 12.5px var(--f);color:var(--yel)}
 /* ---- 相手のステージ（選んだボスで色が変わる） ---- */
-.show{--cut:22px;--e:var(--c1);--L:color-mix(in srgb,var(--c3) 45%,#465070);--R:color-mix(in srgb,var(--c2) 40%,#5c6684);--p:linear-gradient(112deg,var(--L) 0 44%,var(--R) 44% 100%);display:grid;grid-template-columns:230px minmax(0,1fr);gap:8px 22px;align-items:center;padding:20px 26px 20px 18px;min-height:250px}
+.show{--cut:22px;--e:var(--c1);--L:color-mix(in srgb,var(--c3) 62%,#3a4462);--R:color-mix(in srgb,var(--c2) 60%,#4a5474);--p:linear-gradient(112deg,var(--L) 0 44%,var(--R) 44% 100%);display:grid;grid-template-columns:230px minmax(0,1fr);gap:8px 22px;align-items:center;padding:20px 26px 20px 18px;min-height:250px}
 .show[data-d="1"]{--L:var(--c3);--R:color-mix(in srgb,var(--c2) 80%,#000)}
 .show[data-d="2"]{--L:color-mix(in srgb,var(--c3) 35%,#000);--R:color-mix(in srgb,var(--c2) 52%,#000);--p:radial-gradient(120% 140% at 78% 40%,transparent 30%,rgba(0,0,0,.6) 100%),linear-gradient(112deg,var(--L) 0 44%,var(--R) 44% 100%)}
 .show::after{content:"VS";position:absolute;right:10px;top:-22px;font:400 150px/1 var(--d);color:transparent;-webkit-text-stroke:2px color-mix(in srgb,var(--c1) 26%,transparent);pointer-events:none}
@@ -70,8 +70,8 @@ button:disabled{cursor:default}
 .boss:not(:disabled):not(.on):hover,.chr:not(:disabled):not(.on):hover{transform:translateY(-2px)}
 .boss:disabled:not(.on){opacity:.55}
 /* 難易度で、ボスの枠・相手パネルのふち・VSの字・出撃バーの色も変える */
-body[data-d="0"] .boss{--e:color-mix(in srgb,var(--c1) 22%,#3a4666);--p:linear-gradient(180deg,color-mix(in srgb,var(--c2) 18%,#2c3656),#222b48)}
-body[data-d="0"] .boss.on{--e:color-mix(in srgb,var(--c1) 55%,#aab4d0);--p:linear-gradient(180deg,color-mix(in srgb,var(--c2) 40%,#56607e),color-mix(in srgb,var(--c2) 22%,#3a4464))}
+body[data-d="0"] .boss{--e:color-mix(in srgb,var(--c1) 30%,#34405e);--p:linear-gradient(180deg,color-mix(in srgb,var(--c2) 26%,#283250),#1e2742)}
+body[data-d="0"] .boss.on{--e:color-mix(in srgb,var(--c1) 68%,#aab4d0);--p:linear-gradient(180deg,color-mix(in srgb,var(--c2) 58%,#4a5474),color-mix(in srgb,var(--c2) 34%,#343e5c))}
 body[data-d="0"] .show{--e:color-mix(in srgb,var(--c1) 50%,#aab4d0)}
 body[data-d="0"] .show::after{-webkit-text-stroke-color:color-mix(in srgb,var(--c1) 14%,transparent)}
 body[data-d="2"] .boss{--e:color-mix(in srgb,var(--c1) 45%,#000);--p:linear-gradient(180deg,color-mix(in srgb,var(--c2) 30%,#000),#05070f)}
@@ -79,6 +79,13 @@ body[data-d="2"] .boss.on{--e:var(--c1);--p:linear-gradient(180deg,color-mix(in 
 body[data-d="2"] .boss.on::before,body[data-d="2"] .show::before{inset:4px}
 body[data-d="2"] .show::after{-webkit-text-stroke:3px color-mix(in srgb,var(--c1) 60%,transparent)}
 body[data-d="0"] .dkin{border-left-color:#9fd8ff}body[data-d="2"] .dkin{border-left-color:#ff4d5e;border-color:#7a2a3a;border-left-color:#ff4d5e}
+/* 極：ロビー全体を暗くして、後ろにオーブ */
+body::after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(120% 90% at 50% 40%,rgba(30,0,10,.35),rgba(0,0,0,.82));opacity:0;transition:opacity .35s}
+body[data-d="2"]::after{opacity:1}
+#orbs{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:0;transition:opacity .5s}#orbs.on{opacity:1}
+#app{position:relative;z-index:1}
+body[data-d="2"] .pn.box,body[data-d="2"] .chr:not(.on){--p:linear-gradient(180deg,#121a34,#0a1022)}
+.keys li.sp{box-shadow:inset 5px 0 0 var(--sc,transparent);padding-left:10px}.keys .sn{color:var(--sc);font-weight:800}
 /* ---- キャラ ---- */
 .chars{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
 .chr{--e:#2a3b6c;display:grid;grid-template-columns:64px minmax(0,1fr);column-gap:12px;align-items:center;text-align:left;padding:12px 14px;min-height:96px;transition:transform .12s}
@@ -107,7 +114,7 @@ body[data-d="0"] .dkin{border-left-color:#9fd8ff}body[data-d="2"] .dkin{border-l
 .ctlg{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:20px}.ctlg h4{margin:0 0 8px;font-size:12.5px;color:var(--cy);letter-spacing:.06em}
 .keys{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:5px}
 .keys li{display:grid;grid-template-columns:118px minmax(0,1fr);align-items:center;gap:10px;font-size:13px;color:#dbe6fb;line-height:1.45}
-.keys li.sp{background:rgba(255,210,58,.09);padding:3px 0}
+.keys li.sp{background:rgba(255,255,255,.05);padding:3px 0}
 .keys .k{display:flex;flex-wrap:wrap;gap:4px;justify-content:flex-end}
 .keys kbd{display:inline-flex;align-items:center;justify-content:center;min-width:26px;height:24px;padding:0 6px;border-radius:5px;background:#eef2ff;color:#101a30;font:700 12.5px var(--n);box-shadow:0 3px 0 #6a7898}
 .keys kbd.m{font:800 11px var(--f)}.keys small{color:var(--dim);font-size:11.5px}
@@ -571,22 +578,36 @@ const BOSS=[
 const CHARS=[
  {id:'hyu',name:'ウォスパー',type:'ビームで戦う遠距離タイプ',moves:'ショット・チャージ・突撃ラッシュ／必殺：びりびりビーム',c:'#7dffc8',
   svg:'<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M24 10 19 2M40 10 45 2" stroke="#ffd23f" stroke-width="3.5" stroke-linecap="round"/><path d="M32 8C19 8 12 17 12 28c0 8 3 13 7 17l-2 12 9-6h11c9-3 15-11 15-23C52 17 45 8 32 8Z" fill="#9ff2da" stroke="#e0fff6" stroke-width="2"/><circle cx="24.5" cy="27" r="6.5" fill="#173a6e" stroke="#f4f4f4" stroke-width="2.2"/><circle cx="39.5" cy="27" r="6.5" fill="#173a6e" stroke="#f4f4f4" stroke-width="2.2"/><circle cx="26" cy="25.5" r="2.2" fill="#6af0ff"/><circle cx="41" cy="25.5" r="2.2" fill="#6af0ff"/></svg>'},
- {id:'shiro',name:'シロマル',type:'刀で斬りこむ剣士タイプ',moves:'三段攻撃・神速アタック／必殺：みじん切り',c:'#ffb46a',
+ {id:'shiro',name:'シロマル',type:'刀で斬りこむ剣士タイプ',moves:'三段攻撃・神速アタック・突撃ラッシュ／必殺：みじん切り',c:'#ffb46a',
   svg:'<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M6 59 56 9" stroke="#eef4fb" stroke-width="3.4" stroke-linecap="round"/><path d="M11 50l7 7" stroke="#d8a838" stroke-width="4.5" stroke-linecap="round"/><path d="M14 31 12 10 27 20ZM50 31 52 10 37 20Z" fill="#f2a85c" stroke="#ffe0bc" stroke-width="1.5" stroke-linejoin="round"/><ellipse cx="32" cy="35" rx="19" ry="16.5" fill="#f2a85c"/><ellipse cx="32" cy="41" rx="9.5" ry="6.5" fill="#f4f0e8"/><circle cx="25" cy="32" r="3.3" fill="#1a1d26"/><circle cx="39" cy="32" r="3.3" fill="#1a1d26"/><circle cx="32" cy="38" r="1.8" fill="#ff9ab0"/><path d="M14 46h36" stroke="#c81e2a" stroke-width="4" stroke-linecap="round"/></svg>'},
- {id:'kage',name:'ツキカゲ',type:'すばやく斬る忍びタイプ',moves:'三段こうげき・神速アタック／必殺：月影十連斬',c:'#9fb2ff',
+ {id:'kage',name:'ツキカゲ',type:'すばやく斬る忍びタイプ',moves:'三段こうげき・神速アタック・極楽の術（回復）／必殺：一刀両断',c:'#9fb2ff',
   svg:'<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M48 36l12-5M48 40l12 3" stroke="#4a5ad8" stroke-width="3.5" stroke-linecap="round"/><circle cx="32" cy="35" r="19" fill="#4a5ad8"/><path d="M14 37c8 5 28 5 36 0v4c-5 10-31 10-36 0Z" fill="#07060c"/><path d="M14 31c8 4 28 4 36 0" stroke="#07060c" stroke-width="5"/><path d="M21 30l8 3M43 30l-8 3" stroke="#ffc84a" stroke-width="3.6" stroke-linecap="round"/><path d="M29 11a7 7 0 1 0 8.6 9.4 5.6 5.6 0 1 1-8.6-9.4Z" fill="#dfe6f2"/></svg>'}];
 const DIF=[['NORMAL','#9fd8ff'],['HARD','#ffd24a'],['極','#ff6a6a']];
 /* 操作方法（[キー, 説明, 補足]。キーは「+」で並べる。m: はマウス・文字のキー） */
+const SKC={atk:'#ffb07a',dash:'#59e0ff',rush:'#a78bff',chg:'#c8ff5a',heal:'#ff8fd0',ult:'#ffd24a'};   // わざの色（バトル中のボタンと同じ）
 const CTL={
- hyu:{key:[['J|m:左クリック','ビームショット','押しっぱなしで連射'],['K|m:右クリック','チャージビーム','長押しでためて、離すと発射'],['L|m:サイドボタン','突撃ラッシュ','敵に突っこんで連続攻撃'],['I','必殺技「びりびりビーム」','ゲージが100%でつかえる']],
-  touch:[['m:ショット','ビームショット','押しっぱなしで連射'],['m:チャージ','チャージビーム','長押しして離す'],['m:突撃','突撃ラッシュ',''],['m:必殺|m:ひっさつ','必殺技','ゲージ100%で光る']]},
- shiro:{key:[['J|m:左クリック','三段攻撃','続けて押すと3段目まで'],['K|L|m:右クリック','神速アタック','敵に一気に斬りこむ'],['I','必殺技「みじん切り」','ゲージが100%でつかえる']],
-  touch:[['m:攻撃','三段攻撃','続けて押す'],['m:神速','神速アタック',''],['m:必殺|m:ひっさつ','必殺技','ゲージ100%で光る']]},
- kage:{key:[['J|m:左クリック','三段こうげき','続けて押すと3段目まで'],['K|m:右クリック','神速アタック','敵に一気に斬りこむ'],['I','必殺技「月影十連斬」','ゲージが100%でつかえる']],
-  touch:[['m:こうげき','三段こうげき','続けて押す'],['m:神速','神速アタック',''],['m:必殺|m:ひっさつ','必殺技','ゲージ100%で光る']]},
+ hyu:{key:[['J|m:左クリック','ビームショット','押しっぱなしで連射',SKC.atk],['K|m:右クリック','チャージビーム','長押しでためて、離すと発射',SKC.chg],['L|m:サイドボタン','突撃ラッシュ','敵に突っこんで連続攻撃',SKC.rush],['I','必殺技「びりびりビーム」','ゲージが100%でつかえる',SKC.ult]],
+  touch:[['m:ショット','ビームショット','押しっぱなしで連射',SKC.atk],['m:チャージ','チャージビーム','長押しして離す',SKC.chg],['m:突撃','突撃ラッシュ','',SKC.rush],['m:必殺|m:ひっさつ','必殺技','ゲージ100%で光る',SKC.ult]]},
+ shiro:{key:[['J|m:左クリック','三段攻撃','続けて押すと3段目まで',SKC.atk],['K|m:右クリック','神速アタック','敵に一気に斬りこむ',SKC.dash],['L|m:サイドボタン','突撃ラッシュ','敵に突っこんで連続攻撃',SKC.rush],['I','必殺技「みじん切り」','ゲージが100%でつかえる',SKC.ult]],
+  touch:[['m:攻撃','三段攻撃','続けて押す',SKC.atk],['m:神速','神速アタック','',SKC.dash],['m:ラッシュ','突撃ラッシュ','',SKC.rush],['m:必殺|m:ひっさつ','必殺技','ゲージ100%で光る',SKC.ult]]},
+ kage:{key:[['J|m:左クリック','三段こうげき','続けて押すと3段目まで',SKC.atk],['K|m:右クリック','神速アタック','敵に一気に斬りこむ',SKC.dash],['L|m:サイドボタン','極楽の術','長押しでためて離すと、自分とまわりの仲間を回復。20秒に1回',SKC.heal],['I','必殺技「一刀両断」','ゲージが100%でつかえる',SKC.ult]],
+  touch:[['m:こうげき','三段こうげき','続けて押す',SKC.atk],['m:神速','神速アタック','',SKC.dash],['m:極楽','極楽の術','長押しして離すと回復',SKC.heal],['m:必殺|m:ひっさつ','必殺技','ゲージ100%で光る',SKC.ult]]},
  common:{key:[['W|A|S|D','移動',''],['Shift','走る','スタミナをつかう'],['Space','回避','攻撃をよける'],['F','長押しで仲間を助ける','ロボネコ24号では端末も起動'],['Tab','ねらう敵を切りかえ',''],['Q|E','カメラを回す',''],['P','ポーズ',''],['M','音のオン・オフ','']],
   touch:[['m:画面の左側','ドラッグで移動','さわった所がスティックになる'],['m:回避','回避',''],['m:右下のボタン','わざ（上のとおり）','']]}};
 let ctlCh=null;
+/* 「極」のときだけ：ロビーの後ろでオーブがうごめく（軽くするため 1/2 の解像度・毎秒30コマ・ゲーム中は止める） */
+const ORB={on:0,raf:0,c:null,x:null,sp:{},col:'',o:[],last:0};
+function orbSpr(col){if(ORB.sp[col])return ORB.sp[col];const c=document.createElement('canvas');c.width=c.height=64;const g=c.getContext('2d'),q=g.createRadialGradient(32,32,0,32,32,32);q.addColorStop(0,'rgba(255,255,255,.95)');q.addColorStop(.25,col);q.addColorStop(1,'rgba(0,0,0,0)');g.fillStyle=q;g.fillRect(0,0,64,64);return ORB.sp[col]=c}
+function orbSet(on,col){ORB.col=col||ORB.col;on=on?1:0;if(on===ORB.on)return;ORB.on=on;
+ if(!ORB.c){const c=ORB.c=document.createElement('canvas');c.id='orbs';c.setAttribute('aria-hidden','true');document.body.insertBefore(c,document.body.firstChild);ORB.x=c.getContext('2d');
+  for(let i=0;i<34;i++)ORB.o.push({x:Math.random(),y:Math.random(),r:8+Math.random()*26,p:Math.random()*6.28,s:.25+Math.random()*.6,k:i%3})}
+ ORB.c.classList.toggle('on',!!on);if(on&&!ORB.raf)ORB.raf=requestAnimationFrame(orbDraw)}
+function orbDraw(now){ORB.raf=0;if(!ORB.on)return;if(G){ORB.on=0;ORB.c.classList.remove('on');return}ORB.raf=requestAnimationFrame(orbDraw);if(now-ORB.last<33||document.hidden)return;ORB.last=now;
+ const c=ORB.c,w=Math.ceil(innerWidth/2),h=Math.ceil(innerHeight/2);if(c.width!==w||c.height!==h){c.width=w;c.height=h}const g=ORB.x,t=RM?0:now/1000;g.clearRect(0,0,w,h);g.globalCompositeOperation='lighter';
+ const cs=[orbSpr('rgba(255,70,90,.8)'),orbSpr(ORB.col),orbSpr('rgba(255,190,80,.7)')];
+ for(const o of ORB.o){const x=((o.x+Math.sin(t*o.s*.5+o.p)*.07+t*o.s*.012)%1)*w,y=((o.y-t*o.s*.02+Math.cos(t*o.s*.7+o.p*2)*.05)%1+1)%1*h,r=o.r*(1+.3*Math.sin(t*o.s*2+o.p));g.globalAlpha=.3+.3*Math.sin(t*o.s*1.3+o.p*3)**2;g.drawImage(cs[o.k],x-r,y-r,r*2,r*2)}
+ if(RM){ORB.on=0}}
+const RM=(()=>{try{return matchMedia('(prefers-reduced-motion:reduce)').matches}catch(e){return false}})();
 const PCOL=['#7dffc8','#ff9ad0','#ffd24a','#9fb8ff'];
 const CROWN='<svg width="20" height="16" viewBox="-8 -7 16 11" aria-label="リーダー"><path d="M-6 3L-7-4L-3.2-.8L0-6L3.2-.8L7-4L6 3Z" fill="#ffd24a" stroke="#7a4a00" stroke-width="1.1" stroke-linejoin="round"/><rect x="-5.5" y="1.2" width="11" height="1.4" fill="#fff6c8"/></svg>';
 const $=id=>document.getElementById(id);
@@ -631,7 +652,7 @@ let uiQ=0;function ui(){if(uiQ)return;uiQ=1;const go=()=>{if(!uiQ)return;uiQ=0;r
 function render(){
  const s=sel(),mem=isMember(),party=inParty();
  {const b=bossOf(s.b),sg=$('stg');if(sg.dataset.b!==String(b.id)){sg.dataset.b=b.id;sg.style.cssText='--c1:'+b.c1+';--c2:'+b.c2+';--c3:'+b.c3;$('stgArt').innerHTML=b.svg;$('stgName').textContent=b.name;$('stgGame').textContent=b.game;$('stgDesc').textContent=b.desc}
-  sg.dataset.d=s.d;document.body.dataset.d=s.d;$('sum').textContent='VS '+b.name+' ／ '+DIF[s.d][0]+' ／ '+charOf(ME.ch).name}
+  sg.dataset.d=s.d;document.body.dataset.d=s.d;orbSet(s.d===2&&!G,b.c1);$('sum').textContent='VS '+b.name+' ／ '+DIF[s.d][0]+' ／ '+charOf(ME.ch).name}
  for(const el of $('bosses').children){const on=+el.dataset.b===s.b;el.classList.toggle('on',on);el.setAttribute('aria-checked',on?'true':'false');el.disabled=mem||!!G}
  [...$('diff').children].forEach((el,i)=>{const on=i===s.d;el.classList.toggle('on',on);el.setAttribute('aria-checked',on?'true':'false');el.disabled=mem||!!G});
  $('selNote').textContent=mem?'リーダーが選びます':'';
@@ -656,7 +677,7 @@ function render(){
   if(ids.length<4){const li=document.createElement('li');li.className='empty';li.textContent='あと'+(4-ids.length)+'人まで参加できます';ul.appendChild(li)}}
  if(G&&!G.started)loadText()}
 function kc(s){return s.split('|').map(k=>k.startsWith('m:')?'<kbd class="m">'+k.slice(2)+'</kbd>':'<kbd>'+k+'</kbd>').join('')}
-function ctlRow(r,sp){const li=document.createElement('li');if(sp)li.className='sp';li.innerHTML='<span class="k">'+kc(r[0])+'</span><span></span>';const d=li.lastChild;d.textContent=r[1];if(r[2]){const sm=document.createElement('small');sm.textContent='（'+r[2]+'）';d.append(' ',sm)}return li}
+function ctlRow(r,sp){const li=document.createElement('li');if(sp)li.className='sp';li.innerHTML='<span class="k">'+kc(r[0])+'</span><span></span>';const d=li.lastChild;d.textContent=r[1];if(r[3]){li.style.setProperty('--sc',r[3]);d.className='sn'}if(r[2]){const sm=document.createElement('small');sm.textContent='（'+r[2]+'）';d.append(' ',sm)}return li}
 function renderCtl(c){ctlCh=cC(c);const C2=CTL[ctlCh],K=$('ctlKey'),T2=$('ctlTouch');K.textContent='';T2.textContent='';
  for(const r of C2.key)K.appendChild(ctlRow(r,1));for(const r of CTL.common.key)K.appendChild(ctlRow(r));
  for(const r of C2.touch)T2.appendChild(ctlRow(r,1));for(const r of CTL.common.touch)T2.appendChild(ctlRow(r));
