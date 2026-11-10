@@ -439,7 +439,7 @@ function play(o){stop();
  /* 車の位置（時刻→z）：基地を出るまでゆっくり → 道路で一気に加速 */
  function vz(t){if(t<4.65)return VZ0;if(t<=TF0)return VZ0-148.5*Math.pow((t-4.65)/3.35,2.2);const q=Math.min(t-TF0,TFD);return -150-(97.5*q-8.73*q*q)}
  /* 離陸してからの高さ（u:0→1） */
- const HW0=5.9,HWK=1.55,XT=(TF0-HW0)*(HWK-1),warp=r=>r<HW0?r:r<HW0+(TF0-HW0)*HWK?HW0+(r-HW0)/HWK:r-XT;   // 高速を走るところだけ時間を長く
+ const HW0=5.9,HWK=1.55,P1=4.35,PK=1.25,PS=P1-P1/PK,XT=(TF0-HW0)*(HWK-1)-PS,warp=r=>{r=r<P1/PK?r*PK:r+PS;return r<HW0?r:r<HW0+(TF0-HW0)*HWK?HW0+(r-HW0)/HWK:r-XT-PS};   // 準備と乗りこみは少し速く   // 高速を走るところだけ時間を長く
  const fy=u=>{u=cl(u,0,1);return 17*u*u*(3-2*u)};
  let last=performance.now(),t0=performance.now(),tt=0,raf=0,done=false,skipped=false,ci=0,started=0,loadSent=0,fN=0,fAcc=0;
  function setT(t){
