@@ -2520,14 +2520,15 @@ function xsRushTick(){const r=XS.rush;if(!r)return;if(S!=='play'||P.dead||!(P.hp
     if(fin){P.hold=.5;if(e===B)try{bossFlinch()}catch(_){}}shake=Math.max(shake,fin?14:3);snd(fin?100:170+(i%5)*35,.12,'sawtooth',.07,.5)}
    else if(i===0)pop('空振り…',P.x,P.y,'#9fb0c8',18,80)}
   if(r.t>1.17)XS.rush=null}}
-/* 極楽の術（ためた分だけ回復量アップ：80〜140。まわりの仲間もいっしょに回復。クールタイム20秒） */
+/* 極楽の術（ためた分だけ回復量アップ：80〜140。最大までためたときだけ、まわりの仲間もいっしょに回復。クールタイム20秒） */
 function xsHealStart(){if(!xsFree()||XS.cd>0||XS.ch>=0)return;XS.ch=0;snd(520,.3,'sine',.05,1.5)}
-function xsHealRel(){if(!(XS.ch>=0))return;const k=Math.min(1,XS.ch/1.2);XS.ch=-1;if(S!=='play'||P.dead||!(P.hp>0))return;XS.cd=20;const amt=Math.round(80+60*k),R=Math.round(240+80*k);
- XS.hl=[(XS.hl?XS.hl[0]:0)%9999+1,amt,Math.round(P.x),Math.round(P.y),R];xsHealAt(P.x,P.y,amt,R)}
+function xsHealRel(){if(!(XS.ch>=0))return;const k=Math.min(1,XS.ch/1.2);XS.ch=-1;if(S!=='play'||P.dead||!(P.hp>0))return;XS.cd=20;const amt=Math.round(80+60*k);
+ if(k<1){xsHealAt(P.x,P.y,amt,70);return}   // 最大までためていないときは自分だけ回復
+ const R=420;XS.hl=[(XS.hl?XS.hl[0]:0)%9999+1,amt,Math.round(P.x),Math.round(P.y),R];xsHealAt(P.x,P.y,amt,R)}
 function xsHealAt(x,y,amt,R){XS.fx.push({x,y,R,t:0});snd(660,.5,'sine',.07,1.5);snd(990,.6,'triangle',.04,1.3);
  if(S==='play'&&!P.dead&&P.hp>0&&Math.hypot(P.x-x,P.y-y)<=R+PR){const h=Math.min(amt,P.mhp-P.hp);P.hp=Math.min(P.mhp,P.hp+amt);pop('+'+Math.round(h),P.x,P.y,'#7dffa0',30,110);pf(P.x,P.y,16,'#a8ffc4',160,.7,5,30,120)}}
 function xsNet(p){p.xs=XS.rush?(XS.rush.ph?2:1):XS.ch>=0?3:0;if(XS.hl)p.hl=XS.hl}
-function xsRead(r,q){r.xs=q.xs|0;const h=q.hl;if(Array.isArray(h)&&h.length===5){if(r.hlS===undefined)r.hlS=h[0];else if(h[0]!==r.hlS){r.hlS=h[0];xsHealAt(+h[2]||0,+h[3]||0,Math.max(0,Math.min(140,+h[1]||0)),Math.max(0,Math.min(340,+h[4]||0)))}}}
+function xsRead(r,q){r.xs=q.xs|0;const h=q.hl;if(Array.isArray(h)&&h.length===5){if(r.hlS===undefined)r.hlS=h[0];else if(h[0]!==r.hlS){r.hlS=h[0];xsHealAt(+h[2]||0,+h[3]||0,Math.max(0,Math.min(140,+h[1]||0)),Math.max(0,Math.min(460,+h[4]||0)))}}}
 function xsRfx(r){if(r.d)return;if(r.xs===3)gp(GLW,r.x,r.y,50,150+Math.sin(T*9)*30,'#ff8fd0',.45);else if(r.xs)for(let i=0;i<4;i++){const q=r.face+Math.sin(T*40+i*1.3)*.9,r2=30+((T*300+i*20)%34);gp(GLW,r.x+Math.cos(q)*r2,r.y+Math.sin(q)*r2,42+i*4,34,i%2?'#a78bff':'#ffffff',.85)}}
 function xsTick(){
  if(XS.b!==MYCH){XS.b=MYCH;for(let i=TB.length-1;i>=0;i--)if(TB[i].id==='xex')TB.splice(i,1);
