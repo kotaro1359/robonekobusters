@@ -40,7 +40,9 @@ button:disabled{cursor:default}
 .sec::before{content:"";width:8px;height:20px;background:var(--yel);transform:skewX(-14deg)}
 .sec small{font:700 12.5px var(--f);color:var(--yel)}
 /* ---- 相手のステージ（選んだボスで色が変わる） ---- */
-.show{--cut:22px;--e:var(--c1);--p:linear-gradient(112deg,var(--c3) 0 44%,color-mix(in srgb,var(--c2) 78%,#000) 44% 100%);display:grid;grid-template-columns:230px minmax(0,1fr);gap:8px 22px;align-items:center;padding:20px 26px 20px 18px;min-height:250px}
+.show{--cut:22px;--e:var(--c1);--L:color-mix(in srgb,var(--c3) 45%,#465070);--R:color-mix(in srgb,var(--c2) 40%,#5c6684);--p:linear-gradient(112deg,var(--L) 0 44%,var(--R) 44% 100%);display:grid;grid-template-columns:230px minmax(0,1fr);gap:8px 22px;align-items:center;padding:20px 26px 20px 18px;min-height:250px}
+.show[data-d="1"]{--L:var(--c3);--R:color-mix(in srgb,var(--c2) 80%,#000)}
+.show[data-d="2"]{--L:color-mix(in srgb,var(--c3) 35%,#000);--R:color-mix(in srgb,var(--c2) 52%,#000);--p:radial-gradient(120% 140% at 78% 40%,transparent 30%,rgba(0,0,0,.6) 100%),linear-gradient(112deg,var(--L) 0 44%,var(--R) 44% 100%)}
 .show::after{content:"VS";position:absolute;right:10px;top:-22px;font:400 150px/1 var(--d);color:transparent;-webkit-text-stroke:2px color-mix(in srgb,var(--c1) 26%,transparent);pointer-events:none}
 .sart{display:flex;align-items:center;justify-content:center;aspect-ratio:1;background:radial-gradient(circle,color-mix(in srgb,var(--c1) 34%,transparent) 0,transparent 68%)}
 .sart svg{width:88%;height:88%;filter:drop-shadow(0 8px 0 rgba(0,0,0,.35))}
@@ -51,7 +53,7 @@ button:disabled{cursor:default}
 .diffw{display:flex;align-items:center;gap:12px;margin-top:14px}.diffw>span{font-size:12.5px;color:var(--dim);white-space:nowrap}
 .diff{display:flex;gap:6px;flex:1;max-width:420px}
 .diff button{flex:1;height:44px;border:2px solid rgba(255,255,255,.2);background:rgba(4,8,20,.55);font:700 16px var(--n);letter-spacing:.08em;color:#9aa8c8;transform:skewX(-12deg);transition:background .12s,color .12s}
-.diff button.kw{font:400 19px var(--d)}
+.diff button.kw{font:900 20px var(--f)}
 .diff button.on{color:#0a0f1c;background:var(--dc);border-color:#fff}
 .diff button:not(.on):not(:disabled):hover{color:#fff;border-color:var(--dc)}
 .diff button:disabled:not(.on){opacity:.5}
@@ -550,11 +552,11 @@ return{play,stop,get cur(){return M}}})();
 const VER=2,PFX='rnb-lobby-v1-',CH='ABCDEFGHJKLMNPQRSTUVWXYZ23456789',
  LIBS=['https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js','https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js','https://cdnjs.cloudflare.com/ajax/libs/peerjs/1.5.4/peerjs.min.js'];
 const BOSS=[
- {id:1,dir:'1/',name:'ロボネコ24号',game:'ロボネコバスターズ',desc:'滑走路と高架の未来都市。ビームと突撃ラッシュで巨大ロボに立ち向かえ。',pc:'ヒュードロ',c1:'#5fe1ff',c2:'#1d5296',c3:'#0a1a34',
+ {id:1,dir:'1/',name:'ロボネコ24号',game:'ロボネコバスターズ',desc:'未来都市で暴走をはじめた巨大ネコ型ロボ。手下をけちらし、端末を起動して、暴走を止めろ。',pc:'ヒュードロ',c1:'#5fe1ff',c2:'#1d5296',c3:'#0a1a34',
   svg:'<svg class="emb" viewBox="0 0 100 100" aria-hidden="true"><path d="M24 42L19 13L43 31Z M76 42L81 13L57 31Z" fill="#6aa6dc" stroke="#d6f0ff" stroke-width="2.5" stroke-linejoin="round"/><line x1="50" y1="30" x2="50" y2="15" stroke="#d6f0ff" stroke-width="3"/><circle cx="50" cy="12" r="5" fill="#ffd24a"/><rect x="17" y="29" width="66" height="54" rx="17" fill="#245a98" stroke="#d6f0ff" stroke-width="3"/><rect x="25" y="43" width="50" height="18" rx="9" fill="#071426"/><circle cx="39" cy="52" r="5.5" fill="#6af0ff"/><circle cx="61" cy="52" r="5.5" fill="#6af0ff"/><path d="M43 70Q50 75 57 70" stroke="#d6f0ff" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M10 54H17M83 54H90" stroke="#6af0ff" stroke-width="3" stroke-linecap="round"/></svg>'},
- {id:2,dir:'2/',name:'ツキ王',game:'武者の陣',desc:'剣が眠る古戦場。場外から飛んでくる魂を斬って、王に力を吸わせるな。',pc:'シロマル',c1:'#ffcf5a',c2:'#9a1a2a',c3:'#26080e',
+ {id:2,dir:'2/',name:'ツキ王',game:'武者の陣',desc:'月夜の古戦場に立つ剣の王。飛んでくる魂を吸われる前に斬り、王が疲れたスキにとどめを刺せ。',pc:'シロマル',c1:'#ffcf5a',c2:'#9a1a2a',c3:'#26080e',
   svg:'<svg class="emb" viewBox="0 0 100 100" aria-hidden="true"><path d="M58 10A36 36 0 1 0 90 62A29 29 0 1 1 58 10Z" fill="#ffe08a"/><g transform="rotate(-36 50 56)"><rect x="8" y="53" width="66" height="6" rx="3" fill="#eef3fb"/><rect x="74" y="50" width="5" height="12" rx="1.5" fill="#ffd24a"/><rect x="79" y="52.5" width="17" height="7" rx="2.5" fill="#8a1424"/></g></svg>'},
- {id:3,dir:'3/',name:'ぐらりぼぉん',game:'朧月討魔伝',desc:'朧月の間で、ぐらりぼぉんと二体の護衛を討て。その先には大妖魔オボロガミが待つ。',pc:'ツキカゲ',c1:'#d4b0ff',c2:'#5a2fa0',c3:'#150a2a',
+ {id:3,dir:'3/',name:'ぐらりぼぉん',game:'妖怪御殿の夜',desc:'いくべぇ・くるべぇを従えた妖術使い。護衛を倒しても終わらない。真の姿オボロガミまで討ちきれ。',pc:'ツキカゲ',c1:'#d4b0ff',c2:'#5a2fa0',c3:'#150a2a',
   svg:'<svg class="emb" viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="42" r="35" fill="none" stroke="#c79bff" stroke-opacity=".35" stroke-width="7"/><circle cx="50" cy="42" r="27" fill="#ecdcff"/><path d="M8 62Q29 53 50 62T92 61" stroke="#b48cff" stroke-width="8" fill="none" stroke-linecap="round" opacity=".9"/><path d="M16 78Q37 69 58 78T96 75" stroke="#7a52c8" stroke-width="7" fill="none" stroke-linecap="round" opacity=".85"/><path d="M38 37L46 41M62 37L54 41" stroke="#4a1a7a" stroke-width="3.5" stroke-linecap="round"/></svg>'}];
 const CHARS=[
  {id:'hyu',name:'ウォスパー',type:'ビームで戦う遠距離タイプ',moves:'ショット・チャージ・突撃ラッシュ／必殺：びりびりビーム',c:'#7dffc8',
@@ -619,7 +621,7 @@ let uiQ=0;function ui(){if(uiQ)return;uiQ=1;const go=()=>{if(!uiQ)return;uiQ=0;r
 function render(){
  const s=sel(),mem=isMember(),party=inParty();
  {const b=bossOf(s.b),sg=$('stg');if(sg.dataset.b!==String(b.id)){sg.dataset.b=b.id;sg.style.cssText='--c1:'+b.c1+';--c2:'+b.c2+';--c3:'+b.c3;$('stgArt').innerHTML=b.svg;$('stgName').textContent=b.name;$('stgGame').textContent=b.game;$('stgDesc').textContent=b.desc}
-  $('sum').textContent='VS '+b.name+' ／ '+DIF[s.d][0]+' ／ '+charOf(ME.ch).name}
+  sg.dataset.d=s.d;$('sum').textContent='VS '+b.name+' ／ '+DIF[s.d][0]+' ／ '+charOf(ME.ch).name}
  for(const el of $('bosses').children){const on=+el.dataset.b===s.b;el.classList.toggle('on',on);el.setAttribute('aria-checked',on?'true':'false');el.disabled=mem||!!G}
  [...$('diff').children].forEach((el,i)=>{const on=i===s.d;el.classList.toggle('on',on);el.setAttribute('aria-checked',on?'true':'false');el.disabled=mem||!!G});
  $('selNote').textContent=mem?'リーダーが選びます':'';
