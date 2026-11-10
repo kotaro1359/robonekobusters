@@ -42,7 +42,7 @@ const NETMODE='pj';
 const CH_NATIVE='shiro';let MYCH=CH_NATIVE,PK=null;const CHN=()=>MYCH===CH_NATIVE,chOK=c=>c==='hyu'||c==='shiro'||c==='kage';
 function chNet(p){p.ch=MYCH;xsNet(p);if(PK){p.fl&=241;p.q=-1;p.a=0;p.cb=0;p.u=0;p.cs=PK.net()}}
 /* キャラごとの攻撃力の倍率：このボスの本来の自分キャラと同じくらいの強さになるように（自動テストで1秒あたりのダメージを測って決めた） */
-const CHDM={hyu:.9,shiro:1,kage:.72};
+const CHDM={hyu:.9,shiro:1,kage:1};
 
 let BTG=null,MOBID=0,MOBHP=675;
 
@@ -598,7 +598,7 @@ const tH=t=>t===B?B.z+220:60;
 
 /* ================= ダメージ ================= */
 const bPow=()=>1+.12*Math.min(10,B.pow||0);
-function hurt(d,multi,nf){if(S!=='play'||P.dead||P.ultT>0||P.uch>0||P.dash)return false;if(P.dodge>.07){if(!P.dodged){P.dodged=1;pop('回避！',P.x,P.y,'#8affc1',40,105);snd(1250,.18,'triangle',.06,1.6);pf(P.x,P.y,10,'#bfffe0',220,.35,4,40)}return false}if(!multi&&P.inv>0)return false;
+function hurt(d,multi,nf){if(S!=='play'||P.dead||P.ultT>0||P.uch>0||P.dash)return false;if(P.dodge>.03){if(!P.dodged){P.dodged=1;pop('回避！',P.x,P.y,'#8affc1',40,105);snd(1250,.18,'triangle',.06,1.6);pf(P.x,P.y,10,'#bfffe0',220,.35,4,40)}return false}if(!multi&&P.inv>0)return false;
  const ecr=Math.random()<.1;d=Math.round(d*DIFS[DIFF][1]*(ecr?1.25:1)*bPow());P.noHit=0;if(!nf){const fl=multi===2?.3:multi?.14:.38,kb=multi===2?300:multi?120:420;if(P.flinch<fl)P.flinch=fl;const a=B.dying<=0&&B.sky!==1?ang(B,P):P.face+PI;P.kbx=Math.cos(a)*kb;P.kby=Math.sin(a)*kb;P.atk=null;P.aq=0}P.hp=Math.max(0,P.hp-d);P.inv=multi?Math.max(P.inv,.12):1;if(P.hcd<=0){P.hits++;P.hcd=1}
  shake=Math.max(shake,multi?5:12);flash=multi?.12:.25;flashC='#f33';pop('-'+d,P.x,P.y,ecr?'#ff4a3a':'#ff6060',(multi?42:54)+(ecr?14:0),95,'#3a0000',ecr?'#ff2010':null);pf(P.x,P.y,multi?5:14,'#ff5a5a',260,.5,4);snd(150,.2,'sawtooth',multi?.05:.09,.4);
  if(P.hp<=0){if(NET.on)mpDie();else{S='lose';endT=0;snd(300,.9,'sawtooth',.08,.1)}}return true}
@@ -2187,7 +2187,7 @@ function upd(){
  if(P.lv){P.lv.t-=DT;dx=Math.cos(P.lv.a);dy=Math.sin(P.lv.a);v=P.lv.v;if(P.lv.t<=0)P.lv=null}
  if(P.dash){const d=P.dash;d.t+=DT;
   if(d.ph===0){let a=d.a;if(d.tg&&tOK(d.tg)){a=d.a=ang(P,d.tg);const gap=dist(P,d.tg)-d.tg.r-PR-8;if(gap<=0||d.t>.45){d.ph=1;d.t=0;v=0}else v=Math.min(1500,gap/DT)}else{v=1300;if(d.t>.2){d.ph=1;d.t=0}}dx=Math.cos(a);dy=Math.sin(a);P.face=a;if(frame%2==0)ghostAt(P.x,P.y,P.face,0)}
-  else{v=0;if(!d.hit){d.hit=1;melee(104,1.3,24,'dash',112,'#9ff0ff',0,40);NET.sc++;swish(1.3,1500,.25)}if(d.t>.24){P.dash=null;P.hold=.08}}}
+  else{v=0;if(!d.hit){d.hit=1;melee(104,1.3,38.33,'dash',112,'#9ff0ff',0,40);NET.sc++;swish(1.3,1500,.25)}if(d.t>.24){P.dash=null;P.hold=.08}}}
  if(P.step){const s=P.step;s.t+=DT;if(!s.hit&&s.t>=.05){s.hit=1;melee(92,1.4,21,'step',92,'#c8f0ff',-.4,44);NET.sc++}
   if(s.t>=.1&&s.t<.4){dx=Math.cos(s.a);dy=Math.sin(s.a);v=900*(1-(s.t-.1)/.3)+140;P.stepInv=.06;if(frame%3==0)ghostAt(P.x,P.y,P.face,0)}else v=0;if(s.t>=.46)P.step=null}
  if(P.ultT>0){v=0;P.ultT-=DT;P.uTick-=DT;const tg=P.uTg&&tOK(P.uTg)?P.uTg:null;
@@ -2205,7 +2205,7 @@ function upd(){
  const t=curT();if(!P.dash&&!P.step&&P.ultT<=0)P.face=t&&(P.atk||!m||true)?ang(P,t):(m?Math.atan2(dy,dx):P.face);if(!t&&m&&!P.atk)P.face=Math.atan2(dy,dx);
  const want=(keys.KeyJ||md)&&S==='play';
  if(P.atk){const a=P.atk;if(P.hstop<=0)a.t+=DT;const hitT=a.n===3?.12:.08,end=a.n===3?.5:.3;
-  if(!a.hit&&a.t>=hitT){a.hit=1;melee(a.n===3?94:82,a.n===3?1.35:1.1,a.n===3?18:9,a.n===3?'melee3':'melee',a.n===3?98:74,a.n===3?'#fff2b0':'#bfe8ff',a.n===1?.35:a.n===2?-.35:0,a.n===3?36:46);NET.sc++}
+  if(!a.hit&&a.t>=hitT){a.hit=1;melee(a.n===3?94:82,a.n===3?1.35:1.1,a.n===3?16.67:8.33,a.n===3?'melee3':'melee',a.n===3?98:74,a.n===3?'#fff2b0':'#bfe8ff',a.n===1?.35:a.n===2?-.35:0,a.n===3?36:46);NET.sc++}
   if(a.t>=.1&&(want||P.aq>0)&&a.n<3)a.nx=1;
   if(a.nx&&a.t>=hitT+.14){P.aq=0;startAtk(a.n+1)}else if(a.t>=end){P.atk=null;P.ccd=a.n===3?.14:.02}}
  else if((want||P.aq>0)&&canAct()&&P.ccd<=0&&P.dodge<=0){P.aq=0;startAtk(1)}
