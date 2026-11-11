@@ -1598,7 +1598,7 @@ function draw(dt){if((++SHF&1)===0||S!=='play')R.shadowMap.needsUpdate=true;
  if(TOUCH&&S==='play'&&!paused&&!NET.pz&&!(NET.on&&B.dying!==0))drawTouch();
  if(lockOff&&S==='play'&&B.dying===0){panel(W/2-62,H-108,124,22,11,'rgba(180,160,220,.6)');txt('LOCK OFF  [Tab]',W/2,H-97,11,'#d8ccef','center',null,{f:NUMF})}
  for(const c of CUTS)drawCut(c);
- if(paused){X.fillStyle='rgba(0,0,0,.55)';X.fillRect(0,0,W,H);panel(W/2-150,200,300,156,16,'rgba(190,160,255,.8)');gtxt('PAUSE',W/2,244,40,'#ffffff','#d8c0ff','rgba(150,90,255,.7)',null,NUMF);txt('P キーで再開',W/2,286,15,'#ffe9a8');if(!TOUCH)txt('Enter でやり直し',W/2,312,14,'#d8ccef');txt(TOUCH?'右上の II で再開':'T でタイトルへ',W/2,334,14,'#d8ccef');if(TOUCH){for(const[x,y,w,h,l]of PBTN){X.beginPath();X.roundRect(x,y,w,h,12);X.fillStyle='rgba(30,20,60,.95)';X.fill();X.strokeStyle='#d8c0ff';X.lineWidth=2;X.stroke();txt(l,x+w/2,y+h/2+1,15,'#ffffff')}const b=TB[TB.length-1];X.beginPath();X.arc(b.x,b.y,b.r,0,TAU);X.fillStyle='rgba(30,20,60,.9)';X.fill();X.strokeStyle='#ffe27a';X.lineWidth=2;X.stroke();txt('▶',b.x+1,b.y+1,14,'#ffe27a')}}
+ if(paused){X.fillStyle='rgba(0,0,0,.55)';X.fillRect(0,0,W,H);panel(W/2-150,200,300,156,16,'rgba(190,160,255,.8)');gtxt('PAUSE',W/2,244,40,'#ffffff','#d8c0ff','rgba(150,90,255,.7)',null,NUMF);txt('P キーで再開',W/2,286,15,'#ffe9a8');if(!TOUCH)txt('V キーで画質きりかえ（いま：'+(LOQ?'軽量':'オリジナル')+'）',W/2,378,14,'#9fe8ff');if(!TOUCH)txt('Enter でやり直し',W/2,312,14,'#d8ccef');txt(TOUCH?'右上の II で再開':'T でタイトルへ',W/2,334,14,'#d8ccef');if(TOUCH){for(const[x,y,w,h,l]of PBTN){X.beginPath();X.roundRect(x,y,w,h,12);X.fillStyle='rgba(30,20,60,.95)';X.fill();X.strokeStyle='#d8c0ff';X.lineWidth=2;X.stroke();txt(l,x+w/2,y+h/2+1,15,'#ffffff')}const b=TB[TB.length-1];X.beginPath();X.arc(b.x,b.y,b.r,0,TAU);X.fillStyle='rgba(30,20,60,.9)';X.fill();X.strokeStyle='#ffe27a';X.lineWidth=2;X.stroke();txt('▶',b.x+1,b.y+1,14,'#ffe27a')}}
  mpPauseDraw();if(S==='win'||S==='lose')endScr();mpVoteDraw();
  if(S==='quit'){X.fillStyle='rgba(4,2,10,'+Math.min(.92,endT*2)+')';X.fillRect(0,0,W,H);if(endT>.3){gtxt('おつかれさまでした',W/2,H/2-20,40,'#ffffff','#d8c0ff','rgba(150,90,255,.6)');if(endT>1&&Math.floor(T*2)%2==0)txt(TOUCH?'タップでタイトルへ':'クリック / Enter でタイトルへ',W/2,H/2+40,15,'#d8ccef')}}}
 
@@ -1660,7 +1660,7 @@ function drawTouch(){X.save();
   if(b.id==='lock'&&lockOff){X.strokeStyle='#ff8a6b';X.lineWidth=2;X.beginPath();X.moveTo(b.x-12,b.y+12);X.lineTo(b.x+12,b.y-12);X.stroke()}}
  X.restore()}
 let last=0,acc=0;
-const LOQ=(()=>{try{return localStorage.getItem('rnb_q')==='lo'}catch(e){return false}})();let QPR=LOQ?.6:1.5,QFT=0,QN=0,QCD=3;function qAdapt(d){if(S!=='play'||paused){QFT=QN=0;return}QCD-=d;QFT+=d;QN++;if(QN>=90){const ft=QFT/QN;QFT=QN=0;if(QCD>0)return;let n=QPR;if(ft>1/52&&QPR>(LOQ?.5:.75))n=Math.max(LOQ?.5:.75,QPR-.25);else if(ft<1/58&&QPR<(LOQ?.75:2))n=Math.min(LOQ?.75:2,QPR+.25);if(n!==QPR){QPR=n;QCD=3;R.setPixelRatio(LOQ?Math.min(UIS,QPR):Math.min(Math.max(UIS,1.5),QPR));R.setSize(W,H,false)}}}
+let LOQ=rnbLo(),QPR=LOQ?.6:1.5,QFT=0,QN=0,QCD=3;function qAdapt(d){if(S!=='play'||paused){QFT=QN=0;return}QCD-=d;QFT+=d;QN++;if(QN>=90){const ft=QFT/QN;QFT=QN=0;if(QCD>0)return;let n=QPR;if(ft>1/52&&QPR>(LOQ?.5:.75))n=Math.max(LOQ?.5:.75,QPR-.25);else if(ft<1/58&&QPR<(LOQ?.75:2))n=Math.min(LOQ?.75:2,QPR+.25);if(n!==QPR){QPR=n;QCD=3;R.setPixelRatio(LOQ?Math.min(UIS,QPR):Math.min(Math.max(UIS,1.5),QPR));R.setSize(W,H,false)}}}
 function loop(ts){NRAF=NBGL=performance.now();if(ts-NDRAW<psIv()){requestAnimationFrame(loop);return}NDRAW=ts;const d=Math.min(.1,(ts-last)/1000||0);qAdapt(d);last=ts;acc+=d;while(acc>=DT){step();acc-=DT}mpSend();draw(d);if(typeof mpUiSync==='function')mpUiSync();requestAnimationFrame(loop)}
 let UIS=1;
 function fitRes(){const st=document.getElementById('st'),cw=st.clientWidth||W,ch=st.clientHeight||H,disp=Math.min(cw,ch*W/H),dpr=window.devicePixelRatio||1;UIS=cl(disp*dpr/W,1,TOUCH?2:2.7);UIS=Math.min(UIS,2);R.setPixelRatio(LOQ?Math.min(UIS,QPR):Math.min(Math.max(UIS,1.5),QPR));R.setSize(W,H,false);const w2=Math.round(W*UIS),h2=Math.round(H*UIS);if(C.width!==w2||C.height!==h2){C.width=w2;C.height=h2}}
@@ -2560,6 +2560,16 @@ function xsSetup(){if(XS.on)return;XS.on=1;
  addEventListener('keyup',e=>{if(e.code==='KeyL')xsKey(0)});
  C.addEventListener('mousedown',e=>{if((e.button===3||e.button===4)&&ok())xsKey(1)});addEventListener('mouseup',e=>{if(e.button===3||e.button===4)xsKey(0)})}
 xsSetup();
+
+/* ---- 画質をバトル中に切りかえる（V キー）。解像度と影はその場で変わる。モデルの細かさ・ふちの補正は次のバトルから ---- */
+const RQSH=R.shadowMap.enabled;
+function rnbQTip(){let d=document.getElementById('rnbq');if(!d){d=document.createElement('div');d.id='rnbq';d.style.cssText='position:fixed;left:50%;top:16%;transform:translateX(-50%);z-index:50;padding:10px 24px;background:rgba(8,14,32,.94);border:2px solid #58e6ff;border-left-width:8px;color:#fff;font:800 17px sans-serif;pointer-events:none;transition:opacity .3s;text-align:center;white-space:nowrap';document.body.appendChild(d)}
+ d.innerHTML='画質：<b style="color:#58e6ff">'+(LOQ?'軽量':'オリジナル')+'</b><br><span style="font-size:12px;font-weight:700;color:#a4b4d8">V キーで切りかえ（モデルの細かさは次のバトルから）</span>';d.style.opacity=1;clearTimeout(rnbQTip.t);rnbQTip.t=setTimeout(()=>{d.style.opacity=0},2400)}
+function rnbQSet(lo){LOQ=!!lo;try{localStorage.setItem('rnb_q',LOQ?'lo':'hi')}catch(e){}QPR=LOQ?.6:1.5;QCD=3;
+ try{R.setPixelRatio(LOQ?Math.min(UIS,QPR):Math.min(Math.max(UIS,1.5),QPR));R.setSize(W,H,false);const sh=!LOQ&&RQSH;if(R.shadowMap.enabled!==sh){R.shadowMap.enabled=sh;SC.traverse(o=>{const m=o.material;if(m)(Array.isArray(m)?m:[m]).forEach(q=>{q.needsUpdate=true})});R.shadowMap.needsUpdate=true}}catch(e){}
+ rnbQTip()}
+addEventListener('keydown',e=>{if(e.code!=='KeyV'||e.repeat||e.ctrlKey||e.metaKey||e.altKey||(e.target&&e.target.tagName==='INPUT'))return;rnbQSet(!LOQ)});
+setTimeout(()=>{try{for(const p of document.querySelectorAll('p'))if(/カメラ/.test(p.textContent)&&!/画質/.test(p.textContent)){new MutationObserver(()=>{if(!/画質/.test(p.textContent))p.insertAdjacentHTML('beforeend',' ／ <b>V</b> 画質')}).observe(p,{childList:true});p.insertAdjacentHTML('beforeend',' ／ <b>V</b> 画質')}}catch(e){}},500);
 /* ---- 待ち部屋モード：/robonekobusters の待ち部屋の中で開かれたときだけ動く（単体で開いたときは今まで通り） ----
    待ち部屋がパーティーの通信を持っていて、このゲームにはいつもの部屋と同じ形で渡してくれる。
    部屋コードの画面は出さず、そろったら自動で出撃し、終わったら待ち部屋に戻る。 */

@@ -32,12 +32,14 @@ button:disabled{cursor:default}
 .logo{display:flex;align-items:center;gap:12px}.logo svg{width:46px;height:46px;flex:none}
 .logo b{display:block;font:400 clamp(21px,3.4vw,30px)/1.1 var(--d);letter-spacing:.02em;color:var(--yel);text-shadow:0 3px 0 #7a3a00}
 .logo i{display:block;font:700 12.5px/1.2 var(--f);font-style:normal;letter-spacing:.3em;color:var(--cy);margin-top:4px}
-.plate{display:flex;align-items:center;gap:0;height:44px;background:var(--steel);border:2px solid var(--edge);border-radius:4px 14px 4px 14px;overflow:hidden}
-.plate span{align-self:stretch;display:flex;align-items:center;padding:0 12px;background:var(--edge);font-size:12.5px;color:#dfe8ff}
-.plate input{width:11.5em;height:100%;border:0;border-radius:0;background:transparent;box-shadow:none}
-.hud .plate{margin-left:0}.qsel{display:flex;align-items:center;height:44px;margin-left:auto;border:2px solid var(--edge);border-radius:4px;overflow:hidden;background:var(--steel)}
-.qsel span{align-self:stretch;display:flex;align-items:center;padding:0 10px;background:var(--edge);font-size:12.5px;color:#dfe8ff}
-.qsel button{height:100%;padding:0 12px;border:0;background:transparent;font:800 13px var(--f);color:var(--dim)}.qsel button.on{background:var(--cy);color:#06101e}
+.setbar{display:flex;flex-wrap:wrap;gap:10px 22px;align-items:center;margin:-2px 0 14px;padding:10px 14px;background:rgba(16,26,54,.75);border:2px solid var(--edge);border-left:8px solid var(--cy)}
+.setbar.fl{animation:sbf .7s}@keyframes sbf{0%{background:rgba(88,230,255,.45);border-color:#fff}100%{background:rgba(16,26,54,.75)}}
+.setg{display:flex;align-items:center;gap:10px;min-width:0}.sl{font-size:13px;color:var(--cy);white-space:nowrap}
+.setg input{width:15em;flex:0 1 auto;height:44px}
+.qsel{display:flex;gap:6px}.qsel button{display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:112px;height:44px;padding:0 12px;border:2px solid rgba(255,255,255,.22);border-radius:4px;background:rgba(4,8,20,.55);color:var(--dim)}
+.qsel button b{font:800 14px/1.2 var(--f)}.qsel button small{font-size:10.5px;line-height:1.2}
+.qsel button.on{background:var(--cy);border-color:#fff;color:#06101e}.qsel button.on b::before{content:"✓ "}
+.sok{font-style:normal;font-size:12.5px;color:var(--grn);min-width:1em}
 .grid{display:grid;grid-template-columns:minmax(0,1fr) 336px;gap:20px;align-items:start}
 .sec{display:flex;align-items:center;gap:12px;margin:20px 0 10px;font:400 19px/1.2 var(--d);color:#fff}
 .sec::before{content:"";width:8px;height:20px;background:var(--yel);transform:skewX(-14deg)}
@@ -172,7 +174,7 @@ footer{margin:6px 0 0;padding:0 0 18px;font-size:12.5px;color:var(--mute);text-a
 .mvui::after{content:"";position:absolute;inset:0;background:#fff;opacity:0;transition:opacity .12s}.mvui.fl::after{opacity:.85}
 @media (prefers-reduced-motion:reduce){.spin{animation-duration:3s}.boss,.chr,.go,.btn{transition:none}}
 @media (max-width:980px){.grid{grid-template-columns:minmax(0,1fr)}.side{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px}.side .box{margin:0}}
-@media (max-width:680px){#app{padding:10px 12px 0}.dock{margin:14px -12px 0;padding:8px 12px calc(8px + env(safe-area-inset-bottom))}.logo svg{width:38px;height:38px}.plate{flex:1 1 100%}.qsel{margin-left:0;height:38px}.plate input{width:auto;flex:1}
+@media (max-width:680px){#app{padding:10px 12px 0}.dock{margin:14px -12px 0;padding:8px 12px calc(8px + env(safe-area-inset-bottom))}.logo svg{width:38px;height:38px}.setg{flex:1 1 100%;flex-wrap:wrap}.setg input{flex:1;width:auto}.qsel{flex:1}.qsel button{flex:1;min-width:0}.plate input{width:auto;flex:1}
  .show{grid-template-columns:96px minmax(0,1fr);gap:4px 12px;padding:16px 16px 16px 12px;min-height:0}.show::after{font-size:90px;top:-12px}.sd{font-size:13px}.diffw{grid-column:1/-1;margin-top:8px}.diffw>span{display:none}.diff{max-width:none;padding:0 6px}
  .bosses{gap:6px}.boss{grid-template-columns:minmax(0,1fr);justify-items:center;text-align:center;padding:8px 4px;row-gap:2px}.boss .emb{grid-row:auto;width:36px;height:36px}.boss .bn{font-size:12.5px;max-width:100%}.boss .bt{display:none}
  .chars{gap:6px}.chr{grid-template-columns:minmax(0,1fr);justify-items:center;text-align:center;padding:10px 6px;min-height:0;row-gap:2px}.chr svg{grid-row:auto;width:52px;height:52px}.chr .cn{font-size:14px}.chr .ct{font-size:11px}.chr .cm{display:none}
@@ -185,9 +187,13 @@ footer{margin:6px 0 0;padding:0 0 18px;font-size:12.5px;color:var(--mute);text-a
  <header class="hud">
   <div class="logo"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M7 20 5 4l13 8ZM41 20 43 4 30 12Z" fill="#ffd23a" stroke="#7a3a00" stroke-width="2" stroke-linejoin="round"/><rect x="5" y="11" width="38" height="32" rx="11" fill="#ffd23a" stroke="#7a3a00" stroke-width="2"/><rect x="10" y="19" width="28" height="12" rx="6" fill="#0c1430"/><circle cx="18" cy="25" r="3.4" fill="#58e6ff"/><circle cx="30" cy="25" r="3.4" fill="#58e6ff"/><path d="M20 36q4 3 8 0" stroke="#7a3a00" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg>
    <div><b>ロボネコバスターズ</b><i>出撃ロビー</i></div></div>
-  <div class="qsel" id="qsel" role="radiogroup" aria-label="画質"><span>画質</span><button type="button" data-q="hi" role="radio">オリジナル</button><button type="button" data-q="lo" role="radio">軽量</button></div>
-  <label class="plate" for="name"><span>なまえ</span><input id="name" maxlength="10" placeholder="10文字まで" autocomplete="off" spellcheck="false"></label>
  </header>
+ <div class="setbar" id="setbar">
+  <label class="setg" for="name"><span class="sl">あなたの名前</span><input id="name" maxlength="10" placeholder="ここに名前を入れる（10文字まで）" autocomplete="off" spellcheck="false"><i class="sok" id="nameOk" aria-live="polite"></i></label>
+  <div class="setg"><span class="sl">画質</span>
+   <div class="qsel" id="qsel" role="radiogroup" aria-label="画質"><button type="button" data-q="hi" role="radio"><b>オリジナル</b><small>きれい・重め</small></button><button type="button" data-q="lo" role="radio"><b>軽量</b><small>あらめ・軽い</small></button></div>
+   <i class="sok" id="qOk" aria-live="polite"></i></div>
+ </div>
  <div class="grid">
   <section>
    <div class="show pn" id="stg">
@@ -610,11 +616,12 @@ const CTL={
   touch:[['m:攻撃','三段攻撃','続けて押す',SKC.atk],['m:神速','神速アタック','',SKC.dash],['m:ラッシュ','突撃ラッシュ','',SKC.rush],['m:必殺|m:ひっさつ','必殺技','ゲージ100%で光る',SKC.ult]]},
  kage:{key:[['J|m:左クリック','三段こうげき','続けて押すと3段目まで',SKC.atk],['K|m:右クリック','神速アタック','敵に一気に斬りこむ',SKC.dash],['L|m:サイドボタン','極楽の術','長押しでためて離すと回復。最大までためると、まわりの仲間も回復。20秒に1回',SKC.heal],['I','必殺技「一刀両断」','ゲージが100%でつかえる',SKC.ult]],
   touch:[['m:こうげき','三段こうげき','続けて押す',SKC.atk],['m:神速','神速アタック','',SKC.dash],['m:極楽','極楽の術','長押しして離すと回復。最大で仲間も',SKC.heal],['m:必殺|m:ひっさつ','必殺技','ゲージ100%で光る',SKC.ult]]},
- common:{key:[['W|A|S|D','移動',''],['Shift','走る','スタミナをつかう'],['Space','回避','攻撃をよける'],['F','長押しで仲間を助ける','ロボネコ24号では端末も起動'],['Tab','ねらう敵を切りかえ',''],['Q|E','カメラを回す',''],['P','ポーズ',''],['M','音のオン・オフ','']],
+ common:{key:[['W|A|S|D','移動',''],['Shift','走る','スタミナをつかう'],['Space','回避','攻撃をよける'],['F','長押しで仲間を助ける','ロボネコ24号では端末も起動'],['Tab','ねらう敵を切りかえ',''],['Q|E','カメラを回す',''],['P','ポーズ',''],['M','音のオン・オフ',''],['V','画質のきりかえ','オリジナル ⇔ 軽量']],
   touch:[['m:画面の左側','ドラッグで移動','さわった所がスティックになる'],['m:回避','回避',''],['m:右下のボタン','わざ（上のとおり）','']]}};
-/* 画質（この端末だけの設定）：オリジナル／軽量。出撃ムービーとバトルの解像度に効く */
+/* 画質（この端末だけの設定）：オリジナル／軽量。出撃ムービーとバトルに効く。変えたら、設定バーが光って結果を文字で出す */
+function setFlash(el,txt){const b=$('setbar');b.classList.remove('fl');void b.offsetWidth;b.classList.add('fl');el.textContent=txt;clearTimeout(el._t);el._t=setTimeout(()=>{el.textContent=''},6000)}
 {let q='hi';try{if(localStorage.getItem('rnb_q')==='lo')q='lo'}catch(e){}const bs=[...document.querySelectorAll('#qsel button')],set=v=>{q=v;try{localStorage.setItem('rnb_q',v)}catch(e){}for(const b of bs){const on=b.dataset.q===v;b.classList.toggle('on',on);b.setAttribute('aria-checked',on)}};
- for(const b of bs)b.addEventListener('click',()=>{set(b.dataset.q);toast(b.dataset.q==='lo'?'画質：軽量（次のバトルから）':'画質：オリジナル（次のバトルから）')});set(q)}
+ for(const b of bs)b.addEventListener('click',()=>{if(b.dataset.q===q)return;set(b.dataset.q);setFlash($('qOk'),'✓ 「'+(q==='lo'?'軽量':'オリジナル')+'」にしました。次のバトルから（バトル中は V キーでも変えられます）')});set(q)}
 let ctlCh=null;
 /* 「極」のときだけ：ロビーの後ろでオーブがうごめく（軽くするため 1/2 の解像度・毎秒30コマ・ゲーム中は止める） */
 const ORB={on:0,raf:0,c:null,x:null,sp:{},col:'',o:[],last:0};
@@ -840,6 +847,7 @@ window.RNB_LOBBY=Object.freeze({v:1,session:()=>G?G.sess:null,mv:()=>!G||!!G.mov
 /* ================= 入力 ================= */
 function init(){buildStatic();const nm=$('name'),ci=$('code');nm.value=ME.name;
  nm.addEventListener('input',()=>{const v=clean(nm.value);if(v){ME.name=v;LS.s('rnb_name',v);if(inParty())lpSet({})}});
+ nm.addEventListener('change',()=>{const v=clean(nm.value);if(v)setFlash($('nameOk'),'✓ 名前を「'+v+'」にしました')});
  ci.addEventListener('input',()=>{const v=ci.value.toUpperCase().replace(/[^A-Z0-9]/g,'').slice(0,4);if(v!==ci.value)ci.value=v});
  ci.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();join()}});nm.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();nm.blur()}});
  $('create').addEventListener('click',create);$('join').addEventListener('click',join);$('leave').addEventListener('click',leave);$('go').addEventListener('click',()=>{if(isMember())toggleReady();else sortie()});
