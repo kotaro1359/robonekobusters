@@ -267,7 +267,7 @@ function play(o){stop();
  const root=o.container,W0=()=>root.clientWidth||innerWidth,H0=()=>root.clientHeight||innerHeight;
  const LOQ=(()=>{try{return localStorage.getItem('rnb_q')==='lo'}catch(e){return false}})();   // ロビーの「画質：軽量」
  const R=new THREE.WebGLRenderer({antialias:!LOQ,powerPreference:'high-performance'});
- let PR=LOQ?.6:Math.max(1.5,Math.min(window.devicePixelRatio||1,2));R.setPixelRatio(PR);R.setSize(W0(),H0());R.setClearColor(0x05040c);
+ let PR=LOQ?.6:Math.max(1.25,Math.min(window.devicePixelRatio||1,1.5));R.setPixelRatio(PR);R.setSize(W0(),H0());R.setClearColor(0x05040c);
  const cvEl=R.domElement;cvEl.className='mvc';root.appendChild(cvEl);
  const SC=new THREE.Scene();SC.fog=new THREE.Fog(0x1a1030,90,420);
  const CAM=new THREE.PerspectiveCamera(52,W0()/H0(),.1,1200);
