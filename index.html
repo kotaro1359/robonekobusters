@@ -91,6 +91,7 @@ body[data-d="2"] .pn.box,body[data-d="2"] .chr:not(.on){--p:linear-gradient(180d
 .chr{--e:#2a3b6c;display:grid;grid-template-columns:64px minmax(0,1fr);column-gap:12px;align-items:center;text-align:left;padding:12px 14px;min-height:96px;transition:transform .12s}
 .chr svg{width:64px;height:64px;grid-row:1/4}
 .chr .cn{font:400 18px/1.25 var(--d);color:#fff}.chr .ct{font-size:12px;line-height:1.4;color:var(--cc)}.chr .cm{font-size:11.5px;line-height:1.5;color:var(--dim)}
+.chr .cf{grid-column:1/-1;align-self:end;margin-top:8px;padding-top:6px;border-top:1px solid rgba(255,255,255,.16);font-size:11.5px;line-height:1.4;color:#ffd27a}
 .chr.on{--e:var(--cc);--p:linear-gradient(135deg,color-mix(in srgb,var(--cc) 30%,var(--steel)) 0 34%,var(--steel2) 34%)}
 .chr:disabled:not(.on){opacity:.45}
 /* ---- 出撃バー（下に固定） ---- */
@@ -580,7 +581,7 @@ const CHARS=[
   svg:'<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M24 10 19 2M40 10 45 2" stroke="#ffd23f" stroke-width="3.5" stroke-linecap="round"/><path d="M32 8C19 8 12 17 12 28c0 8 3 13 7 17l-2 12 9-6h11c9-3 15-11 15-23C52 17 45 8 32 8Z" fill="#9ff2da" stroke="#e0fff6" stroke-width="2"/><circle cx="24.5" cy="27" r="6.5" fill="#173a6e" stroke="#f4f4f4" stroke-width="2.2"/><circle cx="39.5" cy="27" r="6.5" fill="#173a6e" stroke="#f4f4f4" stroke-width="2.2"/><circle cx="26" cy="25.5" r="2.2" fill="#6af0ff"/><circle cx="41" cy="25.5" r="2.2" fill="#6af0ff"/></svg>'},
  {id:'shiro',name:'シロマル',type:'刀で斬りこむ剣士タイプ',moves:'三段攻撃・神速アタック・突撃ラッシュ／必殺：みじん切り',c:'#ffb46a',
   svg:'<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M6 59 56 9" stroke="#eef4fb" stroke-width="3.4" stroke-linecap="round"/><path d="M11 50l7 7" stroke="#d8a838" stroke-width="4.5" stroke-linecap="round"/><path d="M14 31 12 10 27 20ZM50 31 52 10 37 20Z" fill="#f2a85c" stroke="#ffe0bc" stroke-width="1.5" stroke-linejoin="round"/><ellipse cx="32" cy="35" rx="19" ry="16.5" fill="#f2a85c"/><ellipse cx="32" cy="41" rx="9.5" ry="6.5" fill="#f4f0e8"/><circle cx="25" cy="32" r="3.3" fill="#1a1d26"/><circle cx="39" cy="32" r="3.3" fill="#1a1d26"/><circle cx="32" cy="38" r="1.8" fill="#ff9ab0"/><path d="M14 46h36" stroke="#c81e2a" stroke-width="4" stroke-linecap="round"/></svg>'},
- {id:'kage',name:'ツキカゲ',type:'回復もできる剣士',moves:'攻撃力はシロマルより少しひかえめ／三段こうげき・神速アタック・極楽の術（回復）／必殺：一刀両断',c:'#9fb2ff',
+ {id:'kage',name:'ツキカゲ',type:'回復もできる剣士',moves:'三段こうげき・神速アタック・極楽の術（回復）／必殺：一刀両断',foot:'攻撃力はシロマルより少しひかえめ',c:'#9fb2ff',
   svg:'<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M48 36l12-5M48 40l12 3" stroke="#4a5ad8" stroke-width="3.5" stroke-linecap="round"/><circle cx="32" cy="35" r="19" fill="#4a5ad8"/><path d="M14 37c8 5 28 5 36 0v4c-5 10-31 10-36 0Z" fill="#07060c"/><path d="M14 31c8 4 28 4 36 0" stroke="#07060c" stroke-width="5"/><path d="M21 30l8 3M43 30l-8 3" stroke="#ffc84a" stroke-width="3.6" stroke-linecap="round"/><path d="M29 11a7 7 0 1 0 8.6 9.4 5.6 5.6 0 1 1-8.6-9.4Z" fill="#dfe6f2"/></svg>'}];
 const DIF=[['NORMAL','#9fd8ff'],['HARD','#ffd24a'],['極','#ff6a6a']];
 /* 操作方法（[キー, 説明, 補足]。キーは「+」で並べる。m: はマウス・文字のキー） */
@@ -636,7 +637,7 @@ function buildStatic(){
   el.addEventListener('click',()=>pick(b.id,null));bx.appendChild(el)}
  const cx=$('chars');for(const c of CHARS){const el=document.createElement('button');el.type='button';el.className='chr pn';el.dataset.c=c.id;el.setAttribute('role','radio');el.style.setProperty('--cc',c.c);
   el.innerHTML=c.svg+'<span class="cn"></span><span class="ct"></span><span class="cm"></span><span class="chk" aria-hidden="true">✓</span>';
-  el.querySelector('.cn').textContent=c.name;el.querySelector('.ct').textContent=c.type;el.querySelector('.cm').textContent=c.moves;el.addEventListener('click',()=>pickChar(c.id));cx.appendChild(el)}
+  el.querySelector('.cn').textContent=c.name;el.querySelector('.ct').textContent=c.type;el.querySelector('.cm').textContent=c.moves;if(c.foot){const f=document.createElement('span');f.className='cf';f.textContent=c.foot;el.appendChild(f)}el.addEventListener('click',()=>pickChar(c.id));cx.appendChild(el)}
  const tb=$('ctlTab');for(const c of CHARS){const b=document.createElement('button');b.type='button';b.dataset.c=c.id;b.setAttribute('role','tab');b.textContent=c.name;b.style.setProperty('--cc',c.c);b.addEventListener('click',()=>renderCtl(c.id));tb.appendChild(b)}
  const dx=$('diff');DIF.forEach(([n,c],i)=>{const el=document.createElement('button');el.type='button';el.textContent=n;el.className=i===2?'kw':'';el.style.setProperty('--dc',c);el.setAttribute('role','radio');el.addEventListener('click',()=>pick(null,i));dx.appendChild(el)})}
 function hostLP(){return N.lp.get(N.hostId)||null}
