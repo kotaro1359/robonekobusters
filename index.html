@@ -246,7 +246,7 @@ footer{margin:6px 0 0;padding:0 0 18px;font-size:12.5px;color:var(--mute);text-a
 /* ===== 出撃ムービー：基地で準備 → バスターズ号に乗りこむ → 基地から飛び出す → 道路で助走 → 次元の裂け目へ =====
    軽量のため：影なし・ローポリ・同じ形はまとめて描く（InstancedMesh）・粒子は2つのまとまりだけ */
 window.RNBMovie=(()=>{'use strict';
-const END=9.55,TOTAL=9.65,TUNT=9.4,LOADT=9.22,TF0=8.0,TFD=1.3;
+const END=9.55,TOTAL=9.65,TUNT=9.4,LOADT=9.5,TF0=8.0,TFD=1.3;
 const lerp=(a,b,t)=>a+(b-a)*t,cl=(v,a,b)=>v<a?a:v>b?b:v,sst=(a,b,t)=>{t=cl((t-a)/(b-a),0,1);return t*t*(3-2*t)},
  e3o=t=>1-Math.pow(1-cl(t,0,1),3),e2i=t=>{t=cl(t,0,1);return t*t},rnd=(a,b)=>a+Math.random()*(b-a),PI=Math.PI,TAU=PI*2;
 function cvs(w,h,f){const c=document.createElement('canvas');c.width=w;c.height=h;f(c.getContext('2d'),w,h);return c}
@@ -256,7 +256,7 @@ let M=null;   // 再生中のムービー（1つだけ）
 function play(o){stop();
  const root=o.container,W0=()=>root.clientWidth||innerWidth,H0=()=>root.clientHeight||innerHeight;
  const R=new THREE.WebGLRenderer({antialias:true,powerPreference:'high-performance'});
- let PR=Math.min(window.devicePixelRatio||1,1.5);R.setPixelRatio(PR);R.setSize(W0(),H0());R.setClearColor(0x05040c);
+ let PR=Math.min(window.devicePixelRatio||1,1.25);R.setPixelRatio(PR);R.setSize(W0(),H0());R.setClearColor(0x05040c);
  const cvEl=R.domElement;cvEl.className='mvc';root.appendChild(cvEl);
  const SC=new THREE.Scene();SC.fog=new THREE.Fog(0x1a1030,90,420);
  const CAM=new THREE.PerspectiveCamera(52,W0()/H0(),.1,1200);
@@ -374,6 +374,18 @@ function play(o){stop();
  inst(AM(0x5fe8ff,.9),[[0,5.5,13.42,38,.14,.1],...[-1,1].flatMap(s=>[-6,2,10].map(z=>[s*19.42,7,z,.14,14,.3]))],BASE);
  L(CY(1.6,1.9,1,10),LM(0x39405a),BASE,10.5,.5,10.8);const HOLO=new THREE.Group();HOLO.position.set(10.5,2.6,10.8);BASE.add(HOLO);{const m=AM(0x7ff0ff,.85);L(new THREE.TorusGeometry(1.25,.05,6,28),m,HOLO).rotation.x=PI/2;L(new THREE.TorusGeometry(1,.05,6,24),m,HOLO).rotation.x=.5;spr(0x7ff0ff,1.6,.9,HOLO)}
 
+ /* 内装を豪華に：金の柱・赤じゅうたん・シャンデリア・たれ幕・金のネコ像 */
+ {const IG=LM(0xe6b848,{emissive:0x5a3800}),PL=LM(0x3a2a66,{emissive:0x0c0620}),ZS=[-6,2,10];
+  inst(PL,[-1,1].flatMap(s=>ZS.map(z=>[s*18.7,7,z,1.3,14,1.3])),BASE);
+  inst(IG,[...[-1,1].flatMap(s=>ZS.flatMap(z=>[[s*18.7,13.3,z,2,.9,2],[s*18.7,.5,z,2,1,2],[s*18.7,7,z,1.5,.3,1.5]])),[0,13.3,13.4,39,.5,.3],[0,1.6,13.4,39,.3,.3],[-19.4,13.3,2,.3,.5,23],[19.4,13.3,2,.3,.5,23],[-14.5,.9,11.4,2.6,1.8,2.6],[14.5,.9,11.4,2.6,1.8,2.6]],BASE);
+  const CARP=tex(64,64,(g,w,h)=>{g.fillStyle='#8a1228';g.fillRect(0,0,w,h);g.fillStyle='#ffc83a';g.fillRect(0,0,5,h);g.fillRect(w-5,0,5,h);g.fillStyle='rgba(255,200,58,.5)';g.fillRect(9,0,2,h);g.fillRect(w-11,0,2,h);g.fillStyle='rgba(0,0,0,.18)';for(let y=0;y<h;y+=16)g.fillRect(12,y,w-24,2)});CARP.wrapT=THREE.RepeatWrapping;CARP.repeat.set(1,6);
+  L(new THREE.PlaneGeometry(7,23).rotateX(-PI/2),LM(0xffffff,{map:CARP}),BASE,0,.07,2.4);
+  const CG=new THREE.TorusGeometry(2.3,.14,6,28).rotateX(PI/2),CG2=new THREE.TorusGeometry(1.3,.1,6,20).rotateX(PI/2),CS=CY(.06,.06,1.6,5);
+  for(const z of[-4,3.5,10.5]){L(CG,IG,BASE,0,12.3,z);L(CG2,IG,BASE,0,11.7,z);L(CS,IG,BASE,0,13.2,z);const g=spr(0xffe2a0,9,.75,BASE);g.position.set(0,11.9,z)}
+  const DR=BM(0xffffff,{map:tex(64,128,(g,w,h)=>{g.fillStyle='#7a1024';g.fillRect(0,0,w,h);g.fillStyle='#ffc83a';g.fillRect(0,0,w,6);g.fillRect(0,h-10,w,4);g.beginPath();g.moveTo(0,h);g.lineTo(w/2,h-16);g.lineTo(w,h);g.fill();g.beginPath();g.arc(w/2,48,15,0,TAU);g.fill();g.beginPath();g.moveTo(w/2-15,46);g.lineTo(w/2-13,26);g.lineTo(w/2-3,36);g.moveTo(w/2+15,46);g.lineTo(w/2+13,26);g.lineTo(w/2+3,36);g.fill();g.fillStyle='#7a1024';g.beginPath();g.arc(w/2-6,47,3,0,TAU);g.arc(w/2+6,47,3,0,TAU);g.fill()})});
+  for(const s of[-1,1])for(const z of[-2,6]){const d=L(new THREE.PlaneGeometry(3,6.4),DR,BASE,s*19.42,8.6,z);d.rotation.y=-s*PI/2}
+  for(const s of[-1,1]){L(SP(.95,12,10),IG,BASE,s*14.5,2.7,11.4);for(const q of[-1,1]){const e=L(CO(.38,.8,4),IG,BASE,s*14.5+q*.55,3.6,11.4);e.rotation.y=PI/4}const g=spr(0xffd060,5,.5,BASE);g.position.set(s*14.5,2.9,11)}}
+
  /* ---------- キャラ（参加人数ぶん） ---------- */
  const CH=(o.chars||[]).slice(0,4);if(!CH.length)CH.push({ch:'hyu',name:'',col:'#7dffc8'});
  function mkChar(c){const g=new THREE.Group(),b=new THREE.Group();g.add(b);const parts={g,b};
@@ -450,14 +462,14 @@ function play(o){stop();
  function engSet(k){if(!eng)return;const t=AC.currentTime;eng.os.frequency.setTargetAtTime(38+k*120,t,.08);eng.os2.frequency.setTargetAtTime(57+k*180,t,.08);eng.fl.frequency.setTargetAtTime(380+k*1400,t,.1)}
  function engStop(){if(!eng)return;const t=AC.currentTime;eng.g.gain.cancelScheduledValues(t);eng.g.gain.setTargetAtTime(0,t,.08);const e=eng;eng=null;setTimeout(()=>{try{e.os.stop();e.os2.stop()}catch(x){}},400)}
  const CUES=[[.05,()=>{sTone(.18,880,880,'triangle',.5);setTimeout(()=>sTone(.25,1320,1320,'triangle',.45),110)}],[3.95,()=>sNoise(.25,300,120,'lowpass',1.4)],[4.05,()=>{engStart()}],[4.3,()=>sNoise(.5,900,2400,'bandpass',.9)],
-  [4.85,()=>{sTone(.7,90,40,'sine',2.2);sNoise(.6,1800,200,'lowpass',1.4)}],[6.9,()=>{sTone(.12,520,260,'square',.5);sNoise(.3,2400,600,'bandpass',.8)}],[7.4,()=>sNoise(.9,400,3000,'bandpass',1.1)],[8.0,()=>{sTone(.7,120,45,'sine',2.2);sNoise(.7,2400,300,'lowpass',1.5)}],[8.9,()=>{sTone(.7,200,1400,'sine',1);sNoise(.7,600,6000,'bandpass',1.2)}],[9.35,()=>{sTone(1.2,1500,300,'triangle',.7)}]];
+  [4.85,()=>{sTone(.7,90,40,'sine',2.2);sNoise(.6,1800,200,'lowpass',1.4)}],[6.9,()=>{sTone(.12,520,260,'square',.5);sNoise(.3,2400,600,'bandpass',.8)}],[7.4,()=>sNoise(.9,400,3000,'bandpass',1.1)],[8.0,()=>{sTone(.7,120,45,'sine',2.2);sNoise(.7,2400,300,'lowpass',1.5)}],[8.9,()=>{sTone(.5,200,1400,'sine',1);sNoise(.5,600,6000,'bandpass',1.2)}],[9.35,()=>{sTone(.3,1500,500,'triangle',.6)}],[9.42,()=>engStop()]];
 
  /* ---------- 動き ---------- */
  const _v=new THREE.Vector3(),_v2=new THREE.Vector3(),VZ0=-1.5;
  /* 車の位置（時刻→z）：基地を出るまでゆっくり → 道路で一気に加速 */
  function vz(t){if(t<4.65)return VZ0;if(t<=TF0)return VZ0-148.5*Math.pow((t-4.65)/3.35,2.2);const q=Math.min(t-TF0,TFD);return -150-(97.5*q-8.73*q*q)}
  /* 離陸してからの高さ（u:0→1） */
- const HW0=5.9,HWK=1.55,P1=4.35,PK=1.25,PS=P1-P1/PK,XT=(TF0-HW0)*(HWK-1)-PS,warp=r=>{r=r<P1/PK?r*PK:r+PS;return r<HW0?r:r<HW0+(TF0-HW0)*HWK?HW0+(r-HW0)/HWK:r-XT-PS};   // 準備と乗りこみは少し速く   // 高速を走るところだけ時間を長く
+ const HW0=5.9,HWK=1.4,P1=4.35,PK=1.4,PS=P1-P1/PK,XT=(TF0-HW0)*(HWK-1)-PS,warp=r=>{r=r<P1/PK?r*PK:r+PS;return r<HW0?r:r<HW0+(TF0-HW0)*HWK?HW0+(r-HW0)/HWK:r-XT-PS};   // 準備と乗りこみは少し速く   // 高速を走るところだけ時間を長く
  const fy=u=>{u=cl(u,0,1);return 17*u*u*(3-2*u)};
  let last=performance.now(),t0=performance.now(),tt=0,raf=0,done=false,skipped=false,ci=0,started=0,loadSent=0,fN=0,fAcc=0;
  function setT(t){
@@ -497,7 +509,7 @@ function play(o){stop();
   /* 衝撃波の輪 */
   {const r=RINGS[0],k=(t-TF0)/.7;r.visible=k>0&&k<1;if(r.visible){r.position.set(0,.25,-150);r.scale.setScalar(1.5+k*17);r.material.opacity=.9*(1-k)}
    for(let i=1;i<4;i++){const q=RINGS[i],u0=.18+i*.2,k2=(fu-u0)/.22;q.visible=!inT&&t>TF0&&k2>0&&k2<1;if(q.visible){q.position.set(0,fy(u0),vz(TF0+u0*TFD));q.scale.setScalar(2.2+k2*8);q.material.opacity=.8*(1-k2)}}}
-  EXT.visible=t>=4.3;HRG.rotation.y=t*1.1;RAD.rotation.y=t*1.5;HOLO.rotation.y=t*2;{const c=Math.floor(t*6)%2;GLA.material.opacity=c?.95:.2;GLB.material.opacity=c?.2:.95;for(const g of EYEG)g.material.opacity=.45+Math.sin(t*4)*.15}
+  BASE.visible=t<6.9;EXT.visible=t>=4.3;HRG.rotation.y=t*1.1;RAD.rotation.y=t*1.5;HOLO.rotation.y=t*2;{const c=Math.floor(t*6)%2;GLA.material.opacity=c?.95:.2;GLB.material.opacity=c?.2:.95;for(const g of EYEG)g.material.opacity=.45+Math.sin(t*4)*.15}
   /* --- 基地のシャッター --- */
   SHUT.position.y=3.15+sst(4.25,4.7,t)*6.6;
   BLINK.forEach((s,i)=>s.material.opacity=Math.floor(t*2+i)%2?1:.15);SL.forEach((g,i)=>{g.rotation.z=Math.sin(t*.7+i*2)*.5;g.rotation.x=Math.cos(t*.5+i)*.3});
@@ -544,7 +556,7 @@ function play(o){stop();
   if(t>=END&&!done)finish();
   R.render(SC,CAM);
   /* 重い端末では解像度を下げる（1秒ごとに見直す） */
-  if(t>.3&&t<TUNT){fN++;fAcc+=rdt;if(fN>=30){const av=fAcc/fN;fN=fAcc=0;if(av>.023&&PR>.76){PR=Math.max(.75,PR-.25);R.setPixelRatio(PR);R.setSize(W0(),H0())}}}}
+  if(t>.3&&t<TUNT){fN++;fAcc+=rdt;if(fN>=30){const av=fAcc/fN;fN=fAcc=0;if(av>.021&&PR>.76){PR=Math.max(.75,PR-.25);R.setPixelRatio(PR);R.setSize(W0(),H0())}}}}
  function ui(t){
   const wt=t>=TUNT;CARD.classList.toggle('on',wt);ST.classList.toggle('on',wt);SKB.classList.toggle('off',wt);UI.classList.toggle('fl',t>9.2&&t<9.5);}
  function finish(){if(done)return;done=true;engStop();if(!loadSent){loadSent=1;try{o.onLoad&&o.onLoad()}catch(e){}}try{o.onDone&&o.onDone()}catch(e){}}
@@ -553,7 +565,7 @@ function play(o){stop();
  SKB.addEventListener('click',doSkip);const onKey=e=>{if(e.code==='Enter'||e.code==='Space'||e.code==='Escape'){e.preventDefault();doSkip()}};addEventListener('keydown',onKey);
  const tm=setTimeout(finish,(TOTAL+XT)*1000+200);   // 裏のタブでも時間どおりに「終わった」にする
  /* 再生の前に：材質（シェーダー）と画像をぜんぶ準備しておく。こうしないと最初の数コマがカクつく */
- try{setT(0);camAt(0);EXT.visible=true;TUN.visible=true;WORLD.visible=true;for(const r of RINGS)r.visible=true;for(const q of SPD)q.m.visible=true;R.compile(SC,CAM);if(R.initTexture)for(const x of[TT,SWIRL,ROADT,GLOW,EMB,MON])R.initTexture(x);R.render(SC,CAM);setT(0)}catch(e){}
+ try{setT(0);camAt(0);BASE.visible=true;EXT.visible=true;TUN.visible=true;WORLD.visible=true;for(const r of RINGS)r.visible=true;for(const q of SPD)q.m.visible=true;R.compile(SC,CAM);if(R.initTexture)for(const x of[TT,SWIRL,ROADT,GLOW,EMB,MON])R.initTexture(x);R.render(SC,CAM);setT(0)}catch(e){}
  raf=requestAnimationFrame(frame);
  let stopped=0;M={stop(){if(stopped)return;stopped=1;cancelAnimationFrame(raf);clearTimeout(tm);removeEventListener('resize',onRs);removeEventListener('keydown',onKey);engStop();
    SC.traverse(q=>{if(q.geometry)q.geometry.dispose();const ms=q.material?(Array.isArray(q.material)?q.material:[q.material]):[];for(const m of ms){if(m.map)m.map.dispose();if(m.emissiveMap&&m.emissiveMap!==m.map)m.emissiveMap.dispose();m.dispose()}});
