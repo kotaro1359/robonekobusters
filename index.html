@@ -39,7 +39,7 @@ button:disabled{cursor:default}
 .qsel{display:flex;gap:6px}.qsel button{display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:112px;height:44px;padding:0 12px;border:2px solid rgba(255,255,255,.22);border-radius:4px;background:rgba(4,8,20,.55);color:var(--dim)}
 .qsel button b{font:800 14px/1.2 var(--f)}.qsel button small{font-size:10.5px;line-height:1.2}
 .qsel button.on{background:var(--cy);border-color:#fff;color:#06101e}.qsel button.on b::before{content:"✓ "}
-.sok{font-style:normal;font-size:12.5px;color:var(--grn);min-width:1em}
+.sok{flex:1 1 100%;margin:-4px 0 0;height:20px;line-height:20px;font-size:12.5px;color:var(--grn);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}   /* 高さを先に取っておく：文字が出ても下の画面が動かない */
 .grid{display:grid;grid-template-columns:minmax(0,1fr) 336px;gap:20px;align-items:start}
 .sec{display:flex;align-items:center;gap:12px;margin:20px 0 10px;font:400 19px/1.2 var(--d);color:#fff}
 .sec::before{content:"";width:8px;height:20px;background:var(--yel);transform:skewX(-14deg)}
@@ -189,10 +189,10 @@ footer{margin:6px 0 0;padding:0 0 18px;font-size:12.5px;color:var(--mute);text-a
    <div><b>ロボネコバスターズ</b><i>出撃ロビー</i></div></div>
  </header>
  <div class="setbar" id="setbar">
-  <label class="setg" for="name"><span class="sl">あなたの名前</span><input id="name" maxlength="10" placeholder="ここに名前を入れる（10文字まで）" autocomplete="off" spellcheck="false"><i class="sok" id="nameOk" aria-live="polite"></i></label>
+  <label class="setg" for="name"><span class="sl">あなたの名前</span><input id="name" maxlength="10" placeholder="ここに名前を入れる（10文字まで）" autocomplete="off" spellcheck="false"></label>
   <div class="setg"><span class="sl">画質</span>
-   <div class="qsel" id="qsel" role="radiogroup" aria-label="画質"><button type="button" data-q="hi" role="radio"><b>オリジナル</b><small>きれい・重め</small></button><button type="button" data-q="lo" role="radio"><b>軽量</b><small>あらめ・軽い</small></button></div>
-   <i class="sok" id="qOk" aria-live="polite"></i></div>
+   <div class="qsel" id="qsel" role="radiogroup" aria-label="画質"><button type="button" data-q="hi" role="radio"><b>オリジナル</b><small>きれい・重め</small></button><button type="button" data-q="lo" role="radio"><b>軽量</b><small>あらめ・軽い</small></button></div></div>
+  <p class="sok" id="setNote" aria-live="polite"></p>
  </div>
  <div class="grid">
   <section>
@@ -621,7 +621,7 @@ const CTL={
 /* 画質（この端末だけの設定）：オリジナル／軽量。出撃ムービーとバトルに効く。変えたら、設定バーが光って結果を文字で出す */
 function setFlash(el,txt){const b=$('setbar');b.classList.remove('fl');void b.offsetWidth;b.classList.add('fl');el.textContent=txt;clearTimeout(el._t);el._t=setTimeout(()=>{el.textContent=''},6000)}
 {let q='hi';try{if(localStorage.getItem('rnb_q')==='lo')q='lo'}catch(e){}const bs=[...document.querySelectorAll('#qsel button')],set=v=>{q=v;try{localStorage.setItem('rnb_q',v)}catch(e){}for(const b of bs){const on=b.dataset.q===v;b.classList.toggle('on',on);b.setAttribute('aria-checked',on)}};
- for(const b of bs)b.addEventListener('click',()=>{if(b.dataset.q===q)return;set(b.dataset.q);setFlash($('qOk'),'✓ 「'+(q==='lo'?'軽量':'オリジナル')+'」にしました。次のバトルから（バトル中は V キーでも変えられます）')});set(q)}
+ for(const b of bs)b.addEventListener('click',()=>{if(b.dataset.q===q)return;set(b.dataset.q);setFlash($('setNote'),'✓ 「'+(q==='lo'?'軽量':'オリジナル')+'」にしました（次のバトルから。バトル中は V キーでも変えられます）')});set(q)}
 let ctlCh=null;
 /* 「極」のときだけ：ロビーの後ろでオーブがうごめく（軽くするため 1/2 の解像度・毎秒30コマ・ゲーム中は止める） */
 const ORB={on:0,raf:0,c:null,x:null,sp:{},col:'',o:[],last:0};
@@ -847,7 +847,7 @@ window.RNB_LOBBY=Object.freeze({v:1,session:()=>G?G.sess:null,mv:()=>!G||!!G.mov
 /* ================= 入力 ================= */
 function init(){buildStatic();const nm=$('name'),ci=$('code');nm.value=ME.name;
  nm.addEventListener('input',()=>{const v=clean(nm.value);if(v){ME.name=v;LS.s('rnb_name',v);if(inParty())lpSet({})}});
- nm.addEventListener('change',()=>{const v=clean(nm.value);if(v)setFlash($('nameOk'),'✓ 名前を「'+v+'」にしました')});
+ nm.addEventListener('change',()=>{const v=clean(nm.value);if(v)setFlash($('setNote'),'✓ 名前を「'+v+'」にしました')});
  ci.addEventListener('input',()=>{const v=ci.value.toUpperCase().replace(/[^A-Z0-9]/g,'').slice(0,4);if(v!==ci.value)ci.value=v});
  ci.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();join()}});nm.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();nm.blur()}});
  $('create').addEventListener('click',create);$('join').addEventListener('click',join);$('leave').addEventListener('click',leave);$('go').addEventListener('click',()=>{if(isMember())toggleReady();else sortie()});
