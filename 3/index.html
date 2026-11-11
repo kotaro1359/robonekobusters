@@ -259,7 +259,7 @@ function musStep(t,i,dur){const p2=PH===2,bar=Math.floor(i/16)%8,s=i%16,root=MPR
 setInterval(()=>{if(!AC||paused){MUS.nt=0;return}if(!musWant()){MUS.nt=0;MUS.st=0;return}musOut();const bpm=PH===2?168:150,dur=60/bpm/4,now=AC.currentTime;
  if(MUS.nt<now)MUS.nt=now+.06;while(MUS.nt<now+.14){try{musStep(MUS.nt,MUS.st,dur)}catch(e){}MUS.nt+=dur;MUS.st++}},25);
 /* ================= 3D基盤 ================= */
-const G=document.getElementById('g'),R=new THREE.WebGLRenderer({canvas:G,antialias:true,powerPreference:LITE?'low-power':'high-performance'});
+const G=document.getElementById('g'),R=new THREE.WebGLRenderer({canvas:G,antialias:!(()=>{try{return localStorage.getItem('rnb_q')==='lo'}catch(e){return false}})(),powerPreference:LITE?'low-power':'high-performance'});
 R.setPixelRatio(Math.min(2,window.devicePixelRatio||1));R.setSize(W,H,false);R.shadowMap.enabled=!LITE;R.shadowMap.type=THREE.PCFShadowMap;R.toneMapping=THREE.ACESFilmicToneMapping;R.toneMappingExposure=.9;
 const SC=new THREE.Scene(),CAM=new THREE.PerspectiveCamera(61,W/H,5,12000);
 SC.background=new THREE.CanvasTexture(cv(4,256,(g,w,h)=>{const q=g.createLinearGradient(0,0,0,h);q.addColorStop(0,'#07051a');q.addColorStop(.5,'#1d1440');q.addColorStop(.8,'#4a2858');q.addColorStop(1,'#7a3a5a');g.fillStyle=q;g.fillRect(0,0,w,h)}));
@@ -1659,7 +1659,7 @@ function drawTouch(){X.save();
   if(b.id==='lock'&&lockOff){X.strokeStyle='#ff8a6b';X.lineWidth=2;X.beginPath();X.moveTo(b.x-12,b.y+12);X.lineTo(b.x+12,b.y-12);X.stroke()}}
  X.restore()}
 let last=0,acc=0;
-let QPR=1.25,QFT=0,QN=0,QCD=3;function qAdapt(d){if(S!=='play'||paused){QFT=QN=0;return}QCD-=d;QFT+=d;QN++;if(QN>=90){const ft=QFT/QN;QFT=QN=0;if(QCD>0)return;let n=QPR;if(ft>1/52&&QPR>.75)n=Math.max(.75,QPR-.25);else if(ft<1/58&&QPR<1.5)n=Math.min(1.5,QPR+.25);if(n!==QPR){QPR=n;QCD=3;R.setPixelRatio(Math.min(UIS,QPR));R.setSize(W,H,false)}}}
+const LOQ=(()=>{try{return localStorage.getItem('rnb_q')==='lo'}catch(e){return false}})();let QPR=LOQ?.75:1.25,QFT=0,QN=0,QCD=3;function qAdapt(d){if(S!=='play'||paused){QFT=QN=0;return}QCD-=d;QFT+=d;QN++;if(QN>=90){const ft=QFT/QN;QFT=QN=0;if(QCD>0)return;let n=QPR;if(ft>1/52&&QPR>.75)n=Math.max(.75,QPR-.25);else if(ft<1/58&&QPR<(LOQ?1:1.5))n=Math.min(LOQ?1:1.5,QPR+.25);if(n!==QPR){QPR=n;QCD=3;R.setPixelRatio(Math.min(UIS,QPR));R.setSize(W,H,false)}}}
 function loop(ts){NRAF=NBGL=performance.now();if(ts-NDRAW<psIv()){requestAnimationFrame(loop);return}NDRAW=ts;const d=Math.min(.1,(ts-last)/1000||0);qAdapt(d);last=ts;acc+=d;while(acc>=DT){step();acc-=DT}mpSend();draw(d);if(typeof mpUiSync==='function')mpUiSync();requestAnimationFrame(loop)}
 let UIS=1;
 function fitRes(){const st=document.getElementById('st'),cw=st.clientWidth||W,ch=st.clientHeight||H,disp=Math.min(cw,ch*W/H),dpr=window.devicePixelRatio||1;UIS=cl(disp*dpr/W,1,TOUCH?2:2.7);UIS=Math.min(UIS,2);R.setPixelRatio(Math.min(UIS,QPR));R.setSize(W,H,false);const w2=Math.round(W*UIS),h2=Math.round(H*UIS);if(C.width!==w2||C.height!==h2){C.width=w2;C.height=h2}}

@@ -194,7 +194,7 @@ function snd(f,d,ty,v,sl){if(!AC||mute||BGM.se<=.01)return;v=(v||.05)*BGM.se*2;c
 const BS=[55,55,82.4,55,98,55,82.4,73.4],ARP=[220,262,330,392,330,262,294,349];let bst=0;
 
 /* ================= 3D基盤 ================= */
-const G=document.getElementById('g'),R=new THREE.WebGLRenderer({canvas:G,antialias:true,powerPreference:'low-power'});
+const G=document.getElementById('g'),R=new THREE.WebGLRenderer({canvas:G,antialias:!(()=>{try{return localStorage.getItem('rnb_q')==='lo'}catch(e){return false}})(),powerPreference:'low-power'});
 R.setPixelRatio(Math.min(2,window.devicePixelRatio||1));R.setSize(W,H,false);R.shadowMap.enabled=true;R.shadowMap.type=THREE.PCFShadowMap;R.toneMapping=THREE.ACESFilmicToneMapping;R.toneMappingExposure=.9;
 const SC=new THREE.Scene(),CAM=new THREE.PerspectiveCamera(61,W/H,5,12000);
 SC.background=new THREE.CanvasTexture(cv(4,256,(g,w,h)=>{const q=g.createLinearGradient(0,0,0,h);q.addColorStop(0,'#04060f');q.addColorStop(.5,'#0c1430');q.addColorStop(.8,'#1c2a4a');q.addColorStop(1,'#2a3a5a');g.fillStyle=q;g.fillRect(0,0,w,h)}));
@@ -1538,7 +1538,7 @@ function drawTouch(){X.save();
  X.restore()}
 
 let last=0,acc=0;
-let QPR=1.25,QFT=0,QN=0,QCD=3;function qAdapt(d){if(S!=='play'||paused){QFT=QN=0;return}QCD-=d;QFT+=d;QN++;if(QN>=90){const ft=QFT/QN;QFT=QN=0;if(QCD>0)return;let n=QPR;if(ft>1/52&&QPR>.75)n=Math.max(.75,QPR-.25);else if(ft<1/58&&QPR<1.5)n=Math.min(1.5,QPR+.25);if(n!==QPR){QPR=n;QCD=3;R.setPixelRatio(Math.min(UIS,QPR));R.setSize(W,H,false)}}}
+const LOQ=(()=>{try{return localStorage.getItem('rnb_q')==='lo'}catch(e){return false}})();let QPR=LOQ?.75:1.25,QFT=0,QN=0,QCD=3;function qAdapt(d){if(S!=='play'||paused){QFT=QN=0;return}QCD-=d;QFT+=d;QN++;if(QN>=90){const ft=QFT/QN;QFT=QN=0;if(QCD>0)return;let n=QPR;if(ft>1/52&&QPR>.75)n=Math.max(.75,QPR-.25);else if(ft<1/58&&QPR<(LOQ?1:1.5))n=Math.min(LOQ?1:1.5,QPR+.25);if(n!==QPR){QPR=n;QCD=3;R.setPixelRatio(Math.min(UIS,QPR));R.setSize(W,H,false)}}}
 let SHF=0;R.shadowMap.autoUpdate=false;R.shadowMap.needsUpdate=true;
 let LFT=0;function loop(ts){NRAF=NBGL=performance.now();if(ts-LFT<13){requestAnimationFrame(loop);return}LFT=ts;const gap=ts-last,cap=(S==='play'||S==='cine')&&!paused?1000/75:1000/38;if(gap>0&&gap<cap){requestAnimationFrame(loop);return}const d=Math.min(.1,gap/1000||0);qAdapt(d);last=ts;acc+=d;while(acc>=DT){step();acc-=DT}mpSend();if((++SHF&1)===0||S!=='play')R.shadowMap.needsUpdate=true;draw(d);if(typeof mpUiSync==='function')mpUiSync();requestAnimationFrame(loop)}
 

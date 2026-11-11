@@ -1303,7 +1303,7 @@ function drawTouch(){X.save();
   if(b.id==='lock'&&lockOff){X.strokeStyle='#ff8a6b';X.lineWidth=2;X.beginPath();X.moveTo(b.x-12,b.y+12);X.lineTo(b.x+12,b.y-12);X.stroke()}}
  X.restore()}
 let last=0,acc=0;
-let QPR=1.25,QFT=0,QN=0,QCD=3;function qAdapt(d){if(S!=='play'||paused){QFT=QN=0;return}QCD-=d;QFT+=d;QN++;if(QN>=90){const ft=QFT/QN;QFT=QN=0;if(QCD>0)return;let n=QPR;if(ft>1/52&&QPR>.75)n=Math.max(.75,QPR-.25);else if(ft<1/58&&QPR<1.5)n=Math.min(1.5,QPR+.25);if(n!==QPR){QPR=n;QCD=3;R.setPixelRatio(Math.min(UIS,QPR));R.setSize(W,H,false)}}}
+const LOQ=(()=>{try{return localStorage.getItem('rnb_q')==='lo'}catch(e){return false}})();let QPR=LOQ?.75:1.25,QFT=0,QN=0,QCD=3;function qAdapt(d){if(S!=='play'||paused){QFT=QN=0;return}QCD-=d;QFT+=d;QN++;if(QN>=90){const ft=QFT/QN;QFT=QN=0;if(QCD>0)return;let n=QPR;if(ft>1/52&&QPR>.75)n=Math.max(.75,QPR-.25);else if(ft<1/58&&QPR<(LOQ?1:1.5))n=Math.min(LOQ?1:1.5,QPR+.25);if(n!==QPR){QPR=n;QCD=3;R.setPixelRatio(Math.min(UIS,QPR));R.setSize(W,H,false)}}}
 function loop(ts){NRAF=NBGL=performance.now();if(ts-NDRAW<psIv()){requestAnimationFrame(loop);return}NDRAW=ts;const d=Math.min(.1,(ts-last)/1000||0);qAdapt(d);last=ts;acc+=d;while(acc>=DT){step();acc-=DT}mpSend();draw(d);if(typeof mpUiSync==='function')mpUiSync();requestAnimationFrame(loop)}
 let UIS=1;
 function fitRes(){const st=document.getElementById('st'),cw=st.clientWidth||W,ch=st.clientHeight||H,disp=Math.min(cw,ch*W/H),dpr=window.devicePixelRatio||1;UIS=cl(disp*dpr/W,1,TOUCH?2:2.7);UIS=Math.min(UIS,2);R.setPixelRatio(Math.min(UIS,QPR));R.setSize(W,H,false);const w2=Math.round(W*UIS),h2=Math.round(H*UIS);if(C.width!==w2||C.height!==h2){C.width=w2;C.height=h2}}

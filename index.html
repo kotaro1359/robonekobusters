@@ -35,6 +35,9 @@ button:disabled{cursor:default}
 .plate{display:flex;align-items:center;gap:0;height:44px;background:var(--steel);border:2px solid var(--edge);border-radius:4px 14px 4px 14px;overflow:hidden}
 .plate span{align-self:stretch;display:flex;align-items:center;padding:0 12px;background:var(--edge);font-size:12.5px;color:#dfe8ff}
 .plate input{width:11.5em;height:100%;border:0;border-radius:0;background:transparent;box-shadow:none}
+.hud .plate{margin-left:0}.qsel{display:flex;align-items:center;height:44px;margin-left:auto;border:2px solid var(--edge);border-radius:4px;overflow:hidden;background:var(--steel)}
+.qsel span{align-self:stretch;display:flex;align-items:center;padding:0 10px;background:var(--edge);font-size:12.5px;color:#dfe8ff}
+.qsel button{height:100%;padding:0 12px;border:0;background:transparent;font:800 13px var(--f);color:var(--dim)}.qsel button.on{background:var(--cy);color:#06101e}
 .grid{display:grid;grid-template-columns:minmax(0,1fr) 336px;gap:20px;align-items:start}
 .sec{display:flex;align-items:center;gap:12px;margin:20px 0 10px;font:400 19px/1.2 var(--d);color:#fff}
 .sec::before{content:"";width:8px;height:20px;background:var(--yel);transform:skewX(-14deg)}
@@ -169,7 +172,7 @@ footer{margin:6px 0 0;padding:0 0 18px;font-size:12.5px;color:var(--mute);text-a
 .mvui::after{content:"";position:absolute;inset:0;background:#fff;opacity:0;transition:opacity .12s}.mvui.fl::after{opacity:.85}
 @media (prefers-reduced-motion:reduce){.spin{animation-duration:3s}.boss,.chr,.go,.btn{transition:none}}
 @media (max-width:980px){.grid{grid-template-columns:minmax(0,1fr)}.side{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px}.side .box{margin:0}}
-@media (max-width:680px){#app{padding:10px 12px 0}.dock{margin:14px -12px 0;padding:8px 12px calc(8px + env(safe-area-inset-bottom))}.logo svg{width:38px;height:38px}.plate{flex:1 1 100%}.plate input{width:auto;flex:1}
+@media (max-width:680px){#app{padding:10px 12px 0}.dock{margin:14px -12px 0;padding:8px 12px calc(8px + env(safe-area-inset-bottom))}.logo svg{width:38px;height:38px}.plate{flex:1 1 100%}.qsel{margin-left:0;height:38px}.plate input{width:auto;flex:1}
  .show{grid-template-columns:96px minmax(0,1fr);gap:4px 12px;padding:16px 16px 16px 12px;min-height:0}.show::after{font-size:90px;top:-12px}.sd{font-size:13px}.diffw{grid-column:1/-1;margin-top:8px}.diffw>span{display:none}.diff{max-width:none;padding:0 6px}
  .bosses{gap:6px}.boss{grid-template-columns:minmax(0,1fr);justify-items:center;text-align:center;padding:8px 4px;row-gap:2px}.boss .emb{grid-row:auto;width:36px;height:36px}.boss .bn{font-size:12.5px;max-width:100%}.boss .bt{display:none}
  .chars{gap:6px}.chr{grid-template-columns:minmax(0,1fr);justify-items:center;text-align:center;padding:10px 6px;min-height:0;row-gap:2px}.chr svg{grid-row:auto;width:52px;height:52px}.chr .cn{font-size:14px}.chr .ct{font-size:11px}.chr .cm{display:none}
@@ -182,6 +185,7 @@ footer{margin:6px 0 0;padding:0 0 18px;font-size:12.5px;color:var(--mute);text-a
  <header class="hud">
   <div class="logo"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M7 20 5 4l13 8ZM41 20 43 4 30 12Z" fill="#ffd23a" stroke="#7a3a00" stroke-width="2" stroke-linejoin="round"/><rect x="5" y="11" width="38" height="32" rx="11" fill="#ffd23a" stroke="#7a3a00" stroke-width="2"/><rect x="10" y="19" width="28" height="12" rx="6" fill="#0c1430"/><circle cx="18" cy="25" r="3.4" fill="#58e6ff"/><circle cx="30" cy="25" r="3.4" fill="#58e6ff"/><path d="M20 36q4 3 8 0" stroke="#7a3a00" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg>
    <div><b>ロボネコバスターズ</b><i>出撃ロビー</i></div></div>
+  <div class="qsel" id="qsel" role="radiogroup" aria-label="画質"><span>画質</span><button type="button" data-q="hi" role="radio">オリジナル</button><button type="button" data-q="lo" role="radio">軽量</button></div>
   <label class="plate" for="name"><span>なまえ</span><input id="name" maxlength="10" placeholder="10文字まで" autocomplete="off" spellcheck="false"></label>
  </header>
  <div class="grid">
@@ -255,8 +259,9 @@ let M=null;   // 再生中のムービー（1つだけ）
 
 function play(o){stop();
  const root=o.container,W0=()=>root.clientWidth||innerWidth,H0=()=>root.clientHeight||innerHeight;
- const R=new THREE.WebGLRenderer({antialias:true,powerPreference:'high-performance'});
- let PR=Math.min(window.devicePixelRatio||1,1.25);R.setPixelRatio(PR);R.setSize(W0(),H0());R.setClearColor(0x05040c);
+ const LOQ=(()=>{try{return localStorage.getItem('rnb_q')==='lo'}catch(e){return false}})();   // ロビーの「画質：軽量」
+ const R=new THREE.WebGLRenderer({antialias:!LOQ,powerPreference:'high-performance'});
+ let PR=Math.min(window.devicePixelRatio||1,LOQ?.75:1.25);R.setPixelRatio(PR);R.setSize(W0(),H0());R.setClearColor(0x05040c);
  const cvEl=R.domElement;cvEl.className='mvc';root.appendChild(cvEl);
  const SC=new THREE.Scene();SC.fog=new THREE.Fog(0x1a1030,90,420);
  const CAM=new THREE.PerspectiveCamera(52,W0()/H0(),.1,1200);
@@ -469,7 +474,7 @@ function play(o){stop();
  /* 車の位置（時刻→z）：基地を出るまでゆっくり → 道路で一気に加速 */
  function vz(t){if(t<4.65)return VZ0;if(t<=TF0)return VZ0-148.5*Math.pow((t-4.65)/3.35,2.2);const q=Math.min(t-TF0,TFD);return -150-(97.5*q-8.73*q*q)}
  /* 離陸してからの高さ（u:0→1） */
- const HW0=5.9,HWK=1,P1=4.35,PK=1.9,PS=P1-P1/PK,XT=(TF0-HW0)*(HWK-1)-PS,warp=r=>{r=r<P1/PK?r*PK:r+PS;return r<HW0?r:r<HW0+(TF0-HW0)*HWK?HW0+(r-HW0)/HWK:r-XT-PS};   // 準備と乗りこみは少し速く   // 高速を走るところだけ時間を長く
+ const SEG=[[.9,4.35,1.25],[4.35,5.9,1.45]],XT=-SEG[0][0]-SEG.reduce((q,[a,b,k])=>q+(b-a)*(1-1/k),0),warp=r=>{let m=0;for(const[a,b,k]of SEG){const d=(b-a)/k;if(r<d)return a+r*k;r-=d;m=b}return m+r};   // 場面ごとの速さ（基地の中は準備の途中から始めて 1.25倍・飛び出し 1.45倍）
  const fy=u=>{u=cl(u,0,1);return 17*u*u*(3-2*u)};
  let last=performance.now(),t0=performance.now(),tt=0,raf=0,done=false,skipped=false,ci=0,started=0,loadSent=0,fN=0,fAcc=0;
  function setT(t){
@@ -607,6 +612,9 @@ const CTL={
   touch:[['m:こうげき','三段こうげき','続けて押す',SKC.atk],['m:神速','神速アタック','',SKC.dash],['m:極楽','極楽の術','長押しして離すと回復。最大で仲間も',SKC.heal],['m:必殺|m:ひっさつ','必殺技','ゲージ100%で光る',SKC.ult]]},
  common:{key:[['W|A|S|D','移動',''],['Shift','走る','スタミナをつかう'],['Space','回避','攻撃をよける'],['F','長押しで仲間を助ける','ロボネコ24号では端末も起動'],['Tab','ねらう敵を切りかえ',''],['Q|E','カメラを回す',''],['P','ポーズ',''],['M','音のオン・オフ','']],
   touch:[['m:画面の左側','ドラッグで移動','さわった所がスティックになる'],['m:回避','回避',''],['m:右下のボタン','わざ（上のとおり）','']]}};
+/* 画質（この端末だけの設定）：オリジナル／軽量。出撃ムービーとバトルの解像度に効く */
+{let q='hi';try{if(localStorage.getItem('rnb_q')==='lo')q='lo'}catch(e){}const bs=[...document.querySelectorAll('#qsel button')],set=v=>{q=v;try{localStorage.setItem('rnb_q',v)}catch(e){}for(const b of bs){const on=b.dataset.q===v;b.classList.toggle('on',on);b.setAttribute('aria-checked',on)}};
+ for(const b of bs)b.addEventListener('click',()=>{set(b.dataset.q);toast(b.dataset.q==='lo'?'画質：軽量（次のバトルから）':'画質：オリジナル（次のバトルから）')});set(q)}
 let ctlCh=null;
 /* 「極」のときだけ：ロビーの後ろでオーブがうごめく（軽くするため 1/2 の解像度・毎秒30コマ・ゲーム中は止める） */
 const ORB={on:0,raf:0,c:null,x:null,sp:{},col:'',o:[],last:0};
