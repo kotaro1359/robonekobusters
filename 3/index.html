@@ -28,7 +28,7 @@ b{color:var(--fg)}
 <script>
 "use strict";
 /* 軽量版：window.OBZ_LITE=1 か URL に ?lite で、影・アンチエイリアス・粒子・がれき・ポリゴン数などを減らす（ゲームの中身は同じなのでマルチは通常版と一緒に遊べる） */
-const LITE=true,LQN=n=>LITE?Math.max(1,Math.round(n*.45)):n,PTM=LITE?900:2400;
+const LITE=rnbLo(),LQN=n=>LITE?Math.max(1,Math.round(n*.45)):n,PTM=LITE?900:2400;
 /* ================= 定数・状態 ================= */
 /* ---- マルチプレイ（オンライン協力・最大4人）：状態 ---- */
 const NET={room:null,user:null,want:1,on:0,host:0,me:null,hostPeer:null,gid:null,part:[],rp:new Map(),slot:0,myName:'',
@@ -41,6 +41,7 @@ let BTG=null,MOBID=0,NDRAW=0,SHF=0;
 const NETMODE='pj';
 /* ---- キャラ選択（待ち部屋）：いま使っている自分キャラ。単体で開いたときはいつもこのゲームの自分キャラ ---- */
 const CH_NATIVE='kage';let MYCH=CH_NATIVE,PK=null;const CHN=()=>MYCH===CH_NATIVE,chOK=c=>c==='hyu'||c==='shiro'||c==='kage';
+function rnbLo(){try{return localStorage.getItem('rnb_q')==='lo'}catch(e){return false}}
 function chNet(p){p.ch=MYCH;xsNet(p);if(PK){p.fl&=241;p.q=-1;p.a=0;p.cb=0;p.u=0;p.cs=PK.net()}}
 /* キャラごとの攻撃力の倍率：このボスの本来の自分キャラと同じくらいの強さになるように（自動テストで1秒あたりのダメージを測って決めた） */
 const CHDM={hyu:1.15,shiro:1.15,kage:1.15};
@@ -268,7 +269,7 @@ SC.add(new THREE.HemisphereLight(0xc8c0ff,0x3a2430,.66));
 const DL=new THREE.DirectionalLight(0xdfe4ff,.8);DL.castShadow=!LITE;DL.shadow.mapSize.set(2048,2048);
 Object.assign(DL.shadow.camera,{left:-1200,right:1200,top:1200,bottom:-1200,near:50,far:3600});DL.shadow.camera.updateProjectionMatrix();DL.shadow.bias=-.0006;SC.add(DL);SC.add(DL.target);
 const RBOX=(w,h,d,r,n)=>{n=n||4;const g=new THREE.BoxGeometry(w,h,d,n,n,n),p=g.attributes.position,hx=w/2-r,hy=h/2-r,hz=d/2-r,v=new THREE.Vector3(),c=new THREE.Vector3();for(let i=0;i<p.count;i++){v.fromBufferAttribute(p,i);c.set(Math.max(-hx,Math.min(hx,v.x)),Math.max(-hy,Math.min(hy,v.y)),Math.max(-hz,Math.min(hz,v.z)));v.sub(c);const nm=g.attributes.normal;if(v.lengthSq()>1e-9){v.setLength(r);nm.setXYZ(i,v.x/r,v.y/r,v.z/r)}v.add(c);p.setXYZ(i,v.x,v.y,v.z)}g.attributes.normal.needsUpdate=true;return g};
-const LS=v=>LITE?Math.max(5,Math.round(v*.6)):v,SP=(r,a,b)=>new THREE.SphereGeometry(r,LS(a||20),Math.max(4,LS(b||14))),CY=(a,b,h,s,o)=>new THREE.CylinderGeometry(a,b,h,LS(s||16),1,!!o),CO=(r,h,s)=>new THREE.ConeGeometry(r,h,s||14),BOX=(a,b,c)=>new THREE.BoxGeometry(a,b,c);
+const LS=v=>LITE?Math.max(5,Math.round(v*.6)):v<8?v:Math.round(v*1.5),SP=(r,a,b)=>new THREE.SphereGeometry(r,LS(a||20),Math.max(4,LS(b||14))),CY=(a,b,h,s,o)=>new THREE.CylinderGeometry(a,b,h,LS(s||16),1,!!o),CO=(r,h,s)=>new THREE.ConeGeometry(r,h,s||14),BOX=(a,b,c)=>new THREE.BoxGeometry(a,b,c);
 function mesh(g,m,p,x,y,z,sx,sy,sz,ns){const o=new THREE.Mesh(g,m);o.position.set(x||0,y||0,z||0);if(sx!==undefined)o.scale.set(sx,sy,sz);o.castShadow=!ns;o.receiveShadow=!ns;if(p)p.add(o);return o}
 const MS=(c,o)=>{o=Object.assign({},o);delete o.bumpMap;delete o.bumpScale;return new THREE.MeshStandardMaterial(Object.assign({color:c,roughness:.5,metalness:.4},o))};
 const MB=(c,o)=>new THREE.MeshBasicMaterial(Object.assign({color:c,toneMapped:false},o));
@@ -1659,10 +1660,10 @@ function drawTouch(){X.save();
   if(b.id==='lock'&&lockOff){X.strokeStyle='#ff8a6b';X.lineWidth=2;X.beginPath();X.moveTo(b.x-12,b.y+12);X.lineTo(b.x+12,b.y-12);X.stroke()}}
  X.restore()}
 let last=0,acc=0;
-const LOQ=(()=>{try{return localStorage.getItem('rnb_q')==='lo'}catch(e){return false}})();let QPR=LOQ?.75:1.25,QFT=0,QN=0,QCD=3;function qAdapt(d){if(S!=='play'||paused){QFT=QN=0;return}QCD-=d;QFT+=d;QN++;if(QN>=90){const ft=QFT/QN;QFT=QN=0;if(QCD>0)return;let n=QPR;if(ft>1/52&&QPR>.75)n=Math.max(.75,QPR-.25);else if(ft<1/58&&QPR<(LOQ?1:1.5))n=Math.min(LOQ?1:1.5,QPR+.25);if(n!==QPR){QPR=n;QCD=3;R.setPixelRatio(Math.min(UIS,QPR));R.setSize(W,H,false)}}}
+const LOQ=(()=>{try{return localStorage.getItem('rnb_q')==='lo'}catch(e){return false}})();let QPR=LOQ?.6:1.5,QFT=0,QN=0,QCD=3;function qAdapt(d){if(S!=='play'||paused){QFT=QN=0;return}QCD-=d;QFT+=d;QN++;if(QN>=90){const ft=QFT/QN;QFT=QN=0;if(QCD>0)return;let n=QPR;if(ft>1/52&&QPR>(LOQ?.5:.75))n=Math.max(LOQ?.5:.75,QPR-.25);else if(ft<1/58&&QPR<(LOQ?.75:2))n=Math.min(LOQ?.75:2,QPR+.25);if(n!==QPR){QPR=n;QCD=3;R.setPixelRatio(LOQ?Math.min(UIS,QPR):Math.min(Math.max(UIS,1.5),QPR));R.setSize(W,H,false)}}}
 function loop(ts){NRAF=NBGL=performance.now();if(ts-NDRAW<psIv()){requestAnimationFrame(loop);return}NDRAW=ts;const d=Math.min(.1,(ts-last)/1000||0);qAdapt(d);last=ts;acc+=d;while(acc>=DT){step();acc-=DT}mpSend();draw(d);if(typeof mpUiSync==='function')mpUiSync();requestAnimationFrame(loop)}
 let UIS=1;
-function fitRes(){const st=document.getElementById('st'),cw=st.clientWidth||W,ch=st.clientHeight||H,disp=Math.min(cw,ch*W/H),dpr=window.devicePixelRatio||1;UIS=cl(disp*dpr/W,1,TOUCH?2:2.7);UIS=Math.min(UIS,2);R.setPixelRatio(Math.min(UIS,QPR));R.setSize(W,H,false);const w2=Math.round(W*UIS),h2=Math.round(H*UIS);if(C.width!==w2||C.height!==h2){C.width=w2;C.height=h2}}
+function fitRes(){const st=document.getElementById('st'),cw=st.clientWidth||W,ch=st.clientHeight||H,disp=Math.min(cw,ch*W/H),dpr=window.devicePixelRatio||1;UIS=cl(disp*dpr/W,1,TOUCH?2:2.7);UIS=Math.min(UIS,2);R.setPixelRatio(LOQ?Math.min(UIS,QPR):Math.min(Math.max(UIS,1.5),QPR));R.setSize(W,H,false);const w2=Math.round(W*UIS),h2=Math.round(H*UIS);if(C.width!==w2||C.height!==h2){C.width=w2;C.height=h2}}
 fitRes();addEventListener('resize',fitRes);try{new ResizeObserver(fitRes).observe(document.getElementById('st'))}catch(e){}
 /* ================= マルチプレイ（オンライン協力・最大4人） =================
    しくみ：Enter を押した人が「ホスト」になり、ボスと護衛のAIを動かす。
