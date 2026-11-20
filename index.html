@@ -246,7 +246,7 @@ footer{margin:6px 0 0;padding:0 0 18px;font-size:12.5px;color:var(--mute);text-a
   </aside>
  </div>
  <div class="dock"><div class="dkin"><div class="dkl"><b id="sum"></b><p class="note" id="note" aria-live="polite"></p></div><button class="go" id="go" type="button"><span><b>出撃！</b><small id="goSub">ひとりで</small></span></button></div></div>
- <footer>ゲームは単体でも遊べます：<a href="1/">ロボネコ24号</a> ／ <a href="2/">ツキ王</a> ／ <a href="3/">ぐらりぼぉん</a></footer>
+ <footer>ゲームは単体でも遊べます：<a href="1/">ロボネコ24号</a> ／ <a href="2/">ツキ王</a> ／ <a href="3/">ぐらりにょん</a></footer>
 </div>
 <div id="stage" hidden>
  <div id="load"><div class="lbox"><div class="spin"></div><b id="lTitle"></b><span id="lText"></span><button class="btn bs" id="lBack" type="button">待ち部屋にもどる</button></div></div>
@@ -480,7 +480,7 @@ function play(o){stop();
  /* 車の位置（時刻→z）：基地を出るまでゆっくり → 道路で一気に加速 */
  function vz(t){if(t<4.65)return VZ0;if(t<=TF0)return VZ0-148.5*Math.pow((t-4.65)/3.35,2.2);const q=Math.min(t-TF0,TFD);return -150-(97.5*q-8.73*q*q)}
  /* 離陸してからの高さ（u:0→1） */
- const SEG=[[.9,4.35,1.25],[4.35,5.9,1.45]],XT=-SEG[0][0]-SEG.reduce((q,[a,b,k])=>q+(b-a)*(1-1/k),0),warp=r=>{let m=0;for(const[a,b,k]of SEG){const d=(b-a)/k;if(r<d)return a+r*k;r-=d;m=b}return m+r};   // 場面ごとの速さ（基地の中は準備の途中から始めて 1.25倍・飛び出し 1.45倍）
+ const SEG=[[1.2,4.35,1.3],[4.35,5.9,1.55],[5.9,8.0,1.12]],XT=-SEG[0][0]-SEG.reduce((q,[a,b,k])=>q+(b-a)*(1-1/k),0),warp=r=>{let m=0;for(const[a,b,k]of SEG){const d=(b-a)/k;if(r<d)return a+r*k;r-=d;m=b}return m+r};   // 場面ごとの速さ（基地の中は準備の途中から始めて 1.3倍・飛び出し 1.55倍・高速 1.12倍）
  const fy=u=>{u=cl(u,0,1);return 17*u*u*(3-2*u)};
  let last=performance.now(),t0=performance.now(),tt=0,raf=0,done=false,skipped=false,ci=0,started=0,loadSent=0,fN=0,fAcc=0;
  function setT(t){
@@ -597,7 +597,7 @@ const BOSS=[
   svg:'<svg class="emb" viewBox="0 0 100 100" aria-hidden="true"><path d="M24 42L19 13L43 31Z M76 42L81 13L57 31Z" fill="#6aa6dc" stroke="#d6f0ff" stroke-width="2.5" stroke-linejoin="round"/><line x1="50" y1="30" x2="50" y2="15" stroke="#d6f0ff" stroke-width="3"/><circle cx="50" cy="12" r="5" fill="#ffd24a"/><rect x="17" y="29" width="66" height="54" rx="17" fill="#245a98" stroke="#d6f0ff" stroke-width="3"/><rect x="25" y="43" width="50" height="18" rx="9" fill="#071426"/><circle cx="39" cy="52" r="5.5" fill="#6af0ff"/><circle cx="61" cy="52" r="5.5" fill="#6af0ff"/><path d="M43 70Q50 75 57 70" stroke="#d6f0ff" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M10 54H17M83 54H90" stroke="#6af0ff" stroke-width="3" stroke-linecap="round"/></svg>'},
  {id:2,dir:'2/',name:'ツキ王',game:'武者の陣',desc:'月夜の古戦場に立つ剣の王。飛んでくる魂を吸われる前に斬り、王が疲れたスキにとどめを刺せ。',pc:'シロマル',c1:'#ffcf5a',c2:'#9a1a2a',c3:'#26080e',
   svg:'<svg class="emb" viewBox="0 0 100 100" aria-hidden="true"><path d="M58 10A36 36 0 1 0 90 62A29 29 0 1 1 58 10Z" fill="#ffe08a"/><g transform="rotate(-36 50 56)"><rect x="8" y="53" width="66" height="6" rx="3" fill="#eef3fb"/><rect x="74" y="50" width="5" height="12" rx="1.5" fill="#ffd24a"/><rect x="79" y="52.5" width="17" height="7" rx="2.5" fill="#8a1424"/></g></svg>'},
- {id:3,dir:'3/',name:'ぐらりぼぉん',game:'妖怪御殿の夜',desc:'いくべぇ・くるべぇを従えた妖術使い。護衛を倒しても終わらない。真の姿オボロガミまで討ちきれ。',pc:'ツキカゲ',c1:'#d4b0ff',c2:'#5a2fa0',c3:'#150a2a',
+ {id:3,dir:'3/',name:'ぐらりにょん',game:'妖怪御殿の夜',desc:'いくべぇ・くるべぇを従えた妖術使い。護衛を倒しても終わらない。真の姿オボロガミまで討ちきれ。',pc:'ツキカゲ',c1:'#d4b0ff',c2:'#5a2fa0',c3:'#150a2a',
   svg:'<svg class="emb" viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="42" r="35" fill="none" stroke="#c79bff" stroke-opacity=".35" stroke-width="7"/><circle cx="50" cy="42" r="27" fill="#ecdcff"/><path d="M8 62Q29 53 50 62T92 61" stroke="#b48cff" stroke-width="8" fill="none" stroke-linecap="round" opacity=".9"/><path d="M16 78Q37 69 58 78T96 75" stroke="#7a52c8" stroke-width="7" fill="none" stroke-linecap="round" opacity=".85"/><path d="M38 37L46 41M62 37L54 41" stroke="#4a1a7a" stroke-width="3.5" stroke-linecap="round"/></svg>'}];
 const CHARS=[
  {id:'hyu',name:'ウォスパー',type:'ビームで戦う遠距離タイプ',moves:'ショット・チャージ・突撃ラッシュ／必殺：びりびりビーム',c:'#7dffc8',
