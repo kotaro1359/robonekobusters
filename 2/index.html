@@ -2040,7 +2040,7 @@ function upd(){
   if(was<1.2&&P.qch>=1.2){snd(1500,.3,'triangle',.07,1.5);pf(P.x,P.y,18,'#fff27a',260,.4,5,45);pop('MAX!',P.x,P.y,'#fff27a',30,110)}
   if(frame%2==0){const q=rnd(0,TAU),r=rnd(50,80);PT.push({x:P.x+Math.cos(q)*r,y:P.y+Math.sin(q)*r,h:rnd(10,90),vh:0,vx:-Math.cos(q)*r*3.2,vy:-Math.sin(q)*r*3.2,t:0,l:.3,c:k>=1?'#fff27a':'#8ffcff',r:3.5,gr:0,imp:0})}
   if(frame%12==0&&k<1)snd(400+k*900,.05,'sine',.03)}
- if((keys.KeyJ||md)&&P.fire<=0&&P.hold<=0&&P.dodge<=0&&P.ultT<=0&&!P.rush&&P.qch<0&&B.dying<=0){P.fire=.6;const a=t?ang(P,t)+rnd(-.03,.03):P.face;shots.push({x:P.x,y:P.y,vx:Math.cos(a)*SHOT_V,vy:Math.sin(a)*SHOT_V,t:0,d:SHOT_D,r:7,tg:t});NET.sc++;snd(880,.05,'square',.025,.5)}
+ if((keys.KeyJ||md)&&P.fire<=0&&P.hold<=0&&P.dodge<=0&&P.ultT<=0&&!P.rush&&P.qch<0&&B.dying<=0){P.fire=.8;const a=t?ang(P,t)+rnd(-.03,.03):P.face;shots.push({x:P.x,y:P.y,vx:Math.cos(a)*SHOT_V,vy:Math.sin(a)*SHOT_V,t:0,d:SHOT_D,r:7,tg:t});NET.sc++;snd(880,.05,'square',.025,.5)}
  if(P.cbeam){P.cbeam.t+=DT;if(P.cbeam.t>.4)P.cbeam=null}
  if(P.ultT>0){P.ultT-=DT;P.face=P.ua;
   if(P.uch>0){P.uch-=DT;const k=1-P.uch/.7;if(frame%2==0)for(let i=0;i<3;i++){const q=rnd(0,TAU),r=rnd(160,300)*(1.1-k*.5);PT.push({x:P.x+Math.cos(q)*r,y:P.y+Math.sin(q)*r,h:46+rnd(-60,120),vh:0,vx:-Math.cos(q)*r*2.6,vy:-Math.sin(q)*r*2.6,t:0,l:.36,c:i?'#5affd8':'#d8fff4',r:rnd(4,8),gr:0})}if(frame%8==0)snd(300+k*900,.07,'triangle',.03);
