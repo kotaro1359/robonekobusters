@@ -807,7 +807,7 @@ function startAtk(n){P.atk={n,t:0,hit:0,nx:0};const t=curT();if(t)P.face=ang(P,t
 function melee(reach,arc,d,src,fxR,fxC,tilt,hh){let any=0;
  for(const e of[B,...mobs].filter(tOK)){const dd=dist(P,e)-e.r;if(dd>reach)continue;const da=Math.abs(ad(ang(P,e)-P.face));if(da>arc&&dd>10)continue;if(e!==B&&e.z>90)continue;if(e===B&&B.z>160&&!B.sky)continue;any=1;
   dmgTo(e,d,src);const q=ang(e,P),hx=e.x+Math.cos(q)*e.r*.8,hy=e.y+Math.sin(q)*e.r*.8,eh=e===B?B.z+(B.form===2?150:110):60;pf(hx,hy,8,'#e8f6ff',300,.25,4,eh);pf(hx,hy,4,fxC||'#8fd8ff',200,.3,3,eh);clang(.7);if(e!==B&&(src==='dash'||src==='ult'))e.flT=.3}
- hitBall(reach+36);addSlash(P.x+Math.cos(P.face)*12,P.y+Math.sin(P.face)*12,hh||42,P.face,fxR||72,tilt||0,fxC);
+ addSlash(P.x+Math.cos(P.face)*12,P.y+Math.sin(P.face)*12,hh||42,P.face,fxR||72,tilt||0,fxC);
  if(any){shake=Math.max(shake,src==='melee3'||src==='dash'?6:3);P.hstop=.05}return any}
 function hitBall(rr){const b=BALL;if(!b||b.ph!=='roll'||P.bk>0)return;if(Math.hypot(P.x-b.x,P.y-b.y)>rr+b.r)return;P.bk=.25;const t=curT(),a=t?ang(b,t):P.face;
  if(NET.on&&!NET.host){mpQ('h',a+10);ballKick(b,a,1)}else ballKick(b,a)}
@@ -959,29 +959,29 @@ function* hop2(){B.lock=1;B.crouch=1;yield* W_(.15);B.crouch=0;const tg=tgP(),a=
 function* downG(dur){resetPose();B.down=dur||8;ZCAM=.8;B.lock=1;msg('チャンス！ ダウン中は与ダメージ1.5倍！',2.8);snd(500,.8,'triangle',.08,.25);shake=18;pf(B.x,B.y,26,'#e5ebf5',300,.8,10,40,120);
  while(B.down>0)yield;B.lock=0;B.sq=.6;roar(.5);yield* W_(.4)}
 /* ---- ひっさつわざ：滅びの分裂玉（2回目からは「破魔玉」のチャンス） ---- */
-function* special(){const n=SPN++;B.lock=1;resetPose();announce(SPN_N,1);B.inv=1;B.sky=2;
- const cx=ACX,cy=n>=1?ACY-320:ACY-RA-320,x0=B.x,y0=B.y;roar(.6);
- for(let t=0;t<1.2;t+=DT){const u=t/1.2,e=u*u*(3-2*u);B.x=lerp(x0,cx,e);B.y=lerp(y0,cy,e);B.z=e*230;B.flyA=e;turnTo(ang(B,tgP()),3);if(frame%2==0)pf(B.x+rnd(-120,120),B.y+rnd(-120,120),2,'#7dff9a',120,.6,6,B.z+rnd(0,200),80);yield}
- if(n>=1){mpRecOn();ballStart();mpRecOff();let t=0;
-  while(t<BALLT_L+2.4){t+=DT;B.orb=.15+Math.min(1,t/(BALLT_L+2.4))*.85;turnTo(PI/2,2);if(B.stunQ||!BALL)break;yield}
-  if(B.stunQ){const st=B.stunQ;B.stunQ=0;BALL=null;yield* ballStun(st);nextSp=timeS+46;return}
-  if(BALL){BALL=null;msg('破魔玉が消えてしまった…！',2)}
-  {const x1=B.x,y1=B.y;for(let t=0;t<.8;t+=DT){const e=ss3(t/.8);B.x=lerp(x1,ACX,e);B.y=lerp(y1,ACY-RA-320,e);turnTo(ang(B,tgP()),3);yield}}}
- else for(let t=0;t<1.8;t+=DT){B.orb=t/1.8;turnTo(ang(B,tgP()),3);yield}
+function* special(){SPN++;B.lock=1;resetPose();announce(SPN_N,1);B.inv=1;B.sky=2;
+ const cx=ACX+520,cy=ACY-RA-220,x0=B.x,y0=B.y,ctr={x:ACX,y:ACY};roar(.6);
+ for(let t=0;t<1.2;t+=DT){const u=t/1.2,e=u*u*(3-2*u);B.x=lerp(x0,cx,e);B.y=lerp(y0,cy,e);B.z=e*230;B.flyA=e;turnTo(ang(B,ctr),3);if(frame%2==0)pf(B.x+rnd(-120,120),B.y+rnd(-120,120),2,'#7dff9a',120,.6,6,B.z+rnd(0,200),80);yield}
+ mpRecOn();ballStart();mpRecOff();
+ {let t=0;while(t<SPT){t+=DT;const k=t/SPT;B.orb=.1+k*.9;B.jaw=.3+k*.5;turnTo(ang(B,ctr),2);
+   if(frame%2==0){const mx=B.x+Math.cos(B.face)*200,my=B.y+Math.sin(B.face)*200,mh=B.z+210;for(let i=0;i<2;i++){const q=rnd(0,TAU),r=rnd(160,380),l=.5;PT.push({x:mx+Math.cos(q)*r,y:my+Math.sin(q)*r,h:mh+rnd(-150,150),vx:-Math.cos(q)*r/l,vy:-Math.sin(q)*r/l,vh:0,t:0,l,c:i?'#7dff9a':'#ffffff',r:rnd(5,9),gr:1e-9})}}
+   if(frame%20==0)snd(90+k*160,.25,'sawtooth',.03,1.5);if(B.stunQ)break;yield}}
+ if(B.stunQ){const st=B.stunQ;B.stunQ=0;BALL=null;yield* ballStun(st);nextSp=timeS+40;return}
+ if(BALL){BALL=null;msg('時間切れ…！ 分裂玉が来る！',2)}
  fire();const a=ang(B,tgP());B.jaw=1;const oq={x:B.x+Math.cos(a)*190,y:B.y+Math.sin(a)*190};clampC(oq,140);const ox=oq.x,oy=oq.y;
  hzAdd('split',[ox,oy,Math.cos(a)*600,Math.sin(a)*600,0]);B.orb=0;roar(1);flash=.5;flashC='#9fffb0';shake=20;
  let t=0;while(t<22){t+=DT;turnTo(ang(B,tgP()),2);if(t>1&&!hz.some(h=>h.k==='split'))break;yield}
- B.jaw=0;const z0=B.z,x2=B.x,y2=B.y;for(let t2=0;t2<1;t2+=DT){const u=t2/1,e=ss3(u);B.x=lerp(x2,ACX,e);B.y=lerp(y2,ACY-RA+430,e);B.z=z0*(1-u*u);B.flyA=1-u;turnTo(ang(B,tgP()),3);yield}B.z=0;B.flyA=0;B.sky=0;B.inv=0;B.sq=1;shake=16;gring(B.x,B.y,40,600,800,'200,180,255');B.lock=0;yield* W_(.8);nextSp=timeS+42}
+ B.jaw=0;const z0=B.z,x2=B.x,y2=B.y;for(let t2=0;t2<1;t2+=DT){const u=t2/1,e=ss3(u);B.x=lerp(x2,ACX+200,e);B.y=lerp(y2,ACY-RA+430,e);B.z=z0*(1-u*u);B.flyA=1-u;turnTo(ang(B,tgP()),3);yield}B.z=0;B.flyA=0;B.sky=0;B.inv=0;B.sq=1;shake=16;gring(B.x,B.y,40,600,800,'200,180,255');B.lock=0;yield* W_(.8);nextSp=timeS+40}
 function* ballStun(st){B.inv=0;mpRecOn();cutin('チャンス！','chance');flash=1;flashC='#ffffff';shake=30;const dmg=Math.round(B.mhp*.012*st+90*st);B.hp=Math.max(1,B.hp-dmg);pop(String(dmg),B.x,B.y,'#fff27a',84,B.z+260,'#6a2a00','#ffb020');pop('破魔玉 '+st+'段！',B.x,B.y,BALLC[st-1],30,B.z+340);
  fireball(B.x,B.y,B.z+150,30,420,.6,BALLC[st-1]);pf(B.x,B.y,60,'#fff6c0',700,.8,8,B.z+150,200);boom(1,1.2);mpRecOff();
- const z0=B.z;for(let t=0;t<.55;t+=DT){B.z=z0*(1-(t/.55)*(t/.55));yield}B.z=0;B.sky=0;B.flyA=0;B.sq=1;mpRecOn();boom(.8,1);gring(B.x,B.y,60,800,900,'255,240,180');scorch(B.x,B.y,260);pf(B.x,B.y,40,'#cfd6e0',520,.9,14,10,120,0,'sm');mpRecOff();
+ const z0=B.z,sx=B.x,sy=B.y;for(let t=0;t<.55;t+=DT){const e=t/.55;B.x=lerp(sx,ACX+260,e);B.y=lerp(sy,ACY-RA+460,e);B.z=z0*(1-e*e);yield}B.z=0;B.sky=0;B.flyA=0;B.sq=1;mpRecOn();boom(.8,1);gring(B.x,B.y,60,800,900,'255,240,180');scorch(B.x,B.y,260);pf(B.x,B.y,40,'#cfd6e0',520,.9,14,10,120,0,'sm');mpRecOff();
  B.lock=0;yield* downG(3.5+st*1.6)}
 function* search2(){yield* wander(.9);if(Math.random()<.35)yield* clawR();else if(Math.random()<.4)yield* souls()}
 const MV2={charge:charge2,cannon,clawF,clawR,kick,souls,hop:hop2};
 function* ai2(){yield* W_(.6);yield* charge2();
  while(1){
-  if(SPN===0&&B.hp<=B.mhp*.5){yield* special();continue}
-  if(SPN>=1&&timeS>=nextSp){yield* special();continue}
+  if((SPN===0&&B.hp<=B.mhp*.75)||(SPN===1&&B.hp<=B.mhp*.5)){yield* special();continue}
+  if(SPN>=2&&timeS>=nextSp){yield* special();continue}
   if(!BTG){yield* search2();continue}
   const tg=tgP(),d=dist(B,tg),rel=Math.abs(ad(ang(B,tg)-B.face)),r=Math.random();let pick;
   if(rel>2.3&&d<B.r+300&&r<.8)pick='kick';
@@ -995,20 +995,29 @@ function* ai2(){yield* W_(.6);yield* charge2();
   yield* W_(rnd(.15,.45))}}
 
 /* ---------- 破魔玉（チャンス）：巫女が投げこむ → こうげきで弾く → 大きくなる（5段階・紫が最大） → オボロガミに当てるとダウン ---------- */
-const BALLT_L=13;
-function ballStart(){const tx=ACX+rnd(-180,180),ty=ACY+170;BALL={x:ACX,y:MKY,z:150,x0:ACX,y0:MKY,tx,ty,vx:0,vy:0,st:1,r:34,ph:'miko',t:0,lt:0,hb:0,kc:0};
- msg('月光の巫女が破魔玉を投げこむ！ こうげきで弾いてオボロガミに当てろ！',4);snd(880,.3,'triangle',.06,1.5);snd(1320,.4,'triangle',.05,1.2);cutin('月光の巫女 見参','start')}
-function ballKick(b,a,pred){if(!b||b.ph!=='roll')return;if(!pred&&b.kc>0)return;b.kc=.15;const sp=1080+b.st*80;b.vx=Math.cos(a)*sp;b.vy=Math.sin(a)*sp;b.hb=70;if(!pred)ballGrow(b);
- swish(1.4,1300,.25);snd(500+b.st*120,.15,'square',.05,1.6);pf(b.x,b.y,16,BALLC[b.st-1],320,.35,5,40)}
+const BALLT_L=13,SPT=16,BSPD=s=>380+s*160;
+function ballStart(){const tx=ACX+rnd(-150,150),ty=MKY+420;BALL={x:ACX,y:MKY,z:150,x0:ACX,y0:MKY,tx,ty,vx:0,vy:0,st:1,r:34,ph:'miko',t:0,lt:0,hb:0,kc:0};
+ msg((TOUCH?'巫女の弾を「はね返す」で跳ね返せ！':'巫女の弾をFで跳ね返せ！')+' 3段以上でオボロガミに当てるとチャンス',5);snd(880,.3,'triangle',.06,1.5);snd(1320,.4,'triangle',.05,1.2);cutin('月光の巫女 見参','start')}
+function ballKick(b,a,pred){if(!b||b.ph!=='roll')return;if(!pred&&b.kc>0)return;b.kc=.2;if(!pred)ballGrow(b);const sp=BSPD(pred?Math.min(5,b.st+1):b.st);b.vx=Math.cos(a)*sp;b.vy=Math.sin(a)*sp;
+ swish(1.4,1300,.25);snd(500+b.st*120,.15,'square',.05,1.6);pf(b.x,b.y,16,BALLC[Math.min(4,b.st-1)],320,.35,5,40);gring(b.x,b.y,10,140,300,'255,245,200')}
+/* F で跳ね返す：止まっていればオボロガミへ、動いていればその方向へ */
+function ballF(){const b=BALL;if(S!=='play'||P.dead||!b||b.ph!=='roll'||P.bk>0)return 0;if(Math.hypot(P.x-b.x,P.y-b.y)>b.r+PR+130)return 0;P.bk=.25;
+ const[dx,dy]=inp(),a=(dx||dy)?Math.atan2(dy,dx):ang(b,B);P.face=a;addSlash(P.x+Math.cos(a)*12,P.y+Math.sin(a)*12,40,a,80,0,'#fff2b0');
+ if(NET.on&&!NET.host){mpQ('h',a+10);ballKick(b,a,1)}else ballKick(b,a);return 1}
+addEventListener('keydown',e=>{if(e.code==='KeyF'&&!e.repeat&&!(e.target&&e.target.tagName==='INPUT'))ballF()});
 function ballGrow(b){if(b.st<5){b.st++;pop(b.st>=5?'MAX!':b.st+'段',b.x,b.y,BALLC[b.st-1],b.st>=5?40:28,140,'#200a30');snd(700+b.st*160,.2,'triangle',.06,1.4)}}
 function updBall(){const b=BALL;if(!b)return;const cli=NET.on&&!NET.host;b.t+=DT;b.lt+=DT;b.kc=Math.max(0,b.kc-DT);b.r=26+b.st*7;
- if(b.ph==='miko'){if(b.t>1.3&&!cli){b.ph='throw';b.t=0;snd(600,.3,'sine',.05,2);swish(1,1000,.4)}return}
- if(b.ph==='throw'){const u=Math.min(1,b.t/1.05);b.x=lerp(b.x0,b.tx,u);b.y=lerp(b.y0,b.ty,u);b.z=Math.sin(u*PI)*520+(1-u)*150;if(u>=1&&!cli){b.ph='roll';b.t=0;b.z=0;b.vx=rnd(-60,60);b.vy=420;b.hb=50;mpRecOn();gring(b.x,b.y,20,180,500,'255,250,220');snd(260,.2,'triangle',.06,.6);mpRecOff()}return}
- const fr=Math.pow(.5,DT);b.vx*=fr;b.vy*=fr;b.x+=b.vx*DT;b.y+=b.vy*DT;b.hb*=Math.pow(.25,DT);b.z=Math.abs(Math.sin(b.lt*9))*b.hb;
- const sp=Math.hypot(b.vx,b.vy);const wb=bounceC(b,b.r+95);
- if(wb&&sp>180){b.hb=40;if(!cli){mpRecOn();ballGrow(b);pf(b.x,b.y,10,BALLC[b.st-1],220,.3,4,30);mpRecOff()}}
+ if(b.ph==='miko'){b.x=b.x0;b.y=b.y0;if(b.t>1.3&&!cli){b.ph='throw';b.t=0;snd(600,.3,'sine',.05,2);swish(1,1000,.4)}return}
+ if(b.ph==='throw'){const u=Math.min(1,b.t/1.05);b.x=lerp(b.x0,b.tx,u);b.y=lerp(b.y0,b.ty,u);b.z=Math.sin(u*PI)*520+(1-u)*150;
+  if(u>=1&&!cli){b.ph='roll';b.t=0;b.z=0;const g=tgP(),a=Math.atan2(g.y-b.y,g.x-b.x);b.vx=Math.cos(a)*BSPD(b.st);b.vy=Math.sin(a)*BSPD(b.st);mpRecOn();gring(b.x,b.y,20,180,500,'255,250,220');snd(260,.2,'triangle',.06,.6);mpRecOff()}return}
+ /* ころがり：まっすぐ同じ速さで進む（ブレーキなし）。オボロガミの方へ向かう玉だけは壁をこえて飛んでいく */
+ b.x+=b.vx*DT;b.y+=b.vy*DT;const dc=Math.hypot(b.x-ACX,b.y-ACY),dB=Math.hypot(B.x-b.x,B.y-b.y);b.z=8+Math.abs(Math.sin(b.lt*6))*10+Math.max(0,dc-(RA-200))*.45;
+ const toB=Math.atan2(B.y-b.y,B.x-b.x),va=Math.atan2(b.vy,b.vx),aim=B.sky===2&&Math.abs(ad(va-toB))<Math.atan2(B.r*.9+b.r,Math.max(1,dB))+.05;
+ if(!aim&&bounceC(b,b.r+95)){snd(320,.12,'triangle',.05,.6);pf(b.x,b.y,8,BALLC[b.st-1],220,.3,4,30)}
  if(cli)return;
- if(B.sky===2&&B.dying<=0&&Math.hypot(b.x-B.x,b.y-B.y)<B.r*.95+b.r&&sp>140){B.stunQ=b.st;mpRecOn();snd(1200,.4,'square',.06,.5);mpRecOff();BALL=null}}
+ if(dc>RA+800){b.ph='miko';b.t=0;b.st=1;mpRecOn();msg('破魔玉がはずれた…！ もう一度！',2);mpRecOff();return}
+ if(B.sky===2&&B.dying<=0&&dB<B.r*.95+b.r){mpRecOn();fireball(b.x,b.y,B.z+120,20,320,.5,BALLC[b.st-1]);pf(b.x,b.y,40,BALLC[b.st-1],520,.6,7,B.z+120,160);boom(.6,.8);snd(1200,.4,'square',.06,.5);
+   if(b.st>=3){B.stunQ=b.st;BALL=null}else{msg('まだ小さい！ 跳ね返して3段以上にしてから当てよう',2.6);b.ph='miko';b.t=0;b.st=1}mpRecOff()}}
 
 /* ---------- 危険物（当たり判定は各自の画面で自分のキャラだけ） ---------- */
 function hOrb(x,y,a,v,r,d,del,L,col){const c=col===1?['#b070ff','#f6e8ff']:['#7ff8ff','#ffffff'];return{x,y,t:0,tr:0,hit:0,
@@ -1466,8 +1475,8 @@ function hud(){
   {k:'SPACE',n:'回避',f:1-P.dcd/1.2,rd:P.dcd<=0,c:'#8affc1',s:P.dcd.toFixed(1),ic:icDodge}];
  if(!TOUCH){const _G=xsOrder((PK?PK.gs():GS).concat(xsGS())),_x=W-46-66*(_G.length-1);_G.forEach((q,i)=>gauge(_x+i*66,gy,24,q.f,q.rd,q.k,q.n,XSC[q.n]||q.c,q.s,q.ic))}
  hudUlt();
- if(BALL){const b=BALL,x0=W-286,y0=TOUCH?150:188,rem=Math.max(0,BALLT_L+2.4-b.lt);panel(x0,y0,272,74,12,frame%30<15?'rgba(255,230,120,.95)':'rgba(255,190,80,.85)');
-  txt('チャンス！ 破魔玉を当てろ',x0+14,y0+16,14,'#fff2c0','left');txt(b.ph==='roll'?(TOUCH?'こうげきで弾いて':'こうげき（J）で弾いて')+N2+'へ':'巫女が投げこむ…',x0+14,y0+35,10,'#ffe9a8','left');
+ if(BALL){const b=BALL,x0=W-286,y0=TOUCH?150:188,rem=Math.max(0,SPT-b.lt);panel(x0,y0,272,74,12,frame%30<15?'rgba(255,230,120,.95)':'rgba(255,190,80,.85)');
+  txt('チャンス！ 破魔玉を当てろ',x0+14,y0+16,14,'#fff2c0','left');txt(b.ph==='roll'?(TOUCH?'「はね返す」':'F')+'で跳ね返す・3段以上で'+N2+'へ':'巫女が投げこむ…',x0+14,y0+35,10,'#ffe9a8','left');
   for(let i=0;i<5;i++){X.beginPath();X.arc(x0+22+i*20,y0+56,7,0,TAU);X.fillStyle=i<b.st?BALLC[i]:'rgba(255,255,255,.12)';X.fill();X.strokeStyle='rgba(255,255,255,.5)';X.lineWidth=1;X.stroke()}txt(b.st>=5?'MAX':b.st+'段',x0+128,y0+56,12,BALLC[b.st-1],'left',null,{f:FONT});
   X.save();X.shadowColor='#ff1a1a';X.shadowBlur=10;txt(rem.toFixed(1),x0+258,y0+46,24,rem<4?'#ff5a4a':'#ffffff','right','#2a0000',{f:NUMF});X.restore();txt('秒',x0+258,y0+64,9,'#ffe9a8','right')}
  const mw=TOUCH?160:186,mh=mw,mx=16,my=TOUCH?66:H-mh-20,sc=mw/(2*RA),MX=x=>mx+(x-ACX+RA)*sc,MY=y=>my+(y-ACY+RA)*sc;panel(mx-8,my-8,mw+16,mh+16,(mw+16)/2,PH===2?'rgba(200,110,255,.7)':'rgba(170,150,255,.6)');
@@ -1612,7 +1621,7 @@ addEventListener('keydown',e=>{if(e.target&&e.target.tagName==='INPUT')return;co
  if(S==='title'&&(c==='ArrowLeft'||c==='ArrowRight'||c==='KeyA'||c==='KeyD')){if(mpDiffLock())return;setDiff((DIFF+(c==='ArrowLeft'||c==='KeyA'?2:1))%3);snd([880,520,330][DIFF],.1,'square',.05,DIFF?.6:1.4);return}
  if(S!=='play'){if(S==='win'){if(c==='Enter'&&endT>4.8)start();return}if((c==='Enter'||c==='Space')&&(S==='title'||endT>.8))start();return}
  if(!(NET.on&&!NET.host)&&/^(Digit|Numpad)[6789]$/.test(c)&&!e.repeat&&!paused){const n=performance.now(),d=c.slice(-1);window._kd=window._kd||{};window._kd[d]=(window._kd[d]||[]).filter(t=>n-t<700);window._kd[d].push(n);if(window._kd[d].length>=3){window._kd[d]=[];
-  if(d==='7'){P.ult=100;msg('デバッグ：ひっさつゲージMAX',2)}else if(d==='8'){if(B&&!B.dying&&!B.inv){B.hp=Math.max(1,Math.round(B.hp-B.mhp*.48));msg('デバッグ：ボスHPを48%減らした',2)}}else if(d==='6'){for(const m of mobs)if(!m.dead){m.hp=1}msg('デバッグ：護衛のHPを1に',2)}else if(d==='9'&&PH===2&&!B.inv){SPN=Math.max(1,SPN);nextSp=timeS;msg('デバッグ：次は破魔玉のチャンス',2)}snd(1400,.15,'square',.05,.6)}return}
+  if(d==='7'){P.ult=100;msg('デバッグ：ひっさつゲージMAX',2)}else if(d==='8'){if(B&&!B.dying&&!B.inv){B.hp=Math.max(1,Math.round(B.hp-B.mhp*.48));msg('デバッグ：ボスHPを48%減らした',2)}}else if(d==='6'){for(const m of mobs)if(!m.dead){m.hp=1}msg('デバッグ：護衛のHPを1に',2)}else if(d==='9'&&PH===2&&!B.inv){SPN=Math.max(2,SPN);nextSp=timeS;msg('デバッグ：次は破魔玉のチャンス',2)}snd(1400,.15,'square',.05,.6)}return}
  if(NET.on&&(c==='KeyP'||c==='Escape')){mpPzOpen();return}if(c==='KeyP'||c==='Escape'){paused=!paused;if(BGM.au){if(paused)BGM.au.pause();else BGM.au.play().catch(()=>{})}return}
  if(paused&&c==='Enter'){paused=0;start();endCine();return}
  if(paused&&c==='KeyT'){paused=0;reset();S='title';bgmStop();return}
@@ -1629,7 +1638,7 @@ addEventListener('mousemove',e=>{if(NET.on&&NET.pz){const[lx,ly]=toL(e);mpPzMove
 function vk(code,down){try{dispatchEvent(new KeyboardEvent(down?'keydown':'keyup',{code,bubbles:true}))}catch(e){if(down)keys[code]=1;else keys[code]=0}}
 function toL(t){const rc=C.getBoundingClientRect(),sc=Math.min(rc.width/W,rc.height/H);return[(t.clientX-rc.left-(rc.width-W*sc)/2)/sc,(t.clientY-rc.top-(rc.height-H*sc)/2)/sc]}
 const inR=(x,y,r)=>x>=r[0]-6&&x<=r[0]+r[2]+6&&y>=r[1]-6&&y<=r[1]+r[3]+6;
-function tbVis(b){return b.id!=='int'||!!NET.rv.near}
+function tbVis(b){if(b.id==='int')b.lab=!NET.rv.near&&BALL&&BALL.ph==='roll'?'はね返す':'救助';return b.id!=='int'||!!NET.rv.near||!!(BALL&&BALL.ph==='roll')}
 C.addEventListener('touchstart',e=>{e.preventDefault();if(!TOUCH){TOUCH=true;document.body.classList.add('touch');fitRes()}ac();try{AC&&AC.resume&&AC.resume()}catch(_){}
  for(const t of e.changedTouches){const[x,y]=toL(t);
   if(S==='cine'){cineSkip();continue}
@@ -2115,7 +2124,7 @@ const HX={clamp(o){clampC(o,WM)},
  holdF(){return !!(NET.rv.t>0&&keys.KeyF)},
  src(k){return k==='atk3'?'melee3':k==='atk'?'melee':k},tickP(){P.bk=Math.max(0,(P.bk||0)-DT)},
  kick(x,y,rr,a0){const b=BALL;if(!b||b.ph!=='roll'||P.bk>0)return false;if(Math.hypot(x-b.x,y-b.y)>rr+b.r)return false;P.bk=.25;const t=curT(),a=t?ang(b,t):a0;if(NET.on&&!NET.host){mpQ('h',a+10);ballKick(b,a,1)}else ballKick(b,a);return true},
- swing(x,y,rr){HX.kick(x,y,rr,P.face)},shotBall(s){return !s.cos&&HX.kick(s.x,s.y,s.r+8,Math.atan2(s.vy,s.vx))},
+ swing(){},shotBall(){return false},   /* 破魔玉は攻撃ではなく F で跳ね返す */
  hitH(e){return e===B?B.z+(B.form===2?rnd(170,280):rnd(110,200)):60}};
 
 /* ---------- キャラ：ウォスパー（ロボネコ24号の自分キャラ）をこのボス戦でも使えるようにする ---------- */
